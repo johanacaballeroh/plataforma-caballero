@@ -93,6 +93,11 @@ export class AuthService {
         return permissions.some((permission) => this.hasPermission(permission));
     }
 
+    async refreshCurrentUser(): Promise<void> {
+        const session = this.session();
+        await this.setSession(session);
+    }
+
     private async setSession(session: Session | null): Promise<void> {
         this.state.update((current) => ({ ...current, session, user: session?.user ?? null, loading: true }));
 

@@ -3,6 +3,7 @@ import { AppLayout } from './app/layout/component/app.layout';
 import { authGuard } from './app/core/guards/auth.guard';
 import { permissionGuard } from './app/core/guards/permission.guard';
 import { Dashboard } from './app/pages/dashboard/dashboard';
+import { Profile } from './app/pages/profile/profile';
 import { FeaturePlaceholder } from './app/shared/components/feature-placeholder/feature-placeholder';
 import { Notfound } from './app/pages/notfound/notfound';
 
@@ -13,7 +14,7 @@ export const appRoutes: Routes = [
         canActivate: [authGuard],
         children: [
             { path: '', component: Dashboard, canActivate: [permissionGuard], data: { permissions: ['dashboard.view'] } },
-            { path: 'profile', component: FeaturePlaceholder, data: { title: 'Perfil', description: 'Gestion de datos personales del usuario autenticado.' } },
+            { path: 'profile', component: Profile },
             { path: 'certificates', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Certificados', description: 'Modulo preparado para listado, emision, documentos y PDF de certificados.', permissions: ['certificates.view', 'certificates.view_own'] } },
             { path: 'companies', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Empresas', description: 'Modulo preparado para empresas, sedes y contactos.', permissions: ['companies.view'] } },
             { path: 'items', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Items', description: 'Modulo preparado para items valorizables o residuos.', permissions: ['items.view'] } },
