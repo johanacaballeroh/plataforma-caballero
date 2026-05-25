@@ -1,19 +1,20 @@
-# Módulo 14: Tipos de generación de certificado
+# Modulo 14: Tipos de generacion de certificado
 
-## Propósito
+## Proposito
 
-Administrar tipos de generación de certificado y reglas de visibilidad de campos relacionadas.
+Gestionar tipos de generacion de certificado y reglas visuales/funcionales asociadas a campos de destino.
 
 ## Pantallas identificadas
 
-- Listado de tipos de generación.
-- Crear tipo de generación.
-- Detalle de tipo de generación.
-- Editar tipo de generación.
+- Listado de tipos de generacion.
+- Crear tipo de generacion.
+- Editar tipo de generacion.
+- Detalle de tipo de generacion.
+- Asociacion con plantillas PDF: `Pendiente de validación`.
 
 ## Campos detectados
 
-Desde esquema:
+Desde `certificate_generation_types`:
 
 - `name`
 - `description`
@@ -21,24 +22,30 @@ Desde esquema:
 - `show_destination_place`
 - `status`
 
+Relaciones indirectas:
+
+- plantillas en `certificate_template_versions`.
+
 ## Entidades relacionadas
 
 - Certificados.
-- Plantillas PDF versionadas.
+- Plantillas PDF.
+- Empresas destino final.
 
 ## Reglas de negocio
 
-- El nombre debe ser único.
-- El tipo de generación puede controlar si se muestra empresa destino final.
-- El tipo de generación puede controlar si se muestra lugar de destino.
-- Tipos inactivos no deben aparecer para nuevos certificados.
-- Las plantillas se versionan por tipo de generación.
+- `name` debe ser unico.
+- `show_final_destination_company` controla si el formulario de certificado debe mostrar destino final.
+- `show_destination_place` controla si el formulario de certificado debe mostrar lugar de destino.
+- Tipos inactivos no deberian seleccionarse en nuevos certificados.
+- Las plantillas PDF se versionan por tipo de generacion.
 
 ## Validaciones sugeridas
 
-- Nombre obligatorio.
-- Estado obligatorio.
-- Flags booleanos con valor explícito.
+- Nombre obligatorio y unico.
+- Descripcion opcional.
+- Flags booleanos obligatorios.
+- Estado permitido: `active`, `inactive`.
 
 ## Permisos requeridos
 
@@ -46,6 +53,9 @@ Desde esquema:
 - `certificate_generation_types.create`
 - `certificate_generation_types.update`
 - `certificate_generation_types.delete`
+- `certificate_templates.view`
+- `certificate_templates.create`
+- `certificate_templates.update`
 
 ## Tablas Supabase relacionadas
 
@@ -53,16 +63,15 @@ Desde esquema:
 - `certificate_template_versions`
 - `certificates`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear, ver y editar tipos.
-- No se duplican nombres.
-- Los flags impactan formularios futuros de certificado.
-- RLS protege operaciones.
+- Se puede crear, editar y ver detalle.
+- Los flags afectan formularios futuros de certificados.
+- RLS impide acciones sin permisos.
+- No se modifican certificados historicos al cambiar plantillas.
 
 ## Pendiente de validación
 
-- Si debe existir `show_value`; no está en el esquema actual.
-- Reglas exactas de campos obligatorios por tipo.
-- Plantillas iniciales por tipo.
+- Si la gestion de plantillas vive en este modulo o en Certificados.
+- Si existen mas flags funcionales observados en capturas que aun no estan en SQL.

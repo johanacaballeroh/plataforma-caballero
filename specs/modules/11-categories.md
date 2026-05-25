@@ -1,17 +1,19 @@
-# Módulo 11: Categorías
+# Modulo 11: Categorias
 
-## Propósito
+## Proposito
 
-Administrar categorías para clasificar ítems.
+Gestionar categorias de items para clasificacion operacional y reportes.
 
 ## Pantallas identificadas
 
-- Listado de categorías.
-- Crear categoría.
-- Detalle de categoría.
-- Editar categoría.
+- Listado de categorias.
+- Crear categoria.
+- Editar categoria.
+- Detalle de categoria.
 
 ## Campos detectados
+
+Desde `categories`:
 
 - `name`
 - `description`
@@ -19,19 +21,21 @@ Administrar categorías para clasificar ítems.
 
 ## Entidades relacionadas
 
-- Ítems.
+- Items.
+- Certificados.
+- Reportes.
 
 ## Reglas de negocio
 
-- El nombre debe ser único.
-- Categorías inactivas no deben aparecer para nuevos ítems.
-- No debe eliminarse una categoría usada por ítems: `Pendiente de validación`; el esquema restringe por FK.
+- `name` debe ser unico.
+- Categorias inactivas no deberian seleccionarse en nuevos items.
+- Una categoria usada por items no deberia eliminarse sin validar impacto.
 
 ## Validaciones sugeridas
 
-- Nombre obligatorio.
-- Descripción opcional.
-- Estado obligatorio.
+- Nombre obligatorio y unico.
+- Descripcion opcional.
+- Estado permitido: `active`, `inactive`.
 
 ## Permisos requeridos
 
@@ -45,15 +49,14 @@ Administrar categorías para clasificar ítems.
 - `categories`
 - `items`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear, ver y editar categorías.
-- No se duplican nombres.
-- El estado se muestra con tag.
-- RLS protege operaciones.
+- Se puede crear, editar y ver detalle.
+- Se puede activar/inactivar.
+- RLS impide acciones sin permisos.
 
 ## Pendiente de validación
 
-- Taxonomía final de categorías.
-- Si requiere código adicional.
+- Catalogo inicial definitivo de categorias.
+- Si se permite eliminar categorias con items asociados.

@@ -1,54 +1,58 @@
-# Módulo 05: Roles y permisos
+# Modulo 05: Roles y permisos
 
-## Propósito
+## Proposito
 
-Administrar roles del sistema y su matriz de permisos.
+Gestionar roles del sistema y su matriz de permisos por modulo y accion.
 
 ## Pantallas identificadas
 
 - Listado de roles.
 - Crear rol.
-- Detalle de rol.
 - Editar rol.
+- Detalle de rol.
 - Matriz de permisos.
 
 ## Campos detectados
 
-Roles:
+Desde `roles`:
 
 - `name`
 - `description`
 - `is_system_role`
 - `status`
 
-Permisos:
+Desde `permissions`:
 
 - `module_key`
 - `action_key`
 - `description`
 
+Relaciones:
+
+- `permission_id` mediante `role_permissions`
+
 ## Entidades relacionadas
 
 - Roles.
 - Permisos.
-- Usuarios asociados a roles.
+- Usuarios.
 
 ## Reglas de negocio
 
-- Los roles base no se eliminan.
-- Los roles con `is_system_role = true` están protegidos.
-- Los permisos se agrupan por módulo.
-- Crear o editar roles debe registrar auditoría.
-- Gerente no debe tener permiso `logs.view`.
-- Cliente debe quedar limitado a certificados propios.
+- Los roles base Administrador, Gerente y Cliente no deben eliminarse.
+- Los roles base estan marcados con `is_system_role`.
+- Administrador recibe todos los permisos.
+- Gerente recibe permisos operativos excepto logs.
+- Cliente recibe permisos limitados a certificados propios y PDF.
+- Cambiar permisos impacta el menu, rutas y acciones disponibles.
 
 ## Validaciones sugeridas
 
-- Nombre obligatorio.
-- Nombre único.
-- Estado obligatorio.
-- Al menos un permiso para roles operativos.
-- No permitir modificar protección de roles base desde UI.
+- Nombre obligatorio y unico.
+- Descripcion opcional.
+- Al menos un permiso para roles personalizados: `Pendiente de validación`.
+- No permitir eliminar roles base.
+- No permitir dejar Administrador sin permisos criticos: `Pendiente de validación`.
 
 ## Permisos requeridos
 
@@ -64,16 +68,15 @@ Permisos:
 - `role_permissions`
 - `user_roles`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se pueden crear roles personalizados.
-- Se pueden editar permisos por módulo.
-- No se pueden eliminar roles base.
-- No se puede quitar accidentalmente protección de roles base.
-- Los cambios impactan navegación y guards luego de recargar permisos.
+- Se muestran permisos agrupados por modulo.
+- Se impide eliminar roles base.
+- Se actualiza la matriz de permisos en `role_permissions`.
+- RLS impide cambios sin permisos.
 
 ## Pendiente de validación
 
-- Si roles base pueden editar descripción o permisos.
-- Si se requiere clonación de roles.
+- Si roles personalizados pueden copiar permisos desde roles base.
+- Si se permite inactivar roles asignados a usuarios.

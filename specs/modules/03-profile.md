@@ -1,18 +1,19 @@
-# Módulo 03: Perfil
+# Modulo 03: Perfil
 
-## Propósito
+## Proposito
 
-Permitir que el usuario autenticado consulte y actualice datos básicos de su cuenta.
+Permitir que el usuario autenticado consulte y actualice sus datos personales permitidos.
 
 ## Pantallas identificadas
 
-- Ver perfil.
-- Editar perfil.
-- Cambiar contraseña.
+- Vista de perfil.
+- Edicion de datos personales.
+- Cambio de contrasena.
+- Empresas asociadas en modo lectura para Cliente.
 
 ## Campos detectados
 
-Campos existentes en esquema:
+Desde `profiles`:
 
 - `full_name`
 - `email`
@@ -20,58 +21,56 @@ Campos existentes en esquema:
 - `avatar_url`
 - `status`
 
-Campos de autenticación:
+Campos de Auth:
 
-- contraseña actual: `Pendiente de validación` según flujo Supabase.
-- nueva contraseña.
-- confirmación de nueva contraseña.
+- contrasena actual: `Pendiente de validación`.
+- nueva contrasena: `Pendiente de validación`.
 
 ## Entidades relacionadas
 
 - Perfil.
 - Roles.
 - Empresas asociadas.
+- Supabase Auth.
 
 ## Reglas de negocio
 
-- Cada usuario puede ver su propio perfil.
-- Cada usuario puede editar solo los campos permitidos de su propio perfil.
-- El email proviene de Supabase Auth y debe tratarse con cuidado.
-- La contraseña se actualiza mediante Supabase Auth.
-- Los roles y empresas se muestran como información, no se editan desde Perfil.
+- Un usuario puede ver su propio perfil.
+- Un usuario puede actualizar solo los campos permitidos de su perfil.
+- El email esta sincronizado con Auth y no debe cambiarse sin flujo confirmado.
+- Roles y empresas asociadas se muestran como informacion, no se editan desde Perfil.
 
 ## Validaciones sugeridas
 
 - Nombre obligatorio.
-- Email solo lectura salvo decisión posterior.
-- Teléfono opcional.
-- Nueva contraseña con longitud mínima definida por Supabase/proyecto.
-- Confirmación de contraseña debe coincidir.
+- Email visible y con formato valido, preferentemente solo lectura.
+- Telefono opcional con longitud razonable.
+- Avatar opcional mediante Storage: `Pendiente de validación`.
+- Nueva contrasena con longitud minima definida por Supabase/proyecto.
 
 ## Permisos requeridos
 
-- Sesión autenticada.
-- No requiere permiso administrativo para perfil propio.
+- Usuario autenticado.
+- La actualizacion propia se controla por RLS en `profiles_update_own`.
 
 ## Tablas Supabase relacionadas
 
 - `profiles`
-- `user_roles`
 - `roles`
-- `user_companies`
+- `user_roles`
 - `companies`
+- `user_companies`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
-- El usuario ve su información personal.
-- El usuario actualiza su nombre y teléfono si están permitidos.
-- El usuario puede cambiar contraseña mediante Supabase Auth.
-- No puede editar roles ni empresas desde esta pantalla.
-- RLS permite acceso al perfil propio.
-- La UI respeta Sakai NG.
+- El usuario ve sus datos actuales.
+- El usuario actualiza solo campos permitidos.
+- Roles y empresas asociadas se muestran en modo lectura.
+- El formulario muestra validaciones.
+- RLS impide editar perfiles ajenos.
 
 ## Pendiente de validación
 
-- Edición de avatar.
-- Edición de email.
-- Doble factor.
+- Cambio de email.
+- Carga de avatar.
+- Flujo exacto de cambio de contrasena.

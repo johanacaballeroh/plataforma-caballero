@@ -1,17 +1,19 @@
-# Módulo 16: Tipos de documentos
+# Modulo 16: Tipos de documentos
 
-## Propósito
+## Proposito
 
-Administrar tipos de documentos adjuntos que pueden asociarse a certificados.
+Gestionar tipos de documentos adjuntos que pueden asociarse a certificados.
 
 ## Pantallas identificadas
 
 - Listado de tipos de documentos.
 - Crear tipo de documento.
-- Detalle de tipo de documento.
 - Editar tipo de documento.
+- Detalle de tipo de documento.
 
 ## Campos detectados
+
+Desde `document_types`:
 
 - `name`
 - `status`
@@ -23,14 +25,16 @@ Administrar tipos de documentos adjuntos que pueden asociarse a certificados.
 
 ## Reglas de negocio
 
-- El nombre debe ser único.
-- Tipos inactivos no deben aparecer al adjuntar nuevos documentos.
-- No debe eliminarse un tipo usado por documentos adjuntos: `Pendiente de validación`; el esquema restringe por FK.
+- `name` debe ser unico.
+- Tipos inactivos no deberian seleccionarse al adjuntar nuevos documentos.
+- Los archivos reales se almacenan en `certificate-documents`.
+- La tabla `certificate_documents` guarda metadata.
 
 ## Validaciones sugeridas
 
-- Nombre obligatorio.
-- Estado obligatorio.
+- Nombre obligatorio y unico.
+- Estado permitido: `active`, `inactive`.
+- Tipos de archivo permitidos segun `storage-policies.sql`.
 
 ## Permisos requeridos
 
@@ -44,15 +48,14 @@ Administrar tipos de documentos adjuntos que pueden asociarse a certificados.
 - `document_types`
 - `certificate_documents`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear, ver y editar tipos.
-- No se duplican nombres.
-- El estado se muestra con tag.
-- RLS protege operaciones.
+- Se puede crear, editar y ver detalle.
+- Se puede activar/inactivar.
+- RLS impide acciones sin permisos.
 
 ## Pendiente de validación
 
-- Catálogo inicial de tipos de documento.
-- Si cada tipo limita extensiones o tamaño.
+- Catalogo inicial definitivo de tipos de documentos.
+- Si cada tipo debe restringir MIME types o tamanos adicionales.

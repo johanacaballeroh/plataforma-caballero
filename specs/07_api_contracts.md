@@ -2,69 +2,59 @@
 
 ## Alcance
 
-El proyecto no tendrá backend Node propio. Los contratos de datos se implementan con Supabase JS Client sobre:
+El frontend se comunica directamente con Supabase mediante Supabase JS Client. No existe backend Node propio para estos contratos.
 
-- tablas,
-- vistas,
-- Storage,
-- funciones SQL si se agregan de forma explícita.
+Los contratos documentan patrones de consulta, no endpoints HTTP custom.
 
-Este documento define el patrón esperado para la futura implementación frontend.
+## Patron server-side para tablas
 
-## Patrón de listado server-side
+Entrada comun desde UI:
 
-Entrada estándar:
+```ts
+interface ServerTableQuery {
+  page: number;
+  pageSize: number;
+  sortField?: string;
+  sortOrder?: 'asc' | 'desc';
+  filters?: Record<string, unknown>;
+}
+```
 
-- `page`: número de página base 1.
-- `pageSize`: cantidad de filas.
-- `sortField`: columna permitida.
-- `sortOrder`: `asc` o `desc`.
-- `filters`: objeto con filtros por campo.
+Salida comun hacia UI:
 
-Salida estándar:
-
-- `data`: filas.
-- `total`: total con filtros aplicados.
-- `page`.
-- `pageSize`.
+```ts
+interface ServerTableResult<T> {
+  data: T[];
+  total: number;
+}
+```
 
 Reglas:
 
-- Validar `sortField` contra una lista permitida por módulo.
-- No concatenar SQL desde frontend.
-- Usar `.range(from, to)`.
-- Usar `.order(sortField, { ascending })`.
-- Usar `count: 'exact'` cuando se necesita total.
+- `page` es base 1.
+- `pageSize` debe tener limite maximo definido por UI.
+- `sortField` solo puede mapear a columnas permitidas.
+- Los filtros deben aplicarse en Supabase, no en memoria.
+- Usar `count: 'exact'` cuando el listado requiera total.
 
-## Patrón CRUD
+## Mapeo Supabase
 
-### Crear
+Para listados:
 
-- Validar formulario en frontend.
-- Enviar solo columnas permitidas.
-- RLS valida permiso real.
-- Auditoría se registra por triggers donde aplica.
+- `select(columns, { count: 'exact' })`
+- `range(from, to)`
+- `order(field, { ascending })`
+- filtros con `eq`, `ilike`, `gte`, `lte`, `in` segun el caso
 
-### Editar
-
-- Cargar registro por `id`.
-- Validar permisos.
-- Enviar cambios mínimos.
-- Mantener `updated_at` mediante triggers.
-
-### Cambiar estado
-
-- Preferir actualizar `status` sobre eliminación física cuando aplique.
-- Confirmar la acción.
-- Registrar auditoría.
-
-### Detalle
-
-- Cargar entidad principal.
-- Cargar relaciones necesarias con consultas separadas o joins de Supabase cuando convenga.
-- Respetar RLS en cada tabla relacionada.
+No se deben exponer filtros arbitrarios que permitan consultar columnas no previstas.
 
 ## Contratos por dominio
+
+### Auth
+
+- Login: Supabase Auth email/password.
+- Logout: Supabase Auth signOut.
+- Perfil actual: `profiles` + `user_roles` + `role_permissions` + `user_companies`.
 
 ### Usuarios
 
@@ -79,34 +69,37 @@ Tablas:
 Operaciones:
 
 - listar perfiles,
-- ver perfil,
-- actualizar datos permitidos,
+- consultar detalle,
+- crear usuario,
+- actualizar perfil,
 - asignar roles,
-- asociar empresas.
+- asociar empresas,
+- activar/inactivar.
 
-Pendiente de validación:
+Pendiente de validacion:
 
-- flujo exacto para crear usuarios desde frontend con Supabase Auth sin backend propio.
+- Flujo exacto para crear usuarios de Auth desde frontend sin exponer claves privilegiadas.
 
-### Roles y permisos
+### Catalogos
 
 Tablas:
 
-- `roles`
-- `permissions`
-- `role_permissions`
+- `units`
+- `categories`
+- `item_types`
+- `basel_codes`
+- `quantity_types`
+- `document_types`
+- `certificate_generation_types`
 
 Operaciones:
 
-- listar roles,
-- crear rol,
-- editar rol,
-- asignar permisos,
-- cambiar estado.
-
-Regla:
-
-- No eliminar roles con `is_system_role = true`.
+- listar,
+- consultar detalle,
+- crear,
+- actualizar,
+- activar/inactivar,
+- eliminar solo cuando RLS y reglas de negocio lo permitan.
 
 ### Empresas
 
@@ -118,11 +111,15 @@ Tablas:
 
 Operaciones:
 
-- CRUD de empresa,
-- CRUD de sucursales,
-- CRUD de contactos.
+- listar,
+- consultar detalle,
+- crear,
+- actualizar,
+- activar/inactivar,
+- gestionar sedes,
+- gestionar contactos.
 
-### Ítems y catálogos
+### Items
 
 Tablas:
 
@@ -131,15 +128,14 @@ Tablas:
 - `categories`
 - `item_types`
 - `basel_codes`
-- `quantity_types`
-- `document_types`
-- `certificate_generation_types`
 
 Operaciones:
 
-- CRUD server-side,
-- consultas para selects activos,
-- filtros por estado y texto.
+- listar,
+- consultar detalle,
+- crear,
+- actualizar,
+- activar/inactivar.
 
 ### Certificados
 
@@ -150,54 +146,57 @@ Tablas:
 - `certificate_documents`
 - `certificate_files`
 - `certificate_template_versions`
+- `certificate_generation_types`
+- `companies`
+- `items`
+- `quantity_types`
+- `document_types`
 
 Operaciones:
 
-- listar,
-- crear,
-- editar,
-- ver detalle,
-- administrar ítems,
+- listar certificados,
+- consultar detalle,
+- crear borrador,
+- actualizar borrador,
+- administrar items,
 - adjuntar documentos,
 - emitir,
-- registrar PDF generado.
+- registrar PDF generado,
+- descargar PDF con acceso privado.
 
 ### Reportes
 
-Vista y tabla:
+Fuente:
 
 - `v_certificate_report`
 - `report_exports`
 
 Operaciones:
 
-- consultar reporte de certificados,
-- filtrar por rango de fechas,
-- exportar si se confirma alcance.
+- listar reporte con filtros,
+- exportar,
+- registrar metadata de exportacion.
 
-## Storage
+### Logs
 
-Buckets:
+Fuente:
 
-- `certificate-templates`
-- `generated-certificates`
-- `certificate-documents`
+- `audit_logs`
 
-Reglas:
+Operaciones:
 
-- No usar buckets públicos.
-- Guardar metadata en tablas.
-- Usar rutas organizadas por entidad y fecha cuando se implemente.
-- Usar URLs firmadas para lectura cuando corresponda.
+- listar en modo solo lectura.
 
 ## Manejo de errores
 
-El frontend debe normalizar:
+El frontend debe traducir errores comunes:
 
-- errores de validación,
-- errores de autenticación,
-- errores de autorización/RLS,
-- errores de red,
-- errores de Storage.
+- sesion expirada,
+- acceso denegado por RLS,
+- constraint unica,
+- constraint check,
+- relacion inexistente,
+- error de Storage,
+- error de red.
 
-Cada error debe mostrarse con un mensaje comprensible para el usuario y registrar detalle técnico solo donde corresponda.
+No se deben mostrar mensajes tecnicos crudos al usuario final salvo en entorno de desarrollo.

@@ -1,132 +1,138 @@
-# Guía UI/UX
+# Lineamientos UI/UX
 
 ## Fuente visual oficial
 
-La fuente visual oficial del sistema y base inicial del frontend es Sakai NG:
+Sakai NG es la fuente visual oficial del sistema.
 
-https://github.com/primefaces/sakai-ng
+El frontend debe conservar y adaptar:
 
-Las capturas del backoffice anterior no son referencia visual.
-
-Sakai NG debe clonarse/copiarse como template base. No se debe intentar instalarlo luego como si fuera una librería de componentes sobre un Angular vacío.
-
-## Reglas base
-
-Sakai NG define y aporta físicamente:
-
-- login,
+- pagina de login,
 - layout autenticado,
 - sidebar,
 - topbar,
 - estructura responsive,
 - estilos globales,
-- patrones visuales base.
+- tema PrimeNG,
+- soporte TailwindCSS.
 
-PrimeNG define los componentes funcionales.
+## Uso de capturas
 
-TailwindCSS se usa para ajustes finos de layout, spacing, grids y responsive.
+Las capturas del backoffice anterior son solo fuente funcional.
 
-## Prohibiciones visuales
+Se permite usarlas para identificar:
 
-- No copiar colores del sistema anterior.
-- No copiar sidebar del sistema anterior.
-- No copiar layout del sistema anterior.
-- No copiar estilos antiguos.
-- No recrear pantallas visualmente idénticas a las capturas.
-- No reemplazar PrimeNG por otra librería UI.
-- No crear un layout desde cero si Sakai NG ya provee uno funcional.
-- No recrear manualmente el layout de Sakai NG si se puede partir del template clonado.
-- No continuar sobre un scaffold Angular vacío para implementar la UI final del backoffice.
+- modulos,
+- formularios,
+- campos,
+- acciones,
+- relaciones,
+- reglas de negocio,
+- flujos CRUD.
 
-## Componentes PrimeNG esperados
+No se permite usarlas para copiar:
+
+- colores,
+- layout,
+- sidebar,
+- estilos,
+- densidad visual antigua,
+- componentes visuales identicos.
+
+## Componentes obligatorios
+
+Las nuevas pantallas deben usar PrimeNG para controles funcionales:
 
 - `p-table`
 - `p-dialog`
 - `p-button`
 - `p-inputText`
 - `p-select` o `p-dropdown`
-- `p-datepicker` o calendario equivalente de PrimeNG
+- `p-datepicker` o calendario equivalente PrimeNG
 - `p-toast`
 - `p-confirmDialog`
 - `p-tag`
-- `p-toolbar`
 - `p-fileUpload` cuando aplique
-- `p-password` cuando aplique
 
-## Layout autenticado
+TailwindCSS se usara para:
 
-Debe partir del layout real incluido en Sakai NG.
+- spacing,
+- grids,
+- layout fino,
+- responsive,
+- ajustes visuales puntuales.
 
-Adaptaciones:
+## Patron de listados
 
-- menú según permisos,
-- nombre de usuario,
-- menú de perfil,
-- logout,
-- comportamiento responsive,
-- rutas protegidas.
+Los listados CRUD deben incluir:
 
-## Login
-
-Debe partir del login real incluido en Sakai NG.
-
-Adaptaciones:
-
-- Supabase Auth,
-- validación de email y contraseña,
-- mensajes de error,
-- redirección a Dashboard,
-- bloqueo de rutas internas sin sesión.
-
-## Tablas administrativas
-
-Toda tabla CRUD debe incluir:
-
-- carga lazy,
-- paginado por servidor,
-- ordenamiento por servidor,
+- titulo claro,
+- acciones principales visibles segun permisos,
+- tabla con carga lazy,
 - filtros por servidor,
-- columna de acciones,
-- estado con `p-tag`,
-- loading state,
-- empty state,
-- confirmación para acciones críticas.
+- ordenamiento por servidor,
+- paginado por servidor,
+- estados de carga,
+- estado vacio,
+- badges de estado,
+- acciones por fila condicionadas por permisos.
 
 ## Formularios
 
-Los formularios deben usar Reactive Forms y PrimeNG.
+Los formularios deben:
 
-Deben incluir:
+- usar formularios reactivos,
+- mostrar validacion visible,
+- separar secciones complejas en tabs o paneles si el formulario crece,
+- usar selects remotos para relaciones,
+- evitar logica de negocio compleja dentro del componente,
+- confirmar acciones criticas.
 
-- validaciones visibles,
-- mensajes de error,
-- botón Guardar,
-- botón Cancelar,
-- estado loading,
-- prevención de doble envío.
+## Estados visuales
 
-## Estados visuales sugeridos
+Estados comunes:
 
-### Estados generales
+- `active` -> tag positivo.
+- `inactive` -> tag neutral o warning.
+- `draft` -> tag informativo.
+- `issued` -> tag positivo.
+- `cancelled` -> tag danger.
 
-- `active`: Activo.
-- `inactive`: Inactivo.
+La severidad exacta debe elegirse usando el sistema visual de PrimeNG/Sakai.
 
-### Estados de certificado
+## Menu lateral
 
-- `draft`: Borrador.
-- `issued`: Emitido.
-- `cancelled`: Anulado.
-- `inactive`: Inactivo.
+El menu lateral debe adaptarse a los modulos:
 
-## Accesibilidad y UX
+- Dashboard
+- Certificados
+- Empresas
+- Items
+- Unidades
+- Categorias
+- Tipos de items
+- Codigos Basilea
+- Tipos de generacion de certificado
+- Tipos de cantidad
+- Tipos de documentos
+- Usuarios
+- Roles
+- Reportes
+- Logs
 
-- Los botones de acción deben tener labels o tooltips claros.
-- Los mensajes de error deben explicar la causa.
-- Las pantallas deben conservar navegación predecible.
-- Las acciones destructivas deben requerir confirmación.
-- Los filtros deben ser visibles o fácilmente accesibles.
+Cada entrada debe mostrarse solo si el usuario tiene permiso suficiente.
 
-## Criterio de consistencia
+## Accesibilidad y responsive
 
-Si una pantalla nueva no parece parte de Sakai NG, debe ajustarse antes de considerarse terminada.
+- Mantener navegacion por teclado donde PrimeNG lo soporte.
+- Usar labels visibles en formularios.
+- No depender solo de color para indicar estado.
+- Probar comportamiento responsive en desktop y mobile.
+- Evitar textos que se desborden de botones, tablas o dialogos.
+
+## Prohibiciones
+
+- No reconstruir visualmente las capturas.
+- No mezclar otra libreria UI.
+- No reemplazar PrimeNG.
+- No crear layout propio si Sakai NG ya cubre el caso.
+- No introducir estilos globales inconsistentes con el template.

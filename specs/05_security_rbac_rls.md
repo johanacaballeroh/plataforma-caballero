@@ -5,11 +5,11 @@
 La seguridad se compone de:
 
 - Supabase Auth para identidad.
-- `profiles` para datos públicos del usuario.
-- `roles` y `user_roles` para asignación de roles.
+- `profiles` para datos publicos del usuario.
+- `roles` y `user_roles` para asignacion de roles.
 - `permissions` y `role_permissions` para permisos granulares.
 - `user_companies` para limitar datos de Cliente por empresa.
-- RLS como validación definitiva.
+- RLS como validacion definitiva.
 
 ## Roles base
 
@@ -17,7 +17,7 @@ La seguridad se compone de:
 
 - Acceso total.
 - Puede ver logs.
-- Puede administrar usuarios, roles, permisos, catálogos, certificados, reportes y plantillas.
+- Puede administrar usuarios, roles, permisos, catalogos, certificados, reportes y plantillas.
 
 ### Gerente
 
@@ -70,8 +70,8 @@ Definidas en `/supabase/rls-policies.sql`:
 
 - Un usuario puede ver su propio perfil.
 - Usuarios con permiso `users.view` pueden ver otros perfiles.
-- Un usuario solo puede editar su propio perfil mediante política específica.
-- La gestión de roles y empresas asociadas requiere permisos de usuarios.
+- Un usuario solo puede editar su propio perfil mediante politica especifica.
+- La gestion de roles y empresas asociadas requiere permisos de usuarios.
 
 ### Empresas
 
@@ -79,10 +79,10 @@ Definidas en `/supabase/rls-policies.sql`:
 - Cliente solo accede a empresas asociadas por `user_companies`.
 - Crear, editar o eliminar empresas requiere permisos `companies.create`, `companies.update` o `companies.delete`.
 
-### Catálogos
+### Catalogos
 
-- Lectura disponible para usuarios con permisos del catálogo o permisos de certificados.
-- Gestión requiere permisos específicos por módulo.
+- Lectura disponible para usuarios con permisos del catalogo o permisos de certificados.
+- Gestion requiere permisos especificos por modulo.
 
 ### Certificados
 
@@ -119,17 +119,17 @@ Reglas:
 - Las plantillas requieren permisos `certificate_templates.*`.
 - Los PDFs generados respetan acceso a certificados.
 - Los documentos adjuntos respetan acceso a certificados.
-- Las URLs deben manejarse como firmadas o privadas, no públicas.
+- Las URLs deben manejarse como firmadas o privadas, no publicas.
 
-## Validación frontend
+## Validacion frontend
 
 El frontend debe:
 
 - cargar permisos del usuario autenticado,
-- filtrar menú lateral,
+- filtrar menu lateral,
 - proteger rutas con guards,
 - ocultar acciones no permitidas,
-- manejar respuestas de RLS como errores de autorización.
+- manejar respuestas de RLS como errores de autorizacion.
 
 El frontend no debe:
 
@@ -137,3 +137,9 @@ El frontend no debe:
 - usar `service_role`,
 - saltarse RLS,
 - asumir acceso por rol sin consultar permisos.
+
+## Pendiente de validacion
+
+- Politicas exactas para crear usuarios desde frontend con Supabase Auth.
+- Estrategia final para cambio de contrasena y recuperacion.
+- Si el Cliente puede acceder a documentos adjuntos o solo a PDFs generados.

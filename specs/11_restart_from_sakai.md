@@ -1,78 +1,57 @@
-# Reinicio desde Sakai NG
+# Estado de Sakai NG
 
-## Motivo
+## Estado actual
 
-Sakai NG no debe integrarse como si fuera una dependencia instalable encima de un proyecto Angular vacío.
+El workspace ya esta basado en Sakai NG con Angular 21, PrimeNG y TailwindCSS.
 
-Para este proyecto, Sakai NG debe ser la base inicial real del frontend. El backoffice se adapta sobre su estructura, layout, login, estilos, rutas y configuración PrimeNG/TailwindCSS.
+Este documento queda como nota historica y regla de prevencion: no se debe reiniciar el proyecto ni crear un Angular nuevo si la estructura actual de Sakai NG ya esta presente.
 
-## Qué conservar antes de borrar la instalación actual
+## Regla principal
 
-Conservar estos archivos y carpetas:
+No crear un proyecto Angular nuevo.
+
+La implementacion futura debe adaptar la estructura existente de Sakai NG:
+
+- `src/app/layout`
+- `src/app/pages/auth`
+- `src/app/pages/dashboard`
+- configuracion PrimeNG
+- estilos globales
+- soporte TailwindCSS
+
+## Que conservar siempre
 
 - `/AGENTS.md`
 - `/specs/**`
 - `/reference/**`
 - `/supabase/**`
+- configuracion y estructura real de Sakai NG ya presente en el workspace.
 
-Conservar también cualquier nota local sin secretos que documente decisiones del proyecto.
+## Cuando aplicar un reinicio
 
-## Qué no es necesario conservar
+Solo aplicar reinicio si en una revision futura se confirma que el workspace dejo de estar basado en Sakai NG o se rompio su estructura base.
 
-Si la instalación actual fue creada con Angular vacío y luego modificada manualmente, no es necesario conservar:
+En ese caso, antes de borrar archivos se deben respaldar:
 
-- `/src/**`
-- `/node_modules/**`
-- `/dist/**`
-- `/package.json`
-- `/package-lock.json`
-- `/angular.json`
-- `/tsconfig*.json`
-- configuración generada por el scaffold Angular vacío.
+- `/AGENTS.md`
+- `/specs/**`
+- `/reference/**`
+- `/supabase/**`
+- cualquier nota local sin secretos.
 
-La fuente correcta para esos archivos debe ser Sakai NG.
-
-## Flujo correcto
-
-1. Borrar manualmente la instalación frontend incorrecta.
-2. Clonar/copiar Sakai NG:
-
-   ```text
-   https://github.com/primefaces/sakai-ng
-   ```
-
-3. Verificar Angular 21.
-4. Verificar dependencias propias de Sakai NG:
-   - Angular,
-   - PrimeNG,
-   - PrimeIcons,
-   - `@primeuix/themes`,
-   - TailwindCSS,
-   - `tailwindcss-primeui`.
-5. Copiar de vuelta:
-   - `/AGENTS.md`
-   - `/specs`
-   - `/reference`
-   - `/supabase`
-6. Adaptar el proyecto Sakai NG:
-   - nombre del proyecto,
-   - login a Supabase Auth,
-   - layout autenticado,
-   - menú lateral con módulos del SDD,
-   - rutas protegidas,
-   - guards,
-   - Supabase client,
-   - environments.
-
-## Regla para próximos prompts
-
-El prompt de implementación inicial debe decir explícitamente:
+Luego se debe restaurar desde:
 
 ```text
-El workspace ya está basado en Sakai NG. No crees un proyecto Angular nuevo. Adapta la estructura existente de Sakai NG.
+https://github.com/primefaces/sakai-ng
 ```
 
-Si el workspace no está basado en Sakai NG, se debe detener la implementación frontend y corregir el punto de partida.
+## Regla para proximos prompts
+
+Todo prompt de implementacion frontend debe asumir:
+
+```text
+El workspace ya esta basado en Sakai NG. No crees un proyecto Angular nuevo. Adapta la estructura existente de Sakai NG.
+```
 
 ## Supabase
 
@@ -84,6 +63,6 @@ Supabase sigue siendo backend principal:
 - RLS.
 - Supabase JS Client desde Angular.
 
-La URL de proyecto y publishable key pueden ir en environments del frontend.
+La URL publica del proyecto y publishable key pueden ir en environments del frontend.
 
-La connection string directa de PostgreSQL no debe ir en Angular.
+La connection string directa de PostgreSQL y cualquier clave secreta no deben ir en Angular.

@@ -1,13 +1,15 @@
-# Módulo 06: Reportes
+# Modulo 06: Reportes
 
-## Propósito
+## Proposito
 
-Consultar información consolidada de certificados para análisis operativo y eventual exportación.
+Consultar y exportar informacion operacional de certificados respetando permisos y alcance por empresa.
 
 ## Pantallas identificadas
 
 - Reporte de certificados.
-- Exportación de reporte: `Pendiente de validación`.
+- Filtros de busqueda.
+- Resultado tabular.
+- Exportacion.
 
 ## Campos detectados
 
@@ -28,53 +30,63 @@ Desde `v_certificate_report`:
 - `estado_certificado`
 - `generator_company_id`
 
+Desde `report_exports`:
+
+- `report_type`
+- `filters`
+- `file_name`
+- `storage_bucket`
+- `storage_path`
+- `generated_by`
+- `generated_at`
+
 ## Entidades relacionadas
 
 - Certificados.
 - Empresas.
-- Ítems.
+- Items.
 - Unidades.
-- Tipos de ítems.
-- Códigos Basilea.
+- Codigos Basilea.
 - Exportaciones.
 
 ## Reglas de negocio
 
-- El reporte debe respetar RLS.
-- Cliente no debe ver datos de empresas no asociadas.
-- Los filtros deben ejecutarse por servidor.
-- Si se exporta un archivo, debe registrarse en `report_exports`.
+- Los reportes deben respetar RLS.
+- Cliente solo ve informacion asociada a sus empresas.
+- Exportar requiere permiso especifico.
+- Toda exportacion debe registrar metadata en `report_exports`.
 
 ## Validaciones sugeridas
 
-- Rango de fechas válido.
-- Fecha inicial menor o igual a fecha final.
-- Filtros opcionales por estado, cliente, RUC, placa o tipo si se habilitan.
-- Controlar exportaciones sin resultados.
+- Rango de fechas valido.
+- Limitar tamano maximo de exportacion: `Pendiente de validación`.
+- Mostrar estado vacio cuando no existan resultados.
+- Validar formato de exportacion permitido.
 
 ## Permisos requeridos
 
 - `reports.view`
-- `reports.export` para exportar.
+- `reports.export`
 
 ## Tablas Supabase relacionadas
 
 - `v_certificate_report`
 - `report_exports`
 - `certificates`
+- `certificate_items`
 - `companies`
+- `items`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
-- El reporte carga datos desde `v_certificate_report`.
-- Aplica filtros por servidor.
-- Aplica paginado y ordenamiento por servidor.
-- Respeta restricciones de Cliente.
-- Exportar requiere permiso específico.
-- Las exportaciones quedan registradas si generan archivo.
+- El reporte usa filtros, paginado y ordenamiento por servidor.
+- La vista respeta RLS y alcance por empresa.
+- La exportacion solo aparece con `reports.export`.
+- Cada exportacion crea registro en `report_exports`.
+- La UI respeta Sakai NG y PrimeNG.
 
 ## Pendiente de validación
 
-- Formato de exportación.
-- Columnas visibles finales.
-- Filtros exactos observados en capturas.
+- Formatos de exportacion requeridos.
+- Columnas finales visibles.
+- Reportes adicionales fuera del reporte de certificados.

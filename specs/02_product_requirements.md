@@ -2,50 +2,52 @@
 
 ## Resumen
 
-El sistema debe permitir administrar certificados de valorización de residuos y sus catálogos relacionados, con trazabilidad documental, control de permisos y acceso restringido por empresa para usuarios Cliente.
+El sistema debe permitir administrar certificados de valorizacion de residuos y sus catalogos relacionados, con trazabilidad documental, control de permisos y acceso restringido por empresa para usuarios Cliente.
 
 ## Actores
 
 ### Administrador
 
-Puede acceder a todos los módulos, gestionar usuarios, roles, catálogos, certificados, reportes, plantillas y logs.
+Puede acceder a todos los modulos, gestionar usuarios, roles, catalogos, certificados, reportes, plantillas y logs.
 
 ### Gerente
 
-Puede acceder a módulos operativos y reportes. No puede acceder a logs de auditoría.
+Puede acceder a modulos operativos y reportes. No puede acceder a logs de auditoria.
 
 ### Cliente
 
-Puede acceder solo a certificados asociados a sus empresas. Su alcance inicial es lectura y descarga de PDF, según permisos definidos en seed/RLS.
+Puede acceder solo a certificados asociados a sus empresas. Su alcance inicial es lectura y descarga de PDF, segun permisos definidos en seed/RLS.
 
 ## Requerimientos funcionales generales
 
-### Autenticación
+### Autenticacion
 
-- Iniciar sesión con email y contraseña mediante Supabase Auth.
-- Cerrar sesión.
-- Bloquear rutas internas sin sesión.
+- Iniciar sesion con email y contrasena mediante Supabase Auth.
+- Cerrar sesion.
+- Bloquear rutas internas sin sesion.
 - Cargar perfil, roles, permisos y empresas asociadas al usuario autenticado.
+- Adaptar la pantalla de login existente de Sakai NG.
 
 ### Dashboard
 
-- Mostrar indicadores generales según permisos.
-- Mostrar accesos rápidos solo a módulos permitidos.
-- Evitar mostrar métricas no autorizadas a Cliente.
+- Mostrar indicadores generales segun permisos.
+- Mostrar accesos rapidos solo a modulos permitidos.
+- Evitar mostrar metricas no autorizadas a Cliente.
+- Usar la estructura visual y componentes existentes de Sakai NG como base.
 
 ### Perfil
 
 - Ver datos personales.
-- Editar nombre y datos permitidos.
-- Cambiar contraseña.
-- Ver información básica de roles y empresas asociadas cuando aplique.
+- Editar nombre, telefono y avatar cuando aplique.
+- Cambiar contrasena.
+- Ver roles y empresas asociadas en modo lectura.
 
 ### Usuarios
 
 - Listar usuarios con filtros, paginado y ordenamiento por servidor.
-- Crear usuarios.
+- Crear usuarios usando Supabase Auth y `profiles`.
 - Editar datos permitidos.
-- Asignar uno o más roles mediante `user_roles`.
+- Asignar uno o mas roles mediante `user_roles`.
 - Asociar usuarios Cliente con empresas mediante `user_companies`.
 - Activar o inactivar usuarios.
 
@@ -53,29 +55,29 @@ Puede acceder solo a certificados asociados a sus empresas. Su alcance inicial e
 
 - Listar roles.
 - Crear roles personalizados.
-- Editar descripción, estado y permisos.
-- Impedir eliminación de roles base.
-- Agrupar permisos por módulo y acción.
+- Editar descripcion, estado y permisos.
+- Impedir eliminacion de roles base.
+- Agrupar permisos por modulo y accion.
 
 ### Empresas
 
 - Gestionar empresas.
-- Gestionar sucursales.
+- Gestionar sedes/sucursales.
 - Gestionar contactos.
 - Asociar empresas a certificados como generadora, transportista o destino final.
 
-### Ítems
+### Items
 
-- Gestionar ítems valorizables o residuos.
-- Asociar ítems con unidad, categoría, tipo de ítem y código Basilea.
+- Gestionar items valorizables o residuos.
+- Asociar items con unidad, categoria, tipo de item y codigo Basilea.
 
 ### Certificados
 
-- Listar certificados con filtros por fechas, número, empresa, estado y tipo cuando aplique.
+- Listar certificados con filtros por fechas, numero, empresa, estado y tipo cuando aplique.
 - Crear certificado.
 - Editar certificado mientras su estado lo permita.
 - Ver detalle.
-- Asociar múltiples ítems.
+- Asociar multiples items.
 - Adjuntar documentos.
 - Emitir certificado.
 - Generar PDF desde plantilla versionada.
@@ -85,7 +87,13 @@ Puede acceder solo a certificados asociados a sus empresas. Su alcance inicial e
 
 - Consultar reporte de certificados.
 - Filtrar por rango de fechas y campos disponibles.
-- Exportar si el permiso `reports.export` está habilitado.
+- Exportar si el permiso `reports.export` esta habilitado.
+- Registrar metadata de exportacion en `report_exports`.
+
+### Logs
+
+- Mostrar logs de auditoria en modo solo lectura para Administrador.
+- No permitir edicion ni eliminacion desde frontend.
 
 ## Requerimientos no funcionales
 
@@ -96,18 +104,18 @@ Puede acceder solo a certificados asociados a sus empresas. Su alcance inicial e
 - Ajustes de layout con TailwindCSS.
 - Manejo de errores centralizado.
 - Estados de carga.
-- Confirmaciones en acciones críticas.
-- Validación visible en formularios.
+- Confirmaciones en acciones criticas.
+- Validacion visible en formularios.
 - Paginado por servidor.
 - Ordenamiento por servidor.
 - Filtros por servidor.
 - RLS obligatorio para tablas sensibles.
 
-## Pendientes de validación funcional
+## Pendientes de validacion funcional
 
-- Flujo exacto de anulación de certificados.
-- Si el Cliente puede descargar documentos adjuntos además del PDF.
-- Exportación exacta requerida para reportes: Excel, CSV o PDF.
-- Campos obligatorios finales para cada tipo de generación de certificado.
-- Reglas de numeración de certificado.
-- Si un usuario puede tener más de una empresa asociada en operación real.
+- Flujo exacto de anulacion de certificados.
+- Si el Cliente puede descargar documentos adjuntos ademas del PDF.
+- Exportacion exacta requerida para reportes: Excel, CSV o PDF.
+- Campos obligatorios finales por tipo de generacion de certificado.
+- Reglas de numeracion de certificado.
+- Si un usuario Cliente puede tener mas de una empresa asociada en operacion real.

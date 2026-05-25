@@ -1,36 +1,39 @@
-# Módulo 12: Tipos de ítems
+# Modulo 12: Tipos de items
 
-## Propósito
+## Proposito
 
-Administrar tipos de ítems para clasificación funcional y reportes.
+Gestionar tipos de items para clasificar residuos o materiales valorizables.
 
 ## Pantallas identificadas
 
-- Listado de tipos de ítems.
-- Crear tipo de ítem.
-- Detalle de tipo de ítem.
-- Editar tipo de ítem.
+- Listado de tipos de items.
+- Crear tipo de item.
+- Editar tipo de item.
+- Detalle de tipo de item.
 
 ## Campos detectados
+
+Desde `item_types`:
 
 - `name`
 - `status`
 
 ## Entidades relacionadas
 
-- Ítems.
-- Reporte de certificados.
+- Items.
+- Certificados.
+- Reportes.
 
 ## Reglas de negocio
 
-- El nombre debe ser único.
-- Tipos inactivos no deben aparecer para nuevos ítems.
-- No debe eliminarse un tipo usado por ítems: `Pendiente de validación`; el esquema restringe por FK.
+- `name` debe ser unico.
+- Tipos inactivos no deberian seleccionarse en nuevos items.
+- Un tipo usado por items no deberia eliminarse sin validar impacto.
 
 ## Validaciones sugeridas
 
-- Nombre obligatorio.
-- Estado obligatorio.
+- Nombre obligatorio y unico.
+- Estado permitido: `active`, `inactive`.
 
 ## Permisos requeridos
 
@@ -44,14 +47,14 @@ Administrar tipos de ítems para clasificación funcional y reportes.
 - `item_types`
 - `items`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear, ver y editar tipos.
-- No se duplican nombres.
-- El estado se muestra con tag.
-- RLS protege operaciones.
+- Se puede crear, editar y ver detalle.
+- Se puede activar/inactivar.
+- RLS impide acciones sin permisos.
 
 ## Pendiente de validación
 
-- Si el backoffice anterior usaba descripción o código para tipos.
+- Catalogo inicial definitivo de tipos de items.
+- Si se permite eliminar tipos con items asociados.

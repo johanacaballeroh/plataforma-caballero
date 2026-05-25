@@ -1,21 +1,21 @@
-# Módulo 04: Usuarios
+# Modulo 04: Usuarios
 
-## Propósito
+## Proposito
 
-Administrar usuarios del sistema, sus perfiles, roles y empresas asociadas.
+Gestionar usuarios del sistema, sus perfiles, roles y asociaciones con empresas.
 
 ## Pantallas identificadas
 
 - Listado de usuarios.
 - Crear usuario.
-- Detalle de usuario.
 - Editar usuario.
-- Asignación de roles.
-- Asociación con empresas para Cliente.
+- Detalle de usuario.
+- Asignacion de roles.
+- Asociacion con empresas.
 
 ## Campos detectados
 
-Desde esquema:
+Desde `profiles`:
 
 - `full_name`
 - `email`
@@ -25,65 +25,65 @@ Desde esquema:
 
 Relaciones:
 
-- roles asociados.
-- empresas asociadas.
+- `role_id` mediante `user_roles`
+- `company_id` mediante `user_companies`
 
-Campos de creación Auth:
+Campos de creacion Auth:
 
-- contraseña inicial: `Pendiente de validación`.
+- contrasena inicial: `Pendiente de validación`.
 
 ## Entidades relacionadas
 
-- Perfil.
+- Perfiles.
 - Roles.
 - Permisos.
 - Empresas.
+- Supabase Auth.
 
 ## Reglas de negocio
 
-- El email debe ser único.
-- Un usuario Cliente debe asociarse al menos a una empresa para poder ver certificados.
-- Los roles se asignan con `user_roles`.
-- Las empresas se asignan con `user_companies`.
-- No mostrar contraseñas en detalle.
-- Inactivar usuario debe impedir operación normal.
+- Un usuario puede tener uno o mas roles.
+- Un usuario Cliente debe asociarse a una o mas empresas para ver certificados propios.
+- El usuario administrador inicial existe en seed/dev con email configurable y contrasena inicial `123456`.
+- La gestion de usuarios no debe exponer claves privilegiadas en frontend.
+- Inactivar usuario debe impedir operacion futura.
 
 ## Validaciones sugeridas
 
 - Nombre obligatorio.
-- Email obligatorio y válido.
-- Email único.
-- Al menos un rol.
-- Empresa obligatoria si el rol asignado es Cliente.
-- Estado obligatorio.
+- Email obligatorio, unico y con formato valido.
+- Rol obligatorio.
+- Empresa obligatoria si el rol efectivo es Cliente: `Pendiente de validación`.
+- Estado permitido: `active`, `inactive`.
 
 ## Permisos requeridos
 
 - `users.view`
 - `users.create`
 - `users.update`
-- `users.delete` o cambio de estado según decisión final.
+- `users.delete`
 
 ## Tablas Supabase relacionadas
 
 - `profiles`
-- `user_roles`
 - `roles`
-- `user_companies`
+- `permissions`
+- `user_roles`
+- `role_permissions`
 - `companies`
+- `user_companies`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear o registrar usuario según flujo Supabase validado.
-- Se pueden asignar roles.
-- Se pueden asociar empresas.
-- Cliente sin empresa asociada no queda operativo.
-- No se exponen contraseñas.
-- RLS protege la gestión.
+- Se puede consultar detalle de usuario.
+- Se pueden asignar roles mediante `user_roles`.
+- Se pueden asociar empresas mediante `user_companies`.
+- RLS impide gestionar usuarios sin permisos.
+- No se usa `service_role` en frontend.
 
 ## Pendiente de validación
 
-- Flujo exacto para crear usuarios Auth desde SPA sin backend propio.
-- Si Administrador puede resetear contraseña.
-- Si se permite más de un rol por usuario en UI.
+- Mecanismo final de alta de usuarios Auth desde frontend.
+- Si se permite eliminar o solo inactivar usuarios.
+- Flujo de reseteo de contrasena.

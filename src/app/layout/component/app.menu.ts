@@ -1,168 +1,84 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { AuthService } from '@/app/core/auth/auth.service';
 import { AppMenuitem } from './app.menuitem';
+
+type GuardedMenuItem = MenuItem & {
+    permissions?: string[];
+    items?: GuardedMenuItem[];
+};
 
 @Component({
     selector: 'app-menu',
     standalone: true,
     imports: [CommonModule, AppMenuitem, RouterModule],
     template: `<ul class="layout-menu">
-        @for (item of model; track item.label) {
+        @for (item of model(); track item.label) {
             @if (!item.separator) {
                 <li app-menuitem [item]="item" [root]="true"></li>
             } @else {
                 <li class="menu-separator"></li>
             }
         }
-    </ul> `,
+    </ul> `
 })
 export class AppMenu {
-    model: MenuItem[] = [];
+    private readonly auth = inject(AuthService);
 
-    ngOnInit() {
-        this.model = [
-            {
-                label: 'Home',
-                items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
-            },
-            {
-                label: 'UI Components',
-                items: [
-                    { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
-                    { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
-                    { label: 'Button', icon: 'pi pi-fw pi-mobile', class: 'rotated-icon', routerLink: ['/uikit/button'] },
-                    { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/uikit/table'] },
-                    { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/uikit/list'] },
-                    { label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/tree'] },
-                    { label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/uikit/panel'] },
-                    { label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/uikit/overlay'] },
-                    { label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/uikit/media'] },
-                    { label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/uikit/menu'] },
-                    { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/uikit/message'] },
-                    { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
-                    { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
-                    { label: 'Timeline', icon: 'pi pi-fw pi-calendar', routerLink: ['/uikit/timeline'] },
-                    { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] }
-                ]
-            },
-            {
-                label: 'Pages',
-                icon: 'pi pi-fw pi-briefcase',
-                path: '/pages',
-                items: [
-                    {
-                        label: 'Landing',
-                        icon: 'pi pi-fw pi-globe',
-                        routerLink: ['/landing']
-                    },
-                    {
-                        label: 'Auth',
-                        icon: 'pi pi-fw pi-user',
-                        path: '/auth',
-                        items: [
-                            {
-                                label: 'Login',
-                                icon: 'pi pi-fw pi-sign-in',
-                                routerLink: ['/auth/login']
-                            },
-                            {
-                                label: 'Error',
-                                icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
-                            },
-                            {
-                                label: 'Access Denied',
-                                icon: 'pi pi-fw pi-lock',
-                                routerLink: ['/auth/access']
-                            }
-                        ]
-                    },
-                    {
-                        label: 'Crud',
-                        icon: 'pi pi-fw pi-pencil',
-                        routerLink: ['/pages/crud']
-                    },
-                    {
-                        label: 'Not Found',
-                        icon: 'pi pi-fw pi-exclamation-circle',
-                        routerLink: ['/pages/notfound']
-                    },
-                    {
-                        label: 'Empty',
-                        icon: 'pi pi-fw pi-circle-off',
-                        routerLink: ['/pages/empty']
-                    }
-                ]
-            },
-            {
-                label: 'Hierarchy',
-                path: '/hierarchy',
-                items: [
-                    {
-                        label: 'Submenu 1',
-                        icon: 'pi pi-fw pi-bookmark',
-                        path: '/hierarchy/submenu_1',
-                        items: [
-                            {
-                                label: 'Submenu 1.1',
-                                icon: 'pi pi-fw pi-bookmark',
-                                path: '/hierarchy/submenu_1/submenu_1_1',
-                                items: [
-                                    { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' }
-                                ]
-                            },
-                            {
-                                label: 'Submenu 1.2',
-                                icon: 'pi pi-fw pi-bookmark',
-                                path: '/hierarchy/submenu_1/submenu_1_2',
-                                items: [{ label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }]
-                            }
-                        ]
-                    },
-                    {
-                        label: 'Submenu 2',
-                        icon: 'pi pi-fw pi-bookmark',
-                        path: '/hierarchy/submenu_2',
-                        items: [
-                            {
-                                label: 'Submenu 2.1',
-                                icon: 'pi pi-fw pi-bookmark',
-                                path: '/hierarchy/submenu_2/submenu_2_1',
-                                items: [
-                                    { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' }
-                                ]
-                            },
-                            {
-                                label: 'Submenu 2.2',
-                                icon: 'pi pi-fw pi-bookmark',
-                                path: '/hierarchy/submenu_2/submenu_2_2',
-                                items: [{ label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' }]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                label: 'Get Started',
-                items: [
-                    {
-                        label: 'Documentation',
-                        icon: 'pi pi-fw pi-book',
-                        routerLink: ['/documentation']
-                    },
-                    {
-                        label: 'View Source',
-                        icon: 'pi pi-fw pi-github',
-                        url: 'https://github.com/primefaces/sakai-ng',
-                        target: '_blank'
-                    }
-                ]
-            }
-        ];
+    private readonly baseModel: GuardedMenuItem[] = [
+        {
+            label: 'Principal',
+            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'], permissions: ['dashboard.view'] }]
+        },
+        {
+            label: 'Operacion',
+            items: [
+                { label: 'Certificados', icon: 'pi pi-fw pi-file-check', routerLink: ['/certificates'], permissions: ['certificates.view', 'certificates.view_own'] },
+                { label: 'Empresas', icon: 'pi pi-fw pi-building', routerLink: ['/companies'], permissions: ['companies.view'] },
+                { label: 'Items', icon: 'pi pi-fw pi-box', routerLink: ['/items'], permissions: ['items.view'] }
+            ]
+        },
+        {
+            label: 'Catalogos',
+            items: [
+                { label: 'Unidades', icon: 'pi pi-fw pi-sliders-h', routerLink: ['/units'], permissions: ['units.view'] },
+                { label: 'Categorias', icon: 'pi pi-fw pi-tags', routerLink: ['/categories'], permissions: ['categories.view'] },
+                { label: 'Tipos de items', icon: 'pi pi-fw pi-list-check', routerLink: ['/item-types'], permissions: ['item_types.view'] },
+                { label: 'Codigos Basilea', icon: 'pi pi-fw pi-book', routerLink: ['/basel-codes'], permissions: ['basel_codes.view'] },
+                { label: 'Tipos de generacion', icon: 'pi pi-fw pi-file-edit', routerLink: ['/certificate-generation-types'], permissions: ['certificate_generation_types.view'] },
+                { label: 'Tipos de cantidad', icon: 'pi pi-fw pi-sort-numeric-up', routerLink: ['/quantity-types'], permissions: ['quantity_types.view'] },
+                { label: 'Tipos de documentos', icon: 'pi pi-fw pi-paperclip', routerLink: ['/document-types'], permissions: ['document_types.view'] }
+            ]
+        },
+        {
+            label: 'Administracion',
+            items: [
+                { label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['/users'], permissions: ['users.view'] },
+                { label: 'Roles', icon: 'pi pi-fw pi-shield', routerLink: ['/roles'], permissions: ['roles.view'] },
+                { label: 'Reportes', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/reports'], permissions: ['reports.view'] },
+                { label: 'Logs', icon: 'pi pi-fw pi-history', routerLink: ['/audit-logs'], permissions: ['logs.view'] }
+            ]
+        },
+        {
+            label: 'Cuenta',
+            items: [{ label: 'Perfil', icon: 'pi pi-fw pi-user', routerLink: ['/profile'] }]
+        }
+    ];
+
+    readonly model = computed<MenuItem[]>(() => this.filterItems(this.baseModel));
+
+    private filterItems(items: GuardedMenuItem[]): GuardedMenuItem[] {
+        return items
+            .map((item) => {
+                const children = item.items ? this.filterItems(item.items) : undefined;
+                return { ...item, items: children };
+            })
+            .filter((item) => {
+                const hasPermission = this.auth.hasAnyPermission(item.permissions);
+                const hasChildren = !item.items || item.items.length > 0;
+                return hasPermission && hasChildren;
+            });
     }
 }

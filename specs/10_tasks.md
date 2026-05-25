@@ -1,147 +1,88 @@
 # Plan de tareas
 
-## Estado de este SDD
+## Estado actual
 
-Este plan organiza la implementación futura. La tarea actual solo autoriza documentación SDD.
+El workspace esta basado en Sakai NG con Angular 21, PrimeNG y TailwindCSS. La base de datos Supabase ya cuenta con scripts en `/supabase`.
 
-## Fase 0: Validación documental
+Esta etapa documenta el SDD. No implementa codigo Angular ni SQL.
 
-- Revisar capturas como fuente funcional.
-- Mantener Sakai NG como fuente visual.
-- Validar specs contra `/supabase/schema.sql`.
+## Tareas de documentacion SDD
+
+- Revisar estructura del repositorio.
+- Revisar archivos `.md` existentes.
+- Completar specs generales.
+- Completar specs de modulos.
+- Alinear tablas, columnas y permisos con `/supabase`.
+- Definir Sakai NG como fuente visual oficial.
+- Definir capturas como fuente funcional.
 - Marcar incertidumbres como `Pendiente de validación`.
-- Mantener índice de módulos actualizado.
 
-## Fase 1: Setup del proyecto
+## Tareas futuras de base frontend
 
-- Clonar o copiar Sakai NG como base inicial del frontend.
-- No usar un proyecto Angular vacío como punto de partida.
-- Reincorporar `/AGENTS.md`, `/specs`, `/reference` y `/supabase` al workspace basado en Sakai NG.
-- Verificar Angular 21.
-- Verificar PrimeNG compatible.
-- Mantener la configuración PrimeNG/TailwindCSS original de Sakai NG.
-- Configurar Supabase JS Client.
-- Configurar environments sin secretos.
-- Configurar rutas base.
-- Adaptar login de Sakai NG a Supabase Auth.
-- Adaptar layout principal de Sakai NG.
-- Configurar guards de autenticación y permisos.
-- Crear estructura `core/shared/features`.
+1. Limpiar demos de Sakai NG solo cuando las referencias ya no sean necesarias.
+2. Crear estructura `core`, `shared` y `features` sin romper layout Sakai.
+3. Configurar cliente Supabase con variables publicas.
+4. Implementar `AuthService`.
+5. Implementar carga de perfil, roles, permisos y empresas.
+6. Implementar guards de autenticacion y permisos.
+7. Adaptar login de Sakai a Supabase Auth.
+8. Adaptar menu lateral por permisos.
 
-## Fase 2: Supabase
+## Tareas futuras por modulo
 
-- Revisar `schema.sql`.
-- Ejecutar o validar `seed.sql`.
-- Ejecutar o validar `rls-policies.sql`.
-- Ejecutar o validar `storage-policies.sql`.
-- Confirmar buckets privados.
-- Confirmar usuario administrador inicial solo para entorno seed/dev.
+Orden sugerido:
 
-## Fase 3: Autenticación y sesión
+1. Login.
+2. Perfil.
+3. Roles y permisos.
+4. Usuarios.
+5. Catalogos base:
+   - unidades,
+   - categorias,
+   - tipos de items,
+   - codigos Basilea,
+   - tipos de cantidad,
+   - tipos de documentos,
+   - tipos de generacion de certificado.
+6. Empresas.
+7. Items.
+8. Certificados.
+9. Reportes.
+10. Logs.
+11. Dashboard final con metricas reales.
 
-- Implementar login.
-- Implementar logout.
-- Implementar carga de perfil.
-- Implementar carga de roles.
-- Implementar carga de permisos.
-- Implementar asociaciones de empresa para Cliente.
+## Checklist tecnico para cada CRUD
 
-## Fase 4: Layout y navegación
+- Modelo TypeScript.
+- Servicio Supabase.
+- Listado con `p-table`.
+- Paginado por servidor.
+- Ordenamiento por servidor.
+- Filtros por servidor.
+- Formulario reactivo.
+- Dialogo o pagina de detalle.
+- Validaciones.
+- Confirmacion para acciones criticas.
+- Toast de resultado.
+- Control de permisos frontend.
+- Verificacion de RLS.
 
-- Reutilizar el layout real de Sakai NG clonado.
-- Adaptar sidebar a módulos del sistema.
-- Filtrar menú por permisos.
-- Adaptar topbar.
-- Agregar menú de perfil.
+## Verificacion requerida por tarea futura
 
-## Fase 5: RBAC
+- Build Angular.
+- Lint.
+- Tipos TypeScript.
+- Consultas Supabase.
+- Permisos.
+- Paginado.
+- Ordenamiento.
+- Filtros.
+- Responsive.
 
-- Implementar usuarios.
-- Implementar roles y permisos.
-- Bloquear eliminación de roles base.
-- Validar permisos en guards.
-- Validar permisos visuales en acciones.
+## Restricciones vigentes
 
-## Fase 6: Catálogos
-
-Implementar CRUDs:
-
-- unidades,
-- categorías,
-- tipos de ítems,
-- códigos Basilea,
-- tipos de cantidad,
-- tipos de documentos,
-- tipos de generación de certificado.
-
-## Fase 7: Empresas
-
-- CRUD empresas.
-- Sucursales.
-- Contactos.
-- Asociación con usuarios Cliente.
-
-## Fase 8: Ítems
-
-- CRUD ítems.
-- Relación con catálogos.
-- Validar solo catálogos activos en selects.
-
-## Fase 9: Certificados
-
-- Listado server-side.
-- Creación.
-- Edición.
-- Detalle.
-- Ítems del certificado.
-- Documentos adjuntos.
-- Emisión.
-- Generación y descarga PDF.
-
-## Fase 10: Reportes
-
-- Reporte de certificados sobre `v_certificate_report`.
-- Filtros por fecha y campos disponibles.
-- Exportación si se confirma formato.
-- Registro en `report_exports` si se genera archivo.
-
-## Fase 11: Auditoría
-
-- Vista de logs solo para Administrador.
-- Confirmar triggers en tablas críticas.
-- Definir filtros de logs.
-
-## Fase 12: Hardening
-
-- Verificar build.
-- Verificar lint.
-- Verificar tipos TypeScript.
-- Verificar RLS.
-- Verificar paginado, filtros y ordenamiento.
-- Verificar responsive.
-- Verificar errores y loaders.
-
-## Dependencias de implementación
-
-Antes de implementar cada módulo:
-
-1. Leer `/specs/00_project_context.md`.
-2. Leer `/specs/04_database_supabase.md`.
-3. Leer `/specs/05_security_rbac_rls.md`.
-4. Leer la spec del módulo.
-5. Confirmar campos contra `/supabase/schema.sql`.
-
-## Reinicio del frontend si se partió de Angular vacío
-
-Si el workspace actual no proviene de Sakai NG:
-
-1. Resguardar:
-   - `/AGENTS.md`
-   - `/specs/**`
-   - `/reference/**`
-   - `/supabase/**`
-2. Borrar manualmente la instalación Angular incorrecta.
-3. Clonar/copiar Sakai NG desde `https://github.com/primefaces/sakai-ng`.
-4. Copiar de vuelta los archivos resguardados.
-5. Repetir los prompts de configuración inicial, indicando explícitamente que el workspace ya parte de Sakai NG.
-6. Adaptar, no reconstruir, login/layout/sidebar/topbar.
+- No implementar fuera del SDD sin documentarlo.
+- No cambiar nombres de tablas o columnas sin actualizar specs y SQL.
+- No crear mocks permanentes si ya existe contrato Supabase.
+- No instalar dependencias sin tarea explicita.
+- No modificar `package.json` sin tarea explicita.

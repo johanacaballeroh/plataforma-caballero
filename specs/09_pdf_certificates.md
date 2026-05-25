@@ -1,20 +1,23 @@
 # Certificados PDF
 
-## Propósito
+## Objetivo
 
-Definir reglas para generación, almacenamiento y trazabilidad de PDFs de certificados.
+Gestionar la generacion y trazabilidad de PDFs de certificados sin perder historial documental.
 
-## Principio principal
+## Principios
 
-Los certificados históricos deben conservar la plantilla usada al momento de emisión.
-
-Una nueva plantilla no debe modificar PDFs ya generados ni alterar el significado histórico de certificados emitidos.
+- Las plantillas PDF deben versionarse.
+- Un certificado emitido debe conservar la plantilla usada.
+- Una plantilla nueva no debe modificar certificados historicos.
+- Los PDFs generados no se guardan como base64 en tablas.
+- Los archivos viven en Supabase Storage.
+- Las tablas guardan metadata y referencias.
 
 ## Tablas relacionadas
 
 ### `certificate_template_versions`
 
-Versiona plantillas.
+Representa versiones de plantillas.
 
 Campos clave:
 
@@ -29,15 +32,9 @@ Campos clave:
 - `is_active`
 - `is_locked`
 
-### `certificates`
-
-Guarda la referencia a la plantilla usada:
-
-- `template_version_id`
-
 ### `certificate_files`
 
-Registra cada PDF generado.
+Representa PDFs generados para certificados.
 
 Campos clave:
 
@@ -51,42 +48,51 @@ Campos clave:
 - `generated_by`
 - `generated_at`
 
+### `certificates`
+
+Debe conservar:
+
+- `template_version_id`
+- `status`
+- `issued_at`
+
 ## Buckets
 
-- `certificate-templates`: plantillas PDF privadas.
-- `generated-certificates`: PDFs generados privados.
+- `certificate-templates`: plantillas PDF.
+- `generated-certificates`: PDFs generados.
+- `certificate-documents`: documentos adjuntos.
 
-## Reglas de generación
+Los buckets son privados.
 
-1. El certificado debe tener datos mínimos válidos.
-2. Debe existir una plantilla activa para el tipo de generación.
-3. Al emitir o generar PDF, se debe registrar `template_version_id`.
-4. El PDF generado debe guardarse en Storage.
-5. La metadata debe guardarse en `certificate_files`.
-6. Si se regenera un PDF, debe incrementarse `certificate_files.version_number`.
-7. Solo un archivo por certificado debe tener `is_current = true`.
+## Flujo esperado
+
+1. Administrador o Gerente con permiso sube una plantilla PDF.
+2. Se crea una fila en `certificate_template_versions`.
+3. Solo una plantilla activa por tipo de generacion puede quedar vigente.
+4. Al emitir un certificado, se selecciona la plantilla activa correspondiente.
+5. Se genera el PDF.
+6. Se guarda el archivo en `generated-certificates`.
+7. Se crea metadata en `certificate_files`.
+8. Se conserva `template_version_id` en `certificates` o en `certificate_files`.
 
 ## Permisos
 
-- Ver plantillas: `certificate_templates.view`.
-- Crear plantillas: `certificate_templates.create`.
-- Actualizar plantillas: `certificate_templates.update`.
-- Emitir/generar certificado: `certificates.issue`.
-- Ver/descargar PDF: `certificates.print` o acceso por RLS al certificado.
+- Ver plantillas: `certificate_templates.view`
+- Crear/subir plantillas: `certificate_templates.create`
+- Actualizar plantillas: `certificate_templates.update`
+- Emitir/generar PDF: `certificates.issue`
+- Ver/descargar PDF: `certificates.print`
 
-## Pendientes de validación
+## Reglas de negocio
 
-- Motor final de generación PDF en frontend o servicio externo.
-- Plantillas exactas por tipo de generación.
-- Campos variables dentro de cada plantilla.
-- Reglas de numeración visible en PDF.
-- Si se requiere firma digital, sello o código QR.
-- Si el PDF debe bloquearse después de emitido.
+- No modificar una plantilla historica usada por certificados emitidos.
+- Una nueva plantilla debe crear nueva version.
+- Al reemplazar una plantilla activa, la anterior debe quedar cerrada mediante `active_to` o `is_active = false`.
+- Un certificado emitido no debe perder su PDF anterior si se regenera; debe versionarse en `certificate_files`.
 
-## Restricciones
+## Pendiente de validacion
 
-- No guardar PDFs como base64 en tablas.
-- No usar buckets públicos.
-- No sobrescribir plantillas históricas.
-- No generar PDFs sin metadata.
-- No permitir a Cliente acceder a PDFs de certificados no asociados a sus empresas.
+- Herramienta exacta para rellenar plantillas PDF.
+- Campos exactos que debe contener cada plantilla.
+- Si la emision bloquea completamente la edicion posterior del certificado.
+- Si se permite regenerar PDF de un certificado emitido y bajo que permisos.

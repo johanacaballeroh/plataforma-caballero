@@ -2,15 +2,16 @@
 
 ## Nombre
 
-Sistema web para la gestión y trazabilidad de certificados de valorización de residuos.
+Sistema web para la gestion y trazabilidad de certificados de valorizacion de residuos.
 
 ## Objetivo
 
-Reconstruir funcionalmente un backoffice existente a partir de capturas del sistema anterior, modernizándolo como una SPA administrativa sobre Angular 21, PrimeNG, Sakai NG, TailwindCSS y Supabase.
+Reconstruir funcionalmente un backoffice existente como una SPA administrativa moderna, usando Angular 21, PrimeNG, Sakai NG, TailwindCSS y Supabase.
 
-La reconstrucción debe conservar el comportamiento funcional observado:
+La reconstruccion debe conservar el comportamiento funcional observado en el sistema anterior:
 
-- módulos disponibles,
+- modulos disponibles,
+- pantallas,
 - formularios,
 - campos,
 - acciones,
@@ -19,31 +20,33 @@ La reconstrucción debe conservar el comportamiento funcional observado:
 - flujos CRUD,
 - restricciones por rol.
 
-No debe copiar la interfaz visual del backoffice anterior.
+La reconstruccion no debe copiar la interfaz visual del backoffice anterior.
 
 ## Fuentes del proyecto
 
 ### Fuente funcional
 
-Las capturas del backoffice anterior son una fuente de ingeniería inversa funcional.
+Las capturas del backoffice anterior son una fuente de ingenieria inversa funcional.
 
-Ruta indicada originalmente:
+Ruta indicada en la tarea:
 
 - `/docs/reference/00_capturas_completas_backoffice.pdf`
 
-Ruta real encontrada en este workspace:
+Ruta encontrada en este workspace:
 
 - `/reference/00_capturas_completas_backoffice.pdf`
 
 Uso permitido de las capturas:
 
-- identificar módulos,
+- identificar modulos,
 - identificar pantallas,
+- identificar formularios,
 - identificar campos,
+- identificar acciones,
 - identificar relaciones,
-- identificar acciones disponibles,
 - identificar reglas de negocio,
-- identificar flujos CRUD.
+- identificar flujos CRUD,
+- identificar casos que deben quedar como `Pendiente de validación`.
 
 Uso prohibido de las capturas:
 
@@ -51,82 +54,54 @@ Uso prohibido de las capturas:
 - copiar layout,
 - copiar sidebar,
 - copiar estilos,
-- recrear pantallas visualmente idénticas,
-- usarlas como sistema visual de referencia.
+- recrear pantallas visualmente identicas,
+- usarlas como fuente del sistema visual.
 
-### Fuente visual
+### Fuente visual oficial
 
-La fuente visual oficial y base inicial real del frontend es Sakai NG, template gratuito de PrimeFaces:
+La fuente visual oficial y base real del frontend es Sakai NG, template gratuito de PrimeFaces:
 
 https://github.com/primefaces/sakai-ng
 
-Decisión corregida:
+Decision confirmada:
 
-- Sakai NG debe clonarse o copiarse como base del proyecto.
-- No se debe crear primero un Angular vacío y luego intentar "instalar Sakai NG" encima.
-- PrimeNG, PrimeIcons, TailwindCSS y los estilos del template forman parte de esa base.
-- El trabajo del backoffice debe consistir en adaptar Sakai NG, no reconstruir su layout manualmente.
+- El workspace ya esta basado en Sakai NG.
+- Sakai NG no se trata como libreria agregada encima de un Angular vacio.
+- El login, layout autenticado, sidebar, topbar, estilos globales, configuracion PrimeNG y soporte TailwindCSS deben partir de Sakai NG.
+- Las nuevas pantallas deben verse como una extension natural del template.
 
-Sakai NG define:
+### Fuente tecnica de datos
 
-- login,
-- layout autenticado,
-- sidebar,
-- topbar,
-- estructura responsive,
-- estilos globales,
-- integración visual con PrimeNG,
-- base de TailwindCSS.
-
-Toda pantalla nueva debe verse como una extensión natural de Sakai NG.
-
-## Estrategia de arranque frontend
-
-El frontend debe iniciarse desde el repositorio Sakai NG:
-
-1. Clonar o copiar `https://github.com/primefaces/sakai-ng`.
-2. Verificar que la versión base sea compatible con Angular 21.
-3. Renombrar metadatos del proyecto al nombre de este sistema.
-4. Conservar layout, login, estilos globales, configuración PrimeNG y TailwindCSS.
-5. Eliminar o aislar demos del template solo cuando ya esté claro que no se necesitan.
-6. Incorporar `AGENTS.md`, `/specs`, `/reference` y `/supabase` del proyecto.
-7. Adaptar login a Supabase Auth.
-8. Adaptar menú y rutas a los módulos del SDD.
-
-No se debe repetir el intento de integrar Sakai NG sobre un scaffold Angular vacío.
-
-### Fuente técnica de datos
-
-El esquema Supabase existente es la fuente técnica principal para tablas, columnas, relaciones, índices, triggers y constraints:
+El esquema Supabase existente es la fuente tecnica principal para tablas, columnas, relaciones, indices, triggers, politicas y seeds:
 
 - `/supabase/schema.sql`
 - `/supabase/rls-policies.sql`
 - `/supabase/storage-policies.sql`
 - `/supabase/seed.sql`
 
-Los documentos SDD deben mantenerse alineados con esos archivos.
+Si un documento SDD entra en conflicto con el SQL real, prevalece el SQL y el documento debe corregirse.
 
-## Decisiones técnicas confirmadas
+## Stack obligatorio
 
 - Angular 21.
-- SPA sin SSR.
 - TypeScript.
 - PrimeNG.
 - Sakai NG como template base.
-- TailwindCSS para pantallas nuevas y ajustes visuales.
+- TailwindCSS para nuevas pantallas y ajustes visuales.
 - Supabase JS Client.
 - Supabase Auth.
 - Supabase PostgreSQL.
 - Supabase Storage.
-- Row Level Security obligatorio.
+- Row Level Security.
 - UUID como primary key.
+- SPA sin SSR.
 - Paginado por servidor.
 - Ordenamiento por servidor.
 - Filtros por servidor.
-- Sin Firebase.
-- Sin backend Node propio, salvo decisión explícita posterior.
 
-## Módulos identificados
+No se permite Firebase, backend Node propio ni `service_role` en frontend salvo decision explicita posterior.
+
+## Modulos identificados
 
 1. Login.
 2. Dashboard.
@@ -136,16 +111,16 @@ Los documentos SDD deben mantenerse alineados con esos archivos.
 6. Reportes.
 7. Certificados.
 8. Empresas.
-9. Ítems.
+9. Items.
 10. Unidades.
-11. Categorías.
-12. Tipos de ítems.
-13. Códigos Basilea.
-14. Tipos de generación de certificado.
+11. Categorias.
+12. Tipos de items.
+13. Codigos Basilea.
+14. Tipos de generacion de certificado.
 15. Tipos de cantidad.
 16. Tipos de documentos.
 
-El layout, sidebar y topbar se toman de Sakai NG y no se documentan como módulos de negocio separados.
+El layout, sidebar y topbar pertenecen a la base Sakai NG y no son modulos de negocio separados.
 
 ## Roles base
 
@@ -153,33 +128,16 @@ El layout, sidebar y topbar se toman de Sakai NG y no se documentan como módulo
 - Gerente: acceso operativo completo, excepto logs.
 - Cliente: acceso limitado a certificados asociados a sus empresas.
 
-## Principio de reconstrucción
+## Principio de incertidumbre
 
-Cuando una captura confirme un campo o acción, se documenta como requerimiento funcional.
+Cuando una captura confirme un dato, se documenta como requerimiento funcional.
 
-Cuando una captura no permita confirmar un dato, se marca como `Pendiente de validación`.
+Cuando una captura, el SQL o la documentacion disponible no permitan confirmar un dato, se debe marcar como:
 
-No se deben inventar campos solo para completar formularios.
+`Pendiente de validación`
 
-## Estado actual del SDD
+No se deben inventar campos, tablas ni columnas para completar formularios.
 
-Este SDD prepara la implementación futura. No autoriza por sí solo cambios de código, dependencias, SQL o componentes Angular si la tarea activa solicita únicamente documentación.
+## Alcance de este SDD
 
-## Archivos a rescatar si se reinicia el workspace
-
-Antes de borrar una instalación incorrecta, conservar:
-
-- `/AGENTS.md`
-- `/specs/**`
-- `/reference/**`
-- `/supabase/**`
-- cualquier `.env.example` o nota local sin secretos si existe.
-
-No es necesario conservar:
-
-- `src/**` generado desde un Angular vacío,
-- `node_modules/**`,
-- `dist/**`,
-- `package.json` si no proviene de Sakai NG,
-- `package-lock.json` si no proviene de Sakai NG,
-- `angular.json` si no proviene de Sakai NG.
+Este SDD prepara la implementacion futura. No autoriza por si solo cambios de codigo Angular, dependencias, SQL o scripts cuando la tarea activa solicita solo documentacion.

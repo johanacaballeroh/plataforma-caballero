@@ -1,17 +1,19 @@
-# Módulo 15: Tipos de cantidad
+# Modulo 15: Tipos de cantidad
 
-## Propósito
+## Proposito
 
-Administrar tipos de cantidad aplicables a ítems dentro de certificados.
+Gestionar tipos de cantidad usados en items de certificados.
 
 ## Pantallas identificadas
 
 - Listado de tipos de cantidad.
 - Crear tipo de cantidad.
-- Detalle de tipo de cantidad.
 - Editar tipo de cantidad.
+- Detalle de tipo de cantidad.
 
 ## Campos detectados
+
+Desde `quantity_types`:
 
 - `name`
 - `show_value`
@@ -19,20 +21,20 @@ Administrar tipos de cantidad aplicables a ítems dentro de certificados.
 
 ## Entidades relacionadas
 
-- Ítems de certificado.
+- Items de certificado.
 - Certificados.
 
 ## Reglas de negocio
 
-- El nombre debe ser único.
-- `show_value` define si el formulario debe mostrar o requerir valor asociado: `Pendiente de validación` para comportamiento exacto.
-- Tipos inactivos no deben aparecer en nuevos certificados.
+- `name` debe ser unico.
+- `show_value` indica si el formulario debe solicitar o mostrar valor/cantidad asociada.
+- Tipos inactivos no deberian seleccionarse en nuevos certificados.
 
 ## Validaciones sugeridas
 
-- Nombre obligatorio.
+- Nombre obligatorio y unico.
 - `show_value` obligatorio.
-- Estado obligatorio.
+- Estado permitido: `active`, `inactive`.
 
 ## Permisos requeridos
 
@@ -46,15 +48,14 @@ Administrar tipos de cantidad aplicables a ítems dentro de certificados.
 - `quantity_types`
 - `certificate_items`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear, ver y editar tipos.
-- No se duplican nombres.
-- El flag `show_value` se puede configurar.
-- RLS protege operaciones.
+- Se puede crear, editar y ver detalle.
+- `show_value` queda disponible para formularios de certificado.
+- RLS impide acciones sin permisos.
 
 ## Pendiente de validación
 
-- Significado funcional exacto de `show_value`.
-- Si existen fórmulas o unidades asociadas por tipo.
+- Reglas exactas que `show_value` debe activar en certificados.
+- Catalogo inicial definitivo.

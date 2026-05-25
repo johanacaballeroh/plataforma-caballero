@@ -1,17 +1,19 @@
-# Módulo 10: Unidades
+# Modulo 10: Unidades
 
-## Propósito
+## Proposito
 
-Administrar unidades de medida usadas por ítems y reportes de certificados.
+Gestionar unidades de medida usadas por items y reportes.
 
 ## Pantallas identificadas
 
 - Listado de unidades.
 - Crear unidad.
-- Detalle de unidad.
 - Editar unidad.
+- Detalle de unidad.
 
 ## Campos detectados
+
+Desde `units`:
 
 - `code`
 - `name`
@@ -20,22 +22,22 @@ Administrar unidades de medida usadas por ítems y reportes de certificados.
 
 ## Entidades relacionadas
 
-- Ítems.
+- Items.
+- Certificados.
 - Reportes.
-- Certificados mediante `certificate_items`.
 
 ## Reglas de negocio
 
-- El código debe ser único.
-- Unidades inactivas no deben aparecer para nuevos ítems.
-- No debe eliminarse una unidad si existen ítems asociados: `Pendiente de validación`; el esquema restringe por FK.
+- `code` debe ser unico.
+- Una unidad usada por items no deberia eliminarse sin validar impacto.
+- Unidades inactivas no deberian seleccionarse en nuevos items.
 
 ## Validaciones sugeridas
 
-- Código obligatorio.
+- Codigo obligatorio y unico.
 - Nombre obligatorio.
 - Abreviatura opcional.
-- Estado obligatorio.
+- Estado permitido: `active`, `inactive`.
 
 ## Permisos requeridos
 
@@ -49,15 +51,14 @@ Administrar unidades de medida usadas por ítems y reportes de certificados.
 - `units`
 - `items`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear, ver y editar unidades.
-- Se impide duplicar código.
-- Las unidades inactivas se identifican visualmente.
-- RLS protege operaciones.
+- Se puede crear, editar y ver detalle.
+- Se puede activar/inactivar.
+- RLS impide acciones sin permisos.
 
 ## Pendiente de validación
 
-- Formato exacto de códigos.
-- Si abreviatura debe ser obligatoria.
+- Catalogo inicial definitivo de unidades.
+- Si se permite eliminar unidades con items asociados.

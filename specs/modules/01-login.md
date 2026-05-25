@@ -1,68 +1,73 @@
-# Módulo 01: Login
+# Modulo 01: Login
 
-## Propósito
+## Proposito
 
 Permitir el acceso seguro al backoffice mediante Supabase Auth, reutilizando la pantalla de login de Sakai NG como base visual.
 
 ## Pantallas identificadas
 
 - Login.
-- Recuperación de contraseña: `Pendiente de validación`.
+- Recuperacion o cambio de contrasena: `Pendiente de validación`.
+- Estado de acceso denegado o sesion expirada.
 
 ## Campos detectados
 
 - `email`
 - `password`
 
+Campos auxiliares:
+
+- recordatorio visual de errores de autenticacion.
+- opcion de recuperar contrasena: `Pendiente de validación`.
+
 ## Entidades relacionadas
 
 - Usuario autenticado de Supabase Auth.
-- Perfil público.
-- Roles y permisos del usuario.
+- Perfil.
+- Roles.
+- Permisos.
+- Empresas asociadas.
 
 ## Reglas de negocio
 
 - El login debe usar Supabase Auth.
-- Después de autenticarse, el usuario debe ser redirigido a `/dashboard`.
-- Si el perfil está inactivo, no debe permitirse continuar.
-- El menú posterior debe depender de permisos.
-- La pantalla debe verse como Sakai NG, no como las capturas antiguas.
+- Las rutas internas deben requerir sesion activa.
+- Despues del login se debe cargar `profiles`, `user_roles`, `role_permissions` y `user_companies`.
+- Usuarios inactivos no deben poder operar en el sistema.
+- El usuario Cliente solo accede a informacion relacionada con sus empresas.
+- La pantalla debe adaptar Sakai NG, no copiar capturas.
 
 ## Validaciones sugeridas
 
-- Email obligatorio.
-- Email con formato válido.
-- Contraseña obligatoria.
-- Mostrar error si credenciales son inválidas.
-- Mostrar error si el usuario no tiene perfil o permisos válidos.
+- Email obligatorio y con formato valido.
+- Contrasena obligatoria.
+- Mensaje claro ante credenciales invalidas.
+- Mensaje claro ante usuario inactivo o sin permisos.
 
 ## Permisos requeridos
 
-- No requiere permiso previo.
-- Requiere sesión válida para navegar al resto del sistema.
+- No requiere permiso granular antes de autenticar.
+- Despues del login, el menu y rutas dependen de permisos cargados desde Supabase.
 
 ## Tablas Supabase relacionadas
 
-- `auth.users`
 - `profiles`
-- `user_roles`
 - `roles`
-- `role_permissions`
 - `permissions`
+- `user_roles`
+- `role_permissions`
 - `user_companies`
+- `companies`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
-- El usuario puede iniciar sesión con email y contraseña válidos.
-- El sistema bloquea credenciales inválidas.
-- El sistema bloquea perfiles inactivos.
-- Al iniciar sesión se cargan perfil, roles, permisos y empresas asociadas.
-- El usuario autenticado llega a `/dashboard`.
-- La pantalla reutiliza la estructura visual de login de Sakai NG.
+- El usuario puede iniciar sesion con email y contrasena validos.
+- El usuario no autenticado no puede acceder a rutas internas.
+- El usuario autenticado carga perfil, roles, permisos y empresas asociadas.
+- La UI del login conserva estructura visual Sakai NG.
 - No se usa `service_role` en frontend.
 
 ## Pendiente de validación
 
-- Flujo de recuperación de contraseña.
-- Política de doble factor.
-- Mensaje exacto para usuario inactivo.
+- Flujo final de recuperacion de contrasena.
+- Politica para forzar cambio de contrasena inicial `123456` en entorno seed/dev.

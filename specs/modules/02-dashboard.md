@@ -1,69 +1,79 @@
-# Módulo 02: Dashboard
+# Modulo 02: Dashboard
 
-## Propósito
+## Proposito
 
-Mostrar una vista inicial operativa con indicadores y accesos rápidos según permisos del usuario autenticado.
+Mostrar una vista inicial con indicadores y accesos rapidos segun rol y permisos, sin exponer datos no autorizados.
 
 ## Pantallas identificadas
 
 - Dashboard principal.
+- Widgets de indicadores.
+- Accesos rapidos a modulos permitidos.
 
 ## Campos detectados
 
-Indicadores sugeridos por documentación existente:
+No se identifican campos de captura como contrato cerrado.
 
-- cantidad de usuarios,
-- cantidad de empresas,
-- cantidad de ítems,
-- cantidad de certificados.
+Metricas candidatas desde el esquema:
 
-`Pendiente de validación`: métricas exactas observadas en capturas.
+- total de certificados.
+- certificados por estado.
+- certificados recientes.
+- empresas activas.
+- items activos.
+
+Todo indicador final queda `Pendiente de validación` hasta confirmar con negocio.
 
 ## Entidades relacionadas
 
-- Usuarios.
-- Empresas.
-- Ítems.
 - Certificados.
+- Empresas.
+- Items.
+- Reportes.
+- Usuario autenticado.
 - Permisos.
 
 ## Reglas de negocio
 
-- El Dashboard debe respetar permisos.
-- Administrador y Gerente pueden ver métricas operativas generales.
-- Cliente no debe ver métricas globales de otras empresas.
-- Los accesos rápidos deben filtrarse por permisos.
-- El diseño debe venir de Sakai NG.
+- Cada widget debe consultar solo informacion permitida por RLS.
+- Cliente no debe ver indicadores globales si solo tiene permiso `certificates.view_own`.
+- Gerente puede ver metricas operativas, excepto logs.
+- Administrador puede ver indicadores completos.
+- El diseno debe partir de widgets y estilos Sakai NG.
 
 ## Validaciones sugeridas
 
-- Validar sesión activa.
-- Validar permiso `dashboard.view`.
-- Manejar métricas sin datos.
-- Manejar errores de RLS sin exponer detalles técnicos.
+- No mostrar widgets sin datos o sin permiso.
+- Mostrar estado de carga y estado vacio.
+- Manejar errores de RLS como acceso no autorizado.
 
 ## Permisos requeridos
 
 - `dashboard.view`
+- Permisos especificos de cada fuente consultada, por ejemplo:
+  - `certificates.view`
+  - `certificates.view_own`
+  - `companies.view`
+  - `items.view`
+  - `reports.view`
 
 ## Tablas Supabase relacionadas
 
-- `profiles`
+- `certificates`
 - `companies`
 - `items`
-- `certificates`
-- `user_companies`
+- `v_certificate_report`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
-- El usuario autenticado con permiso accede al dashboard.
-- Las métricas se calculan desde Supabase con RLS activo.
-- Cliente solo ve información permitida por sus empresas asociadas.
-- Los accesos rápidos se ocultan si no hay permiso.
-- La pantalla mantiene layout, cards y estilo de Sakai NG.
+- El dashboard carga solo para usuarios autenticados.
+- Los widgets se muestran segun permisos.
+- Cliente no ve datos de otras empresas.
+- La presentacion visual respeta Sakai NG.
+- Los datos vienen de Supabase, no de mocks permanentes.
 
 ## Pendiente de validación
 
 - Indicadores definitivos.
-- Necesidad de gráficos.
-- Rango temporal por defecto para métricas.
+- Periodos por defecto para metricas.
+- Si debe existir grafico de tendencia o solo KPIs.

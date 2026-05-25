@@ -1,4 +1,5 @@
-import { Injectable, effect, signal, computed } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { LayoutConfigStorageService } from '@/app/core/services/layout-config-storage.service';
 
 export interface LayoutConfig {
     preset: string;
@@ -17,17 +18,21 @@ interface LayoutState {
     activePath: string | null;
 }
 
+const DEFAULT_LAYOUT_CONFIG: LayoutConfig = {
+    preset: 'Aura',
+    primary: 'emerald',
+    surface: null,
+    darkTheme: false,
+    menuMode: 'static'
+};
+
 @Injectable({
     providedIn: 'root'
 })
 export class LayoutService {
-    layoutConfig = signal<LayoutConfig>({
-        preset: 'Aura',
-        primary: 'emerald',
-        surface: null,
-        darkTheme: false,
-        menuMode: 'static'
-    });
+    private readonly layoutConfigStorage = inject(LayoutConfigStorageService);
+
+    layoutConfig = signal<LayoutConfig>(this.layoutConfigStorage.load(DEFAULT_LAYOUT_CONFIG));
 
     layoutState = signal<LayoutState>({
         staticMenuDesktopInactive: false,
@@ -55,8 +60,12 @@ export class LayoutService {
     private initialized = false;
 
     constructor() {
+        this.toggleDarkMode(this.layoutConfig());
+
         effect(() => {
             const config = this.layoutConfig();
+
+            this.layoutConfigStorage.save(config);
 
             if (!this.initialized || !config) {
                 this.initialized = true;

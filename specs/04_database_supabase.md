@@ -2,7 +2,7 @@
 
 ## Fuente oficial del esquema
 
-El esquema real está en:
+El esquema real esta en:
 
 - `/supabase/schema.sql`
 
@@ -12,23 +12,15 @@ Archivos relacionados:
 - `/supabase/storage-policies.sql`
 - `/supabase/seed.sql`
 
-Este documento resume el contrato de datos para implementación frontend. Si hay conflicto, prevalece el SQL real.
+Este documento resume el contrato de datos para implementacion frontend. Si hay conflicto, prevalece el SQL real.
 
 ## Convenciones
 
 - Tablas en `snake_case`.
 - Primary keys UUID con `gen_random_uuid()`, salvo `profiles.id` que referencia `auth.users(id)`.
-- Fechas estándar:
-  - `created_at`
-  - `updated_at`
-- Estados comunes:
-  - `active`
-  - `inactive`
-- Estados de certificados:
-  - `draft`
-  - `issued`
-  - `cancelled`
-  - `inactive`
+- Fechas estandar: `created_at`, `updated_at`.
+- Estados comunes: `active`, `inactive`.
+- Estados de certificados: `draft`, `issued`, `cancelled`, `inactive`.
 - No guardar PDFs ni documentos como base64.
 - Almacenar archivos en Supabase Storage y guardar metadata en tablas.
 
@@ -38,7 +30,7 @@ Este documento resume el contrato de datos para implementación frontend. Si hay
 
 Extiende Supabase Auth.
 
-Campos principales:
+Campos:
 
 - `id`
 - `full_name`
@@ -52,12 +44,12 @@ Campos principales:
 Notas:
 
 - No tiene `role_id`.
-- La asignación de roles se realiza mediante `user_roles`.
-- La asociación con empresas se realiza mediante `user_companies`.
+- La asignacion de roles se realiza mediante `user_roles`.
+- La asociacion con empresas se realiza mediante `user_companies`.
 
 ### `roles`
 
-Campos principales:
+Campos:
 
 - `id`
 - `name`
@@ -75,7 +67,7 @@ Roles base:
 
 ### `permissions`
 
-Campos principales:
+Campos:
 
 - `id`
 - `module_key`
@@ -83,13 +75,11 @@ Campos principales:
 - `description`
 - `created_at`
 
-La combinación `module_key` + `action_key` debe ser única.
+La combinacion `module_key` + `action_key` es unica.
 
 ### `user_roles`
 
-Relación muchos a muchos entre usuarios y roles.
-
-Campos:
+Relacion muchos a muchos entre usuarios y roles.
 
 - `user_id`
 - `role_id`
@@ -97,9 +87,7 @@ Campos:
 
 ### `role_permissions`
 
-Relación muchos a muchos entre roles y permisos.
-
-Campos:
+Relacion muchos a muchos entre roles y permisos.
 
 - `role_id`
 - `permission_id`
@@ -107,9 +95,7 @@ Campos:
 
 ### `user_companies`
 
-Relación entre usuarios y empresas, especialmente para rol Cliente.
-
-Campos:
+Relacion entre usuarios y empresas, especialmente para rol Cliente.
 
 - `user_id`
 - `company_id`
@@ -118,8 +104,6 @@ Campos:
 ## Empresas
 
 ### `companies`
-
-Campos principales:
 
 - `id`
 - `company_type`
@@ -140,8 +124,6 @@ Valores de `company_type`:
 
 ### `company_branches`
 
-Campos principales:
-
 - `id`
 - `company_id`
 - `branch_type`
@@ -160,8 +142,6 @@ Valores de `branch_type`:
 
 ### `company_contacts`
 
-Campos principales:
-
 - `id`
 - `company_id`
 - `full_name`
@@ -172,7 +152,7 @@ Campos principales:
 - `created_at`
 - `updated_at`
 
-## Catálogos
+## Catalogos
 
 ### `units`
 
@@ -238,16 +218,13 @@ Campos principales:
 - `created_at`
 - `updated_at`
 
-Nota:
+Pendiente de validacion:
 
-- No existe `show_value` en el esquema actual para esta tabla.
-- Si el formulario antiguo requiere controlar valor/cantidad por tipo de generación, queda `Pendiente de validación`.
+- Si el formulario antiguo requiere controlar valor/cantidad por tipo de generacion, no existe una columna dedicada en el esquema actual.
 
-## Ítems
+## Items
 
 ### `items`
-
-Campos principales:
 
 - `id`
 - `code`
@@ -271,8 +248,6 @@ Relaciones:
 ## Certificados
 
 ### `certificates`
-
-Campos principales:
 
 - `id`
 - `certificate_number`
@@ -303,14 +278,12 @@ Relaciones:
 - `transporter_company_id` -> `companies.id`
 - `final_destination_company_id` -> `companies.id`
 
-Pendiente de validación:
+Pendiente de validacion:
 
 - Si se requiere `start_date` y `end_date`, no existen en el esquema actual.
-- Si se requiere `origin_place`, no existe en el esquema actual; podría estar representado por `generation_source` o `arrival_address`, pero debe validarse.
+- Si se requiere `origin_place`, no existe en el esquema actual; podria estar representado por `generation_source` o `arrival_address`, pero debe validarse.
 
 ### `certificate_items`
-
-Campos principales:
 
 - `id`
 - `certificate_id`
@@ -328,8 +301,6 @@ Campos principales:
 
 Metadata de documentos adjuntos.
 
-Campos principales:
-
 - `id`
 - `certificate_id`
 - `document_type_id`
@@ -344,8 +315,6 @@ Campos principales:
 ### `certificate_files`
 
 Metadata de PDFs generados.
-
-Campos principales:
 
 - `id`
 - `certificate_id`
@@ -362,8 +331,6 @@ Campos principales:
 
 Versionado de plantillas PDF.
 
-Campos principales:
-
 - `id`
 - `certificate_generation_type_id`
 - `version_number`
@@ -377,13 +344,11 @@ Campos principales:
 - `is_locked`
 - `created_at`
 
-## Reportes y auditoría
+## Reportes y auditoria
 
 ### `v_certificate_report`
 
 Vista para reporte de certificados.
-
-Campos expuestos:
 
 - `fecha`
 - `numero_ticket`
@@ -402,10 +367,6 @@ Campos expuestos:
 
 ### `report_exports`
 
-Registra exportaciones de reportes.
-
-Campos principales:
-
 - `id`
 - `report_type`
 - `filters`
@@ -417,8 +378,6 @@ Campos principales:
 
 ### `audit_logs`
 
-Campos principales:
-
 - `id`
 - `user_id`
 - `action`
@@ -428,9 +387,19 @@ Campos principales:
 - `new_data`
 - `created_at`
 
-## Regla para implementación futura
+## Storage
 
-Antes de implementar cualquier módulo de datos, revisar:
+Buckets privados:
+
+- `certificate-templates`
+- `generated-certificates`
+- `certificate-documents`
+
+Limites y MIME types se definen en `/supabase/storage-policies.sql`.
+
+## Regla para implementacion futura
+
+Antes de implementar cualquier modulo de datos, revisar:
 
 1. `/supabase/schema.sql`
 2. `/specs/04_database_supabase.md`

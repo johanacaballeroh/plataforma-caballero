@@ -1,22 +1,23 @@
-# Módulo 07: Certificados
+# Modulo 07: Certificados
 
-## Propósito
+## Proposito
 
-Gestionar certificados de valorización de residuos, sus ítems, documentos adjuntos, emisión y PDF generado.
+Gestionar certificados de valorizacion de residuos, sus items, documentos adjuntos, emision y PDF generado.
 
 ## Pantallas identificadas
 
 - Listado de certificados.
 - Crear certificado.
-- Detalle de certificado.
 - Editar certificado.
-- Gestión de ítems del certificado.
-- Gestión de documentos adjuntos.
+- Detalle de certificado.
+- Gestion de items del certificado.
+- Gestion de documentos adjuntos.
 - Vista o descarga de PDF.
+- Emision de certificado.
 
 ## Campos detectados
 
-Desde esquema actual:
+Desde `certificates`:
 
 - `certificate_number`
 - `generation_type_id`
@@ -34,7 +35,7 @@ Desde esquema actual:
 - `status`
 - `issued_at`
 
-Ítems:
+Items:
 
 - `item_id`
 - `quantity_type_id`
@@ -55,37 +56,37 @@ Documentos:
 ## Entidades relacionadas
 
 - Empresas.
-- Ítems.
+- Items.
 - Unidades.
-- Categorías.
-- Tipos de ítems.
-- Códigos Basilea.
+- Categorias.
+- Tipos de items.
+- Codigos Basilea.
 - Tipos de cantidad.
 - Tipos de documentos.
-- Tipos de generación.
+- Tipos de generacion.
 - Plantillas PDF.
 - Archivos generados.
 
 ## Reglas de negocio
 
-- Un certificado puede tener múltiples ítems.
-- Un certificado puede tener múltiples documentos adjuntos.
+- Un certificado puede tener multiples items.
+- Un certificado puede tener multiples documentos adjuntos.
 - El PDF debe generarse desde una plantilla versionada.
 - La plantilla usada debe quedar registrada.
 - Cliente solo ve certificados asociados a sus empresas.
-- Emitir certificado requiere permiso específico.
+- Emitir certificado requiere permiso especifico.
 - El estado `issued` debe preservar trazabilidad.
 
 ## Validaciones sugeridas
 
-- Número obligatorio y único.
-- Tipo de generación obligatorio.
-- Fecha de emisión obligatoria.
+- Numero obligatorio y unico.
+- Tipo de generacion obligatorio.
+- Fecha de emision obligatoria.
 - Empresa generadora obligatoria.
 - Empresas seleccionadas deben estar activas.
-- Al menos un ítem antes de emitir: `Pendiente de validación`.
+- Al menos un item antes de emitir: `Pendiente de validación`.
 - Cantidades, pesos y precios no negativos.
-- Documentos con tipo válido y tamaño permitido.
+- Documentos con tipo valido y tamano permitido.
 
 ## Permisos requeridos
 
@@ -110,12 +111,12 @@ Documentos:
 - `quantity_types`
 - `document_types`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
 - Cliente solo ve certificados permitidos por RLS.
-- Se puede crear certificado con datos mínimos.
-- Se pueden administrar ítems relacionados.
+- Se puede crear certificado con datos minimos.
+- Se pueden administrar items relacionados.
 - Se pueden adjuntar documentos en Storage.
 - Se puede emitir certificado si cumple validaciones.
 - Se genera PDF registrando metadata en `certificate_files`.
@@ -123,7 +124,7 @@ Documentos:
 
 ## Pendiente de validación
 
-- Reglas de numeración.
+- Reglas de numeracion.
 - Estados y transiciones exactas.
-- Obligatoriedad de transportista y destino final por tipo de generación.
-- Campos `start_date`, `end_date` u `origin_place` mencionados en documentación previa no existen en esquema actual.
+- Obligatoriedad de transportista y destino final por tipo de generacion.
+- Campos `start_date`, `end_date` u `origin_place` mencionados en documentacion previa no existen en esquema actual.

@@ -1,4 +1,4 @@
-# Constitución del proyecto
+# Constitucion del proyecto
 
 ## Principios obligatorios
 
@@ -6,23 +6,36 @@
 
 Todo acceso a datos sensibles debe estar protegido con Supabase RLS.
 
-El frontend puede ocultar botones, rutas o acciones para mejorar la experiencia, pero la protección real debe vivir en PostgreSQL/Supabase.
+El frontend puede ocultar rutas, botones o acciones para mejorar la experiencia, pero la autorizacion real debe vivir en PostgreSQL/Supabase.
 
-### 2. Reconstrucción funcional, no visual
+### 2. Reconstruccion funcional, no visual
 
-El backoffice anterior se usa para entender negocio, datos y flujos.
+El backoffice anterior se usa para entender negocio, datos y flujos. La interfaz final debe provenir de Sakai NG.
 
-La interfaz visual final debe provenir de Sakai NG. No se debe reproducir la apariencia del sistema anterior.
+Queda prohibido copiar la apariencia de las capturas.
 
-### 3. Modularidad
+### 3. Sakai NG como sistema visual
 
-Cada módulo funcional debe quedar aislado por feature en Angular.
+Sakai NG es la fuente visual oficial del producto:
 
-Los módulos no deben depender directamente entre sí salvo mediante servicios, modelos o componentes compartidos.
+- login,
+- layout autenticado,
+- sidebar,
+- topbar,
+- menu responsive,
+- estilos globales,
+- integracion PrimeNG,
+- soporte TailwindCSS.
 
-### 4. Coherencia con Supabase
+No se debe reemplazar el layout de Sakai NG por uno creado desde cero.
 
-La documentación y la implementación deben respetar el esquema real:
+### 4. Modularidad
+
+Cada modulo funcional debe quedar aislado por feature en Angular. La logica compartida debe ir en `core` o `shared`, no duplicarse por modulo.
+
+### 5. Coherencia con Supabase
+
+La documentacion y la implementacion deben respetar:
 
 - `/supabase/schema.sql`
 - `/supabase/rls-policies.sql`
@@ -31,24 +44,24 @@ La documentación y la implementación deben respetar el esquema real:
 
 Si una pantalla requiere un campo que no existe en el esquema, debe registrarse como inconsistencia o `Pendiente de validación`.
 
-### 5. Trazabilidad
+### 6. Trazabilidad
 
-El sistema debe registrar operaciones importantes:
+Toda accion critica debe registrar auditoria o metadata suficiente:
 
-- creación,
-- edición,
+- creacion,
+- edicion,
 - cambio de estado,
-- eliminación,
-- emisión de certificado,
-- generación de PDF,
+- eliminacion,
+- emision de certificado,
+- generacion de PDF,
 - carga de documentos,
 - cambio de permisos,
-- asignación de roles,
-- asociación de usuarios con empresas.
+- asignacion de roles,
+- asociacion de usuarios con empresas.
 
-### 6. Datos normalizados
+### 7. Datos normalizados
 
-Los catálogos deben mantenerse en tablas independientes:
+Los catalogos deben mantenerse en tablas independientes:
 
 - `units`,
 - `categories`,
@@ -58,28 +71,26 @@ Los catálogos deben mantenerse en tablas independientes:
 - `document_types`,
 - `certificate_generation_types`.
 
-### 7. Experiencia administrativa clara
+### 8. CRUD administrativo consistente
 
-Todo módulo CRUD debe incluir:
+Todo modulo CRUD debe incluir:
 
 - listado,
-- filtros,
+- filtros por servidor,
 - paginado por servidor,
 - ordenamiento por servidor,
-- creación,
-- edición,
+- creacion,
+- edicion,
 - vista detalle,
 - estado activo/inactivo cuando aplique,
-- confirmación para acciones críticas,
-- feedback con toast.
+- confirmacion para acciones criticas,
+- feedback con `p-toast`.
 
-### 8. Historial documental
+### 9. Historial documental
 
-Las plantillas PDF deben versionarse.
+Las plantillas PDF deben versionarse. Un certificado historico debe conservar la referencia a la plantilla usada al momento de emision.
 
-Un certificado histórico debe conservar la referencia a la plantilla usada en el momento de emisión.
-
-Una nueva plantilla no debe modificar certificados históricos.
+Una nueva plantilla no debe modificar certificados historicos.
 
 ## Decisiones no negociables
 
@@ -88,11 +99,11 @@ Una nueva plantilla no debe modificar certificados históricos.
 - No usar `service_role` en frontend.
 - No desactivar RLS para simplificar.
 - No guardar PDFs como base64 en tablas.
-- No crear backend Node propio salvo decisión explícita.
+- No crear backend Node propio salvo decision explicita.
 - No hardcodear IDs de roles salvo en seeds controlados.
-- No eliminar físicamente roles base.
+- No eliminar fisicamente roles base.
 - No permitir que Cliente vea datos de empresas no asociadas.
-- No copiar el diseño visual de las capturas.
+- No copiar el diseno visual de las capturas.
 
 ## Roles base protegidos
 
@@ -102,12 +113,12 @@ Los roles base son:
 - Gerente.
 - Cliente.
 
-En base de datos se protegen mediante `roles.is_system_role`.
+En base de datos se protegen mediante `roles.is_system_role` y el trigger `prevent_delete_system_roles`.
 
 ## Criterio de incertidumbre
 
-Cuando el PDF de capturas o el esquema no permita confirmar un dato, se debe escribir:
+Cuando el PDF de capturas, el SQL o el contexto disponible no permitan confirmar un dato, se debe escribir:
 
-`Pendiente de validación`.
+`Pendiente de validación`
 
-Esto evita convertir suposiciones en contrato técnico.
+Esto evita convertir suposiciones en contrato tecnico.

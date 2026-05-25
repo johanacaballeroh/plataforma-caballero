@@ -1,21 +1,21 @@
-# Módulo 08: Empresas
+# Modulo 08: Empresas
 
-## Propósito
+## Proposito
 
-Gestionar empresas involucradas en certificados como generadoras, transportistas o destino final.
+Gestionar empresas que participan en certificados como generadoras, transportistas o destino final, incluyendo sedes y contactos.
 
 ## Pantallas identificadas
 
 - Listado de empresas.
 - Crear empresa.
-- Detalle de empresa.
 - Editar empresa.
-- Sucursales.
-- Contactos.
+- Detalle de empresa.
+- Gestion de sedes o direcciones.
+- Gestion de contactos.
 
 ## Campos detectados
 
-Empresa:
+Desde `companies`:
 
 - `company_type`
 - `ruc`
@@ -24,14 +24,14 @@ Empresa:
 - `fiscal_address`
 - `status`
 
-Sucursal:
+Desde `company_branches`:
 
 - `branch_type`
 - `name`
 - `address`
 - `status`
 
-Contacto:
+Desde `company_contacts`:
 
 - `full_name`
 - `position`
@@ -43,25 +43,23 @@ Contacto:
 
 - Certificados.
 - Usuarios Cliente.
-- Sucursales.
+- Sedes.
 - Contactos.
 
 ## Reglas de negocio
 
-- El RUC debe ser único.
-- Una empresa puede tener muchas sucursales.
-- Una empresa puede tener muchos contactos.
-- Usuarios Cliente acceden a certificados mediante `user_companies`.
-- Empresas inactivas no deberían seleccionarse en nuevos certificados.
+- `ruc` debe ser unico y tener 11 caracteres.
+- La empresa puede actuar como generadora, transportista, destino final o ambos segun `company_type`.
+- Cliente accede solo a empresas asociadas mediante `user_companies`.
+- Empresas inactivas no deberian seleccionarse en nuevos certificados.
 
 ## Validaciones sugeridas
 
+- RUC obligatorio, unico y de 11 digitos.
+- Razon social obligatoria.
 - Tipo de empresa obligatorio.
-- RUC obligatorio de 11 caracteres.
-- Razón social obligatoria.
-- Dirección fiscal sugerida.
-- Email de contacto con formato válido.
-- Sucursal debe tener dirección.
+- Direccion fiscal opcional segun esquema.
+- Email de contacto con formato valido.
 
 ## Permisos requeridos
 
@@ -78,17 +76,15 @@ Contacto:
 - `user_companies`
 - `certificates`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear y editar empresa.
-- Se pueden gestionar sucursales y contactos.
-- No se duplican RUC.
-- Empresas inactivas se identifican visualmente.
-- RLS limita acceso de Cliente a empresas asociadas.
+- Se puede crear, editar y ver detalle de empresa.
+- Se pueden gestionar sedes y contactos.
+- RLS limita empresas visibles para Cliente.
+- Las acciones se muestran segun permisos.
 
 ## Pendiente de validación
 
-- Catálogo exacto de tipos de empresa visible en capturas.
-- Campos adicionales legales o comerciales.
-- Reglas de baja si la empresa tiene certificados.
+- Catalogo final de tipos de empresa.
+- Si se permite eliminar empresas usadas en certificados o solo inactivar.

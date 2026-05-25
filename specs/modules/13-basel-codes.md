@@ -1,17 +1,19 @@
-# Módulo 13: Códigos Basilea
+# Modulo 13: Codigos Basilea
 
-## Propósito
+## Proposito
 
-Administrar códigos Basilea asociados a ítems para clasificación normativa.
+Gestionar codigos Basilea asociados a items y reportes de certificados.
 
 ## Pantallas identificadas
 
-- Listado de códigos Basilea.
-- Crear código Basilea.
-- Detalle de código Basilea.
-- Editar código Basilea.
+- Listado de codigos Basilea.
+- Crear codigo Basilea.
+- Editar codigo Basilea.
+- Detalle de codigo Basilea.
 
 ## Campos detectados
+
+Desde `basel_codes`:
 
 - `code`
 - `description`
@@ -19,21 +21,21 @@ Administrar códigos Basilea asociados a ítems para clasificación normativa.
 
 ## Entidades relacionadas
 
-- Ítems.
-- Reporte de certificados.
+- Items.
+- Certificados.
+- Reportes.
 
 ## Reglas de negocio
 
-- El código debe ser único.
-- La descripción es obligatoria en el esquema.
-- Códigos inactivos no deben aparecer para nuevos ítems.
-- No debe eliminarse un código usado por ítems: `Pendiente de validación`; el esquema restringe por FK.
+- `code` debe ser unico.
+- Codigo Basilea es opcional en `items` segun esquema actual.
+- Codigos inactivos no deberian seleccionarse en nuevos items.
 
 ## Validaciones sugeridas
 
-- Código obligatorio.
-- Descripción obligatoria.
-- Estado obligatorio.
+- Codigo obligatorio y unico.
+- Descripcion obligatoria.
+- Estado permitido: `active`, `inactive`.
 
 ## Permisos requeridos
 
@@ -46,16 +48,16 @@ Administrar códigos Basilea asociados a ítems para clasificación normativa.
 
 - `basel_codes`
 - `items`
+- `v_certificate_report`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear, ver y editar códigos.
-- No se duplican códigos.
-- El estado se muestra con tag.
-- RLS protege operaciones.
+- Se puede crear, editar y ver detalle.
+- Se puede activar/inactivar.
+- RLS impide acciones sin permisos.
 
 ## Pendiente de validación
 
-- Formato exacto del código Basilea.
-- Catálogo inicial oficial.
+- Catalogo inicial oficial de codigos.
+- Formato exacto permitido para `code`.

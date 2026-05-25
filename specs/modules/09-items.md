@@ -1,17 +1,19 @@
-# Módulo 09: Ítems
+# Modulo 09: Items
 
-## Propósito
+## Proposito
 
-Gestionar los ítems usados en certificados, vinculándolos con unidades, categorías, tipos de ítem y códigos Basilea.
+Gestionar items valorizables o residuos que pueden asociarse a certificados.
 
 ## Pantallas identificadas
 
-- Listado de ítems.
-- Crear ítem.
-- Detalle de ítem.
-- Editar ítem.
+- Listado de items.
+- Crear item.
+- Editar item.
+- Detalle de item.
 
 ## Campos detectados
+
+Desde `items`:
 
 - `code`
 - `name`
@@ -25,26 +27,28 @@ Gestionar los ítems usados en certificados, vinculándolos con unidades, catego
 ## Entidades relacionadas
 
 - Unidades.
-- Categorías.
-- Tipos de ítems.
-- Códigos Basilea.
+- Categorias.
+- Tipos de items.
+- Codigos Basilea.
 - Certificados.
+- Items de certificado.
 
 ## Reglas de negocio
 
-- El código debe ser único.
-- Un ítem debe tener unidad, categoría y tipo.
-- El código Basilea es nullable en esquema, pero funcionalmente puede ser requerido según negocio.
-- Ítems inactivos no deberían seleccionarse en nuevos certificados.
+- `code` debe ser unico.
+- Item debe tener unidad, categoria y tipo.
+- Codigo Basilea es opcional segun esquema.
+- Items inactivos no deberian seleccionarse en nuevos certificados.
+- No eliminar items usados en certificados sin validar impacto.
 
 ## Validaciones sugeridas
 
-- Código obligatorio.
+- Codigo obligatorio y unico.
 - Nombre obligatorio.
 - Unidad obligatoria.
-- Categoría obligatoria.
-- Tipo de ítem obligatorio.
-- Código Basilea: `Pendiente de validación` si debe ser obligatorio.
+- Categoria obligatoria.
+- Tipo de item obligatorio.
+- Estado permitido: `active`, `inactive`.
 
 ## Permisos requeridos
 
@@ -62,17 +66,15 @@ Gestionar los ítems usados en certificados, vinculándolos con unidades, catego
 - `basel_codes`
 - `certificate_items`
 
-## Criterios de aceptación
+## Criterios de aceptacion
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
-- Se puede crear, ver y editar ítems.
-- Los selects muestran catálogos activos.
-- No se duplican códigos.
-- El estado se muestra con tag.
-- RLS protege operaciones.
+- Se puede crear, editar y ver detalle.
+- Los selects cargan catalogos activos desde Supabase.
+- RLS impide acciones sin permisos.
+- Los items inactivos se muestran con tag de estado.
 
 ## Pendiente de validación
 
-- Obligatoriedad de `basel_code_id`.
-- Campos adicionales del backoffice anterior.
-- Reglas para eliminar o inactivar ítems usados en certificados.
+- Regla final para eliminar items relacionados con certificados.
+- Formato exacto del codigo de item.
