@@ -15,6 +15,10 @@ import { DocumentTypes } from './app/pages/document-types/document-types';
 import { DocumentTypesDetail } from './app/pages/document-types/document-types-detail';
 import { DocumentTypesEdit } from './app/pages/document-types/document-types-edit';
 import { DocumentTypesNew } from './app/pages/document-types/document-types-new';
+import { ItemTypes } from './app/pages/item-types/item-types';
+import { ItemTypesDetail } from './app/pages/item-types/item-types-detail';
+import { ItemTypesEdit } from './app/pages/item-types/item-types-edit';
+import { ItemTypesNew } from './app/pages/item-types/item-types-new';
 import { Profile } from './app/pages/profile/profile';
 import { QuantityTypes } from './app/pages/quantity-types/quantity-types';
 import { QuantityTypesDetail } from './app/pages/quantity-types/quantity-types-detail';
@@ -42,7 +46,10 @@ export const appRoutes: Routes = [
             { path: 'items', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Items', description: 'Modulo preparado para items valorizables o residuos.', permissions: ['items.view'] } },
             { path: 'units', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Unidades', description: 'Catalogo de unidades de medida.', permissions: ['units.view'] } },
             { path: 'categories', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Categorias', description: 'Catalogo de categorias de items.', permissions: ['categories.view'] } },
-            { path: 'item-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de items', description: 'Catalogo de tipos de items.', permissions: ['item_types.view'] } },
+            { path: 'item-types/new', component: ItemTypesNew, canActivate: [permissionGuard], data: { permissions: ['item_types.create'] } },
+            { path: 'item-types/:id/edit', component: ItemTypesEdit, canActivate: [permissionGuard], data: { permissions: ['item_types.update'] } },
+            { path: 'item-types/:id', component: ItemTypesDetail, canActivate: [permissionGuard], data: { permissions: ['item_types.view'] } },
+            { path: 'item-types', component: ItemTypes, canActivate: [permissionGuard], data: { permissions: ['item_types.view'] } },
             { path: 'basel-codes/new', component: BaselCodesNew, canActivate: [permissionGuard], data: { permissions: ['basel_codes.create'] } },
             { path: 'basel-codes/:id/edit', component: BaselCodesEdit, canActivate: [permissionGuard], data: { permissions: ['basel_codes.update'] } },
             { path: 'basel-codes/:id', component: BaselCodesDetail, canActivate: [permissionGuard], data: { permissions: ['basel_codes.view'] } },
