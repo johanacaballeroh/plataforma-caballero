@@ -19,6 +19,10 @@ import { DocumentTypes } from './app/pages/document-types/document-types';
 import { DocumentTypesDetail } from './app/pages/document-types/document-types-detail';
 import { DocumentTypesEdit } from './app/pages/document-types/document-types-edit';
 import { DocumentTypesNew } from './app/pages/document-types/document-types-new';
+import { Items } from './app/pages/items/items';
+import { ItemsDetail } from './app/pages/items/items-detail';
+import { ItemsEdit } from './app/pages/items/items-edit';
+import { ItemsNew } from './app/pages/items/items-new';
 import { ItemTypes } from './app/pages/item-types/item-types';
 import { ItemTypesDetail } from './app/pages/item-types/item-types-detail';
 import { ItemTypesEdit } from './app/pages/item-types/item-types-edit';
@@ -51,7 +55,10 @@ export const appRoutes: Routes = [
             { path: 'profile', component: Profile },
             { path: 'certificates', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Certificados', description: 'Modulo preparado para listado, emision, documentos y PDF de certificados.', permissions: ['certificates.view', 'certificates.view_own'] } },
             { path: 'companies', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Empresas', description: 'Modulo preparado para empresas, sedes y contactos.', permissions: ['companies.view'] } },
-            { path: 'items', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Items', description: 'Modulo preparado para items valorizables o residuos.', permissions: ['items.view'] } },
+            { path: 'items/new', component: ItemsNew, canActivate: [permissionGuard], data: { permissions: ['items.create'] } },
+            { path: 'items/:id/edit', component: ItemsEdit, canActivate: [permissionGuard], data: { permissions: ['items.update'] } },
+            { path: 'items/:id', component: ItemsDetail, canActivate: [permissionGuard], data: { permissions: ['items.view'] } },
+            { path: 'items', component: Items, canActivate: [permissionGuard], data: { permissions: ['items.view'] } },
             { path: 'units/new', component: UnitsNew, canActivate: [permissionGuard], data: { permissions: ['units.create'] } },
             { path: 'units/:id/edit', component: UnitsEdit, canActivate: [permissionGuard], data: { permissions: ['units.update'] } },
             { path: 'units/:id', component: UnitsDetail, canActivate: [permissionGuard], data: { permissions: ['units.view'] } },
