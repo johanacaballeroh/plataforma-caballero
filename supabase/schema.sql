@@ -485,6 +485,43 @@ end;
 $$;
 
 -- Triggers de auditoría para tablas principales
+create or replace function public.audit_role_permissions_changes()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if tg_op = 'INSERT' then
+    insert into public.audit_logs(user_id, action, table_name, record_id, old_data, new_data)
+    values (
+      auth.uid(),
+      lower(tg_op),
+      tg_table_name,
+      new.role_id,
+      null,
+      jsonb_build_object('role_id', new.role_id, 'permission_id', new.permission_id)
+    );
+    return new;
+  elsif tg_op = 'DELETE' then
+    insert into public.audit_logs(user_id, action, table_name, record_id, old_data, new_data)
+    values (
+      auth.uid(),
+      lower(tg_op),
+      tg_table_name,
+      old.role_id,
+      jsonb_build_object('role_id', old.role_id, 'permission_id', old.permission_id),
+      null
+    );
+    return old;
+  end if;
+
+  return null;
+end;
+$$;
+
+create trigger audit_roles after insert or update or delete on public.roles for each row execute function public.audit_table_changes();
+create trigger audit_role_permissions after insert or delete on public.role_permissions for each row execute function public.audit_role_permissions_changes();
 create trigger audit_companies after insert or update or delete on public.companies for each row execute function public.audit_table_changes();
 create trigger audit_company_branches after insert or update or delete on public.company_branches for each row execute function public.audit_table_changes();
 create trigger audit_company_contacts after insert or update or delete on public.company_contacts for each row execute function public.audit_table_changes();

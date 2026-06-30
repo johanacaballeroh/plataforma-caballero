@@ -142,6 +142,22 @@ using (
   or exists (select 1 from public.user_roles ur where ur.user_id = auth.uid() and ur.role_id = roles.id)
 );
 
+drop policy if exists roles_insert on public.roles;
+create policy roles_insert on public.roles
+for insert to authenticated
+with check (public.has_permission('roles', 'create'));
+
+drop policy if exists roles_update on public.roles;
+create policy roles_update on public.roles
+for update to authenticated
+using (public.has_permission('roles', 'update'))
+with check (public.has_permission('roles', 'update'));
+
+drop policy if exists roles_delete on public.roles;
+create policy roles_delete on public.roles
+for delete to authenticated
+using (public.has_permission('roles', 'delete') and is_system_role = false);
+
 drop policy if exists permissions_select on public.permissions;
 create policy permissions_select on public.permissions
 for select to authenticated
@@ -156,6 +172,19 @@ drop policy if exists role_permissions_select on public.role_permissions;
 create policy role_permissions_select on public.role_permissions
 for select to authenticated
 using (true);
+
+drop policy if exists role_permissions_manage on public.role_permissions;
+create policy role_permissions_manage on public.role_permissions
+for all to authenticated
+using (
+  public.has_permission('roles', 'update')
+  or public.has_permission('roles', 'create')
+  or public.has_permission('roles', 'delete')
+)
+with check (
+  public.has_permission('roles', 'update')
+  or public.has_permission('roles', 'create')
+);
 
 drop policy if exists user_companies_select on public.user_companies;
 create policy user_companies_select on public.user_companies

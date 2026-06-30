@@ -4,6 +4,10 @@ import { authGuard } from './app/core/guards/auth.guard';
 import { permissionGuard } from './app/core/guards/permission.guard';
 import { Dashboard } from './app/pages/dashboard/dashboard';
 import { Profile } from './app/pages/profile/profile';
+import { Roles } from './app/pages/roles/roles';
+import { RolesDetail } from './app/pages/roles/roles-detail';
+import { RolesEdit } from './app/pages/roles/roles-edit';
+import { RolesNew } from './app/pages/roles/roles-new';
 import { Users } from './app/pages/users/users';
 import { UsersNew } from './app/pages/users/users-new';
 import { FeaturePlaceholder } from './app/shared/components/feature-placeholder/feature-placeholder';
@@ -29,7 +33,10 @@ export const appRoutes: Routes = [
             { path: 'document-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de documentos', description: 'Catalogo de tipos de documentos adjuntos.', permissions: ['document_types.view'] } },
             { path: 'users/new', component: UsersNew, canActivate: [permissionGuard], data: { permissions: ['users.create'] } },
             { path: 'users', component: Users, canActivate: [permissionGuard], data: { permissions: ['users.view'] } },
-            { path: 'roles', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Roles', description: 'Modulo preparado para roles y matriz de permisos.', permissions: ['roles.view'] } },
+            { path: 'roles/new', component: RolesNew, canActivate: [permissionGuard], data: { permissions: ['roles.create'] } },
+            { path: 'roles/:id/edit', component: RolesEdit, canActivate: [permissionGuard], data: { permissions: ['roles.update'] } },
+            { path: 'roles/:id', component: RolesDetail, canActivate: [permissionGuard], data: { permissions: ['roles.view'] } },
+            { path: 'roles', component: Roles, canActivate: [permissionGuard], data: { permissions: ['roles.view'] } },
             { path: 'reports', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Reportes', description: 'Modulo preparado para reporte de certificados y exportaciones.', permissions: ['reports.view'] } },
             { path: 'audit-logs', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Logs', description: 'Modulo preparado para auditoria en solo lectura.', permissions: ['logs.view'] } }
         ]
