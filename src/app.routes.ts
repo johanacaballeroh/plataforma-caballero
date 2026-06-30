@@ -3,6 +3,10 @@ import { AppLayout } from './app/layout/component/app.layout';
 import { authGuard } from './app/core/guards/auth.guard';
 import { permissionGuard } from './app/core/guards/permission.guard';
 import { Dashboard } from './app/pages/dashboard/dashboard';
+import { DocumentTypes } from './app/pages/document-types/document-types';
+import { DocumentTypesDetail } from './app/pages/document-types/document-types-detail';
+import { DocumentTypesEdit } from './app/pages/document-types/document-types-edit';
+import { DocumentTypesNew } from './app/pages/document-types/document-types-new';
 import { Profile } from './app/pages/profile/profile';
 import { Roles } from './app/pages/roles/roles';
 import { RolesDetail } from './app/pages/roles/roles-detail';
@@ -30,7 +34,10 @@ export const appRoutes: Routes = [
             { path: 'basel-codes', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Codigos Basilea', description: 'Catalogo de codigos Basilea.', permissions: ['basel_codes.view'] } },
             { path: 'certificate-generation-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de generacion de certificado', description: 'Catalogo de tipos de generacion y reglas asociadas.', permissions: ['certificate_generation_types.view'] } },
             { path: 'quantity-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de cantidad', description: 'Catalogo de tipos de cantidad.', permissions: ['quantity_types.view'] } },
-            { path: 'document-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de documentos', description: 'Catalogo de tipos de documentos adjuntos.', permissions: ['document_types.view'] } },
+            { path: 'document-types/new', component: DocumentTypesNew, canActivate: [permissionGuard], data: { permissions: ['document_types.create'] } },
+            { path: 'document-types/:id/edit', component: DocumentTypesEdit, canActivate: [permissionGuard], data: { permissions: ['document_types.update'] } },
+            { path: 'document-types/:id', component: DocumentTypesDetail, canActivate: [permissionGuard], data: { permissions: ['document_types.view'] } },
+            { path: 'document-types', component: DocumentTypes, canActivate: [permissionGuard], data: { permissions: ['document_types.view'] } },
             { path: 'users/new', component: UsersNew, canActivate: [permissionGuard], data: { permissions: ['users.create'] } },
             { path: 'users', component: Users, canActivate: [permissionGuard], data: { permissions: ['users.view'] } },
             { path: 'roles/new', component: RolesNew, canActivate: [permissionGuard], data: { permissions: ['roles.create'] } },
