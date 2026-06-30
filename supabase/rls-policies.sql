@@ -128,6 +128,12 @@ for update to authenticated
 using (id = auth.uid())
 with check (id = auth.uid());
 
+drop policy if exists profiles_update_manage on public.profiles;
+create policy profiles_update_manage on public.profiles
+for update to authenticated
+using (public.has_permission('users', 'update'))
+with check (public.has_permission('users', 'update'));
+
 drop policy if exists roles_select on public.roles;
 create policy roles_select on public.roles
 for select to authenticated
