@@ -2,6 +2,10 @@ import { Routes } from '@angular/router';
 import { AppLayout } from './app/layout/component/app.layout';
 import { authGuard } from './app/core/guards/auth.guard';
 import { permissionGuard } from './app/core/guards/permission.guard';
+import { BaselCodes } from './app/pages/basel-codes/basel-codes';
+import { BaselCodesDetail } from './app/pages/basel-codes/basel-codes-detail';
+import { BaselCodesEdit } from './app/pages/basel-codes/basel-codes-edit';
+import { BaselCodesNew } from './app/pages/basel-codes/basel-codes-new';
 import { CertificateGenerationTypes } from './app/pages/certificate-generation-types/certificate-generation-types';
 import { CertificateGenerationTypesDetail } from './app/pages/certificate-generation-types/certificate-generation-types-detail';
 import { CertificateGenerationTypesEdit } from './app/pages/certificate-generation-types/certificate-generation-types-edit';
@@ -39,7 +43,10 @@ export const appRoutes: Routes = [
             { path: 'units', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Unidades', description: 'Catalogo de unidades de medida.', permissions: ['units.view'] } },
             { path: 'categories', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Categorias', description: 'Catalogo de categorias de items.', permissions: ['categories.view'] } },
             { path: 'item-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de items', description: 'Catalogo de tipos de items.', permissions: ['item_types.view'] } },
-            { path: 'basel-codes', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Codigos Basilea', description: 'Catalogo de codigos Basilea.', permissions: ['basel_codes.view'] } },
+            { path: 'basel-codes/new', component: BaselCodesNew, canActivate: [permissionGuard], data: { permissions: ['basel_codes.create'] } },
+            { path: 'basel-codes/:id/edit', component: BaselCodesEdit, canActivate: [permissionGuard], data: { permissions: ['basel_codes.update'] } },
+            { path: 'basel-codes/:id', component: BaselCodesDetail, canActivate: [permissionGuard], data: { permissions: ['basel_codes.view'] } },
+            { path: 'basel-codes', component: BaselCodes, canActivate: [permissionGuard], data: { permissions: ['basel_codes.view'] } },
             { path: 'certificate-generation-types/new', component: CertificateGenerationTypesNew, canActivate: [permissionGuard], data: { permissions: ['certificate_generation_types.create'] } },
             { path: 'certificate-generation-types/:id/edit', component: CertificateGenerationTypesEdit, canActivate: [permissionGuard], data: { permissions: ['certificate_generation_types.update'] } },
             { path: 'certificate-generation-types/:id', component: CertificateGenerationTypesDetail, canActivate: [permissionGuard], data: { permissions: ['certificate_generation_types.view'] } },
