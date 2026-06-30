@@ -8,6 +8,10 @@ import { DocumentTypesDetail } from './app/pages/document-types/document-types-d
 import { DocumentTypesEdit } from './app/pages/document-types/document-types-edit';
 import { DocumentTypesNew } from './app/pages/document-types/document-types-new';
 import { Profile } from './app/pages/profile/profile';
+import { QuantityTypes } from './app/pages/quantity-types/quantity-types';
+import { QuantityTypesDetail } from './app/pages/quantity-types/quantity-types-detail';
+import { QuantityTypesEdit } from './app/pages/quantity-types/quantity-types-edit';
+import { QuantityTypesNew } from './app/pages/quantity-types/quantity-types-new';
 import { Roles } from './app/pages/roles/roles';
 import { RolesDetail } from './app/pages/roles/roles-detail';
 import { RolesEdit } from './app/pages/roles/roles-edit';
@@ -33,7 +37,10 @@ export const appRoutes: Routes = [
             { path: 'item-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de items', description: 'Catalogo de tipos de items.', permissions: ['item_types.view'] } },
             { path: 'basel-codes', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Codigos Basilea', description: 'Catalogo de codigos Basilea.', permissions: ['basel_codes.view'] } },
             { path: 'certificate-generation-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de generacion de certificado', description: 'Catalogo de tipos de generacion y reglas asociadas.', permissions: ['certificate_generation_types.view'] } },
-            { path: 'quantity-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de cantidad', description: 'Catalogo de tipos de cantidad.', permissions: ['quantity_types.view'] } },
+            { path: 'quantity-types/new', component: QuantityTypesNew, canActivate: [permissionGuard], data: { permissions: ['quantity_types.create'] } },
+            { path: 'quantity-types/:id/edit', component: QuantityTypesEdit, canActivate: [permissionGuard], data: { permissions: ['quantity_types.update'] } },
+            { path: 'quantity-types/:id', component: QuantityTypesDetail, canActivate: [permissionGuard], data: { permissions: ['quantity_types.view'] } },
+            { path: 'quantity-types', component: QuantityTypes, canActivate: [permissionGuard], data: { permissions: ['quantity_types.view'] } },
             { path: 'document-types/new', component: DocumentTypesNew, canActivate: [permissionGuard], data: { permissions: ['document_types.create'] } },
             { path: 'document-types/:id/edit', component: DocumentTypesEdit, canActivate: [permissionGuard], data: { permissions: ['document_types.update'] } },
             { path: 'document-types/:id', component: DocumentTypesDetail, canActivate: [permissionGuard], data: { permissions: ['document_types.view'] } },
