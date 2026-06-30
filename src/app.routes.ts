@@ -6,6 +6,10 @@ import { BaselCodes } from './app/pages/basel-codes/basel-codes';
 import { BaselCodesDetail } from './app/pages/basel-codes/basel-codes-detail';
 import { BaselCodesEdit } from './app/pages/basel-codes/basel-codes-edit';
 import { BaselCodesNew } from './app/pages/basel-codes/basel-codes-new';
+import { Categories } from './app/pages/categories/categories';
+import { CategoriesDetail } from './app/pages/categories/categories-detail';
+import { CategoriesEdit } from './app/pages/categories/categories-edit';
+import { CategoriesNew } from './app/pages/categories/categories-new';
 import { CertificateGenerationTypes } from './app/pages/certificate-generation-types/certificate-generation-types';
 import { CertificateGenerationTypesDetail } from './app/pages/certificate-generation-types/certificate-generation-types-detail';
 import { CertificateGenerationTypesEdit } from './app/pages/certificate-generation-types/certificate-generation-types-edit';
@@ -45,7 +49,10 @@ export const appRoutes: Routes = [
             { path: 'companies', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Empresas', description: 'Modulo preparado para empresas, sedes y contactos.', permissions: ['companies.view'] } },
             { path: 'items', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Items', description: 'Modulo preparado para items valorizables o residuos.', permissions: ['items.view'] } },
             { path: 'units', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Unidades', description: 'Catalogo de unidades de medida.', permissions: ['units.view'] } },
-            { path: 'categories', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Categorias', description: 'Catalogo de categorias de items.', permissions: ['categories.view'] } },
+            { path: 'categories/new', component: CategoriesNew, canActivate: [permissionGuard], data: { permissions: ['categories.create'] } },
+            { path: 'categories/:id/edit', component: CategoriesEdit, canActivate: [permissionGuard], data: { permissions: ['categories.update'] } },
+            { path: 'categories/:id', component: CategoriesDetail, canActivate: [permissionGuard], data: { permissions: ['categories.view'] } },
+            { path: 'categories', component: Categories, canActivate: [permissionGuard], data: { permissions: ['categories.view'] } },
             { path: 'item-types/new', component: ItemTypesNew, canActivate: [permissionGuard], data: { permissions: ['item_types.create'] } },
             { path: 'item-types/:id/edit', component: ItemTypesEdit, canActivate: [permissionGuard], data: { permissions: ['item_types.update'] } },
             { path: 'item-types/:id', component: ItemTypesDetail, canActivate: [permissionGuard], data: { permissions: ['item_types.view'] } },
