@@ -2,6 +2,10 @@ import { Routes } from '@angular/router';
 import { AppLayout } from './app/layout/component/app.layout';
 import { authGuard } from './app/core/guards/auth.guard';
 import { permissionGuard } from './app/core/guards/permission.guard';
+import { CertificateGenerationTypes } from './app/pages/certificate-generation-types/certificate-generation-types';
+import { CertificateGenerationTypesDetail } from './app/pages/certificate-generation-types/certificate-generation-types-detail';
+import { CertificateGenerationTypesEdit } from './app/pages/certificate-generation-types/certificate-generation-types-edit';
+import { CertificateGenerationTypesNew } from './app/pages/certificate-generation-types/certificate-generation-types-new';
 import { Dashboard } from './app/pages/dashboard/dashboard';
 import { DocumentTypes } from './app/pages/document-types/document-types';
 import { DocumentTypesDetail } from './app/pages/document-types/document-types-detail';
@@ -36,7 +40,10 @@ export const appRoutes: Routes = [
             { path: 'categories', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Categorias', description: 'Catalogo de categorias de items.', permissions: ['categories.view'] } },
             { path: 'item-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de items', description: 'Catalogo de tipos de items.', permissions: ['item_types.view'] } },
             { path: 'basel-codes', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Codigos Basilea', description: 'Catalogo de codigos Basilea.', permissions: ['basel_codes.view'] } },
-            { path: 'certificate-generation-types', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Tipos de generacion de certificado', description: 'Catalogo de tipos de generacion y reglas asociadas.', permissions: ['certificate_generation_types.view'] } },
+            { path: 'certificate-generation-types/new', component: CertificateGenerationTypesNew, canActivate: [permissionGuard], data: { permissions: ['certificate_generation_types.create'] } },
+            { path: 'certificate-generation-types/:id/edit', component: CertificateGenerationTypesEdit, canActivate: [permissionGuard], data: { permissions: ['certificate_generation_types.update'] } },
+            { path: 'certificate-generation-types/:id', component: CertificateGenerationTypesDetail, canActivate: [permissionGuard], data: { permissions: ['certificate_generation_types.view'] } },
+            { path: 'certificate-generation-types', component: CertificateGenerationTypes, canActivate: [permissionGuard], data: { permissions: ['certificate_generation_types.view'] } },
             { path: 'quantity-types/new', component: QuantityTypesNew, canActivate: [permissionGuard], data: { permissions: ['quantity_types.create'] } },
             { path: 'quantity-types/:id/edit', component: QuantityTypesEdit, canActivate: [permissionGuard], data: { permissions: ['quantity_types.update'] } },
             { path: 'quantity-types/:id', component: QuantityTypesDetail, canActivate: [permissionGuard], data: { permissions: ['quantity_types.view'] } },
