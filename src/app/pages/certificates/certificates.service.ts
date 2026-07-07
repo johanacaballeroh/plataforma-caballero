@@ -117,6 +117,7 @@ export interface CertificateDocument {
     uploaded_by: string | null;
     created_at: string;
     document_type: CertificateOption | null;
+    file?: File;
 }
 
 export interface CertificateFile {
@@ -177,6 +178,11 @@ export interface SaveCertificateItemPayload {
     price: number | null;
     description: string | null;
     sort_order: number;
+}
+
+export interface CertificateDraftDocument {
+    document_type_id: string;
+    file: File;
 }
 
 interface CertificateRow {
@@ -468,28 +474,36 @@ quantity_type:quantity_types(id, name, status)
     }
 
     async deleteDocument(document: CertificateDocument): Promise<void> {
-        const { error } = await this.supabase.from('certificate_documents').delete().eq('id', document.id);
+        const { data, error } = await this.supabase.from('certificate_documents').delete().eq('id', document.id).select('id').maybeSingle().returns<{ id: string }>();
 
         if (error) {
             throw error;
         }
 
-        await this.supabase.storage.from(document.storage_bucket).remove([document.storage_path]);
+        if (!data) {
+            throw new Error('No se elimino el documento. Revisa permisos RLS para editar certificados.');
+        }
+
+        const { error: storageError } = await this.supabase.storage.from(document.storage_bucket).remove([document.storage_path]);
+
+        if (storageError) {
+            throw storageError;
+        }
     }
 
-    async listFiles(certificateId: string): Promise<CertificateFile[]> {
+    async getCertificatePdf(certificateId: string): Promise<CertificateFile | null> {
         const { data, error } = await this.supabase
             .from('certificate_files')
             .select('id, certificate_id, template_version_id, file_name, storage_bucket, storage_path, version_number, is_current, generated_by, generated_at, template_version:certificate_template_versions(name, version_number)')
             .eq('certificate_id', certificateId)
-            .order('version_number', { ascending: false })
-            .returns<CertificateFile[]>();
+            .maybeSingle()
+            .returns<CertificateFile>();
 
         if (error) {
             throw error;
         }
 
-        return data ?? [];
+        return data ?? null;
     }
 
     async createSignedUrl(bucket: string, storagePath: string): Promise<string> {

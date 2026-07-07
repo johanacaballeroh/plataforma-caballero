@@ -4,16 +4,13 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { CertificateDocumentsManager } from './certificate-documents-manager';
-import { CertificateFilesPanel } from './certificate-files-panel';
-import { CertificateItemsManager } from './certificate-items-manager';
-import { CertificatesForm } from './certificates-form';
-import { CertificateFormOptions, CertificatesService, ManagedCertificate, SaveCertificatePayload } from './certificates.service';
+import { CertificateCompleteForm, CertificateCompleteSaveEvent } from './certificate-complete-form';
+import { CertificateFormOptions, CertificatesService, ManagedCertificate } from './certificates.service';
 
 @Component({
     selector: 'app-certificates-edit',
     standalone: true,
-    imports: [ButtonModule, CertificateDocumentsManager, CertificateFilesPanel, CertificateItemsManager, CertificatesForm, CommonModule, RouterModule, ToastModule],
+    imports: [ButtonModule, CertificateCompleteForm, CommonModule, RouterModule, ToastModule],
     providers: [MessageService],
     template: `
         <p-toast />
@@ -33,13 +30,7 @@ import { CertificateFormOptions, CertificatesService, ManagedCertificate, SaveCe
             @if (loading()) {
                 <div class="card">Cargando certificado...</div>
             } @else if (certificate(); as currentCertificate) {
-                <div class="card">
-                    <app-certificates-form mode="edit" [certificate]="currentCertificate" [options]="options()" [saving]="saving()" (save)="updateCertificate($event)" />
-                </div>
-
-                <app-certificate-items-manager [certificateId]="currentCertificate.id" [options]="options()" />
-                <app-certificate-documents-manager [certificateId]="currentCertificate.id" [options]="options()" />
-                <app-certificate-files-panel [certificateId]="currentCertificate.id" />
+                <app-certificate-complete-form mode="edit" [certificate]="currentCertificate" [options]="options()" [saving]="saving()" (save)="updateCertificate($event)" />
             } @else {
                 <div class="card flex flex-col gap-4">
                     <h2 class="text-xl font-semibold">Certificado no encontrado</h2>
@@ -79,7 +70,7 @@ export class CertificatesEdit implements OnInit {
         }
     }
 
-    async updateCertificate(payload: SaveCertificatePayload): Promise<void> {
+    async updateCertificate(event: CertificateCompleteSaveEvent): Promise<void> {
         const currentCertificate = this.certificate();
         if (!currentCertificate) {
             return;
@@ -88,7 +79,7 @@ export class CertificatesEdit implements OnInit {
         this.saving.set(true);
 
         try {
-            this.certificate.set(await this.certificatesService.updateCertificate(currentCertificate.id, payload));
+            this.certificate.set(await this.certificatesService.updateCertificate(currentCertificate.id, event.certificate));
             this.messageService.add({ severity: 'success', summary: 'Certificado actualizado', detail: 'El certificado fue actualizado correctamente.', life: 2500 });
         } catch {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el certificado.', life: 3500 });

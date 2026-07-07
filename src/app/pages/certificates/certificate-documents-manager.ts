@@ -8,7 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
-import { CertificateDocument, CertificateFormOptions, CertificatesService } from './certificates.service';
+import { CertificateDocument, CertificateDraftDocument, CertificateFormOptions, CertificatesService } from './certificates.service';
 
 @Component({
     selector: 'app-certificate-documents-manager',
@@ -19,7 +19,7 @@ import { CertificateDocument, CertificateFormOptions, CertificatesService } from
         <p-toast />
         <p-confirmdialog [style]="{ width: '450px' }" />
 
-        <div class="card flex flex-col gap-4">
+        <section [ngClass]="embedded ? 'flex flex-col gap-4 border-t border-surface-200 pt-6 dark:border-surface-700' : 'card flex flex-col gap-4'">
             <div class="flex items-center justify-between gap-3">
                 <div>
                     <h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0">Documentos adjuntos</h2>
@@ -65,7 +65,7 @@ import { CertificateDocument, CertificateFormOptions, CertificatesService } from
                                 <small class="text-muted-color">{{ document.mime_type || 'MIME no registrado' }}</small>
                             </div>
                         </td>
-                        <td><span class="text-primary font-medium">Subido</span></td>
+                        <td><span class="text-primary font-medium">{{ document.file ? 'Pendiente' : 'Subido' }}</span></td>
                         <td>{{ formatSize(document.size_bytes) }}</td>
                         <td>{{ document.created_at | date: 'dd/MM/yyyy HH:mm' }}</td>
                         <td>
@@ -84,7 +84,7 @@ import { CertificateDocument, CertificateFormOptions, CertificatesService } from
                     </tr>
                 </ng-template>
             </p-table>
-        </div>
+        </section>
     `
 })
 export class CertificateDocumentsManager implements OnChanges {
@@ -94,9 +94,10 @@ export class CertificateDocumentsManager implements OnChanges {
     private readonly messageService = inject(MessageService);
 
     @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
-    @Input({ required: true }) certificateId = '';
+    @Input() certificateId = '';
     @Input() options: CertificateFormOptions = { companies: [], generationTypes: [], templateVersions: [], companyAddresses: [], items: [], quantityTypes: [], documentTypes: [] };
     @Input({ alias: 'readonly' }) isReadonly = false;
+    @Input() embedded = false;
 
     readonly documents = signal<CertificateDocument[]>([]);
     readonly selectedFile = signal<File | null>(null);
@@ -113,7 +114,20 @@ export class CertificateDocumentsManager implements OnChanges {
         }
     }
 
+    getDraftDocuments(): CertificateDraftDocument[] {
+        return this.documents()
+            .filter((document) => !!document.file)
+            .map((document) => ({
+                document_type_id: document.document_type_id,
+                file: document.file as File
+            }));
+    }
+
     async reload(): Promise<void> {
+        if (!this.certificateId) {
+            return;
+        }
+
         this.loading.set(true);
 
         try {
@@ -139,16 +153,17 @@ export class CertificateDocumentsManager implements OnChanges {
             return;
         }
 
+        if (!this.certificateId) {
+            this.addDraftDocument(documentTypeId, file);
+            return;
+        }
+
         this.uploading.set(true);
 
         try {
             await this.certificatesService.uploadDocument(this.certificateId, documentTypeId, file);
             this.messageService.add({ severity: 'success', summary: 'Documento subido', detail: 'El documento fue registrado correctamente.', life: 2500 });
-            this.selectedFile.set(null);
-            this.form.reset({ document_type_id: '' });
-            if (this.fileInput?.nativeElement) {
-                this.fileInput.nativeElement.value = '';
-            }
+            this.resetUploadControls();
             await this.reload();
         } catch {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo subir el documento. Revisa permisos, Storage y RLS.', life: 4000 });
@@ -159,7 +174,7 @@ export class CertificateDocumentsManager implements OnChanges {
 
     async download(document: CertificateDocument): Promise<void> {
         try {
-            const url = await this.certificatesService.createSignedUrl(document.storage_bucket, document.storage_path);
+            const url = document.file ? URL.createObjectURL(document.file) : await this.certificatesService.createSignedUrl(document.storage_bucket, document.storage_path);
             window.open(url, '_blank', 'noopener,noreferrer');
         } catch {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo generar enlace de descarga.', life: 3500 });
@@ -181,12 +196,19 @@ export class CertificateDocumentsManager implements OnChanges {
     }
 
     async delete(document: CertificateDocument): Promise<void> {
+        if (!this.certificateId || document.file) {
+            this.documents.set(this.documents().filter((currentDocument) => currentDocument.id !== document.id));
+            return;
+        }
+
         try {
             await this.certificatesService.deleteDocument(document);
             this.messageService.add({ severity: 'success', summary: 'Documento eliminado', detail: 'El documento fue eliminado correctamente.', life: 2500 });
+        } catch (error) {
+            const detail = error instanceof Error ? error.message : 'No se pudo eliminar el documento.';
+            this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 4500 });
+        } finally {
             await this.reload();
-        } catch {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el documento.', life: 3500 });
         }
     }
 
@@ -200,5 +222,39 @@ export class CertificateDocumentsManager implements OnChanges {
         }
 
         return `${(size / 1024 / 1024).toFixed(1)} MB`;
+    }
+
+    private addDraftDocument(documentTypeId: string, file: File): void {
+        const documentType = this.options.documentTypes.find((option) => option.id === documentTypeId) ?? null;
+        const now = new Date().toISOString();
+
+        this.documents.set([
+            ...this.documents(),
+            {
+                id: `draft-${crypto.randomUUID()}`,
+                certificate_id: '',
+                document_type_id: documentTypeId,
+                file_name: file.name,
+                storage_bucket: '',
+                storage_path: '',
+                mime_type: file.type || null,
+                size_bytes: file.size,
+                uploaded_by: null,
+                created_at: now,
+                document_type: documentType,
+                file
+            }
+        ]);
+
+        this.resetUploadControls();
+        this.messageService.add({ severity: 'success', summary: 'Agregado', detail: 'Documento agregado al certificado.', life: 2500 });
+    }
+
+    private resetUploadControls(): void {
+        this.selectedFile.set(null);
+        this.form.reset({ document_type_id: '' });
+        if (this.fileInput?.nativeElement) {
+            this.fileInput.nativeElement.value = '';
+        }
     }
 }

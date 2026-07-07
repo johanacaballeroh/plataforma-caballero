@@ -3,13 +3,13 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { CertificatesForm } from './certificates-form';
-import { CertificateFormOptions, CertificatesService, SaveCertificatePayload } from './certificates.service';
+import { CertificateCompleteForm, CertificateCompleteSaveEvent } from './certificate-complete-form';
+import { CertificateFormOptions, CertificatesService } from './certificates.service';
 
 @Component({
     selector: 'app-certificates-new',
     standalone: true,
-    imports: [CertificatesForm, CommonModule, ToastModule],
+    imports: [CertificateCompleteForm, CommonModule, ToastModule],
     providers: [MessageService],
     template: `
         <p-toast />
@@ -24,9 +24,7 @@ import { CertificateFormOptions, CertificatesService, SaveCertificatePayload } f
             @if (loading()) {
                 <div class="card">Cargando catalogos...</div>
             } @else {
-                <div class="card">
-                    <app-certificates-form mode="create" [options]="options()" [nextCertificateNumber]="nextCertificateNumber()" [saving]="saving()" (save)="createCertificate($event)" />
-                </div>
+                <app-certificate-complete-form mode="create" [options]="options()" [nextCertificateNumber]="nextCertificateNumber()" [saving]="saving()" (save)="createCertificate($event)" />
             }
         </div>
     `
@@ -54,11 +52,13 @@ export class CertificatesNew implements OnInit {
         }
     }
 
-    async createCertificate(payload: SaveCertificatePayload): Promise<void> {
+    async createCertificate(event: CertificateCompleteSaveEvent): Promise<void> {
         this.saving.set(true);
 
         try {
-            const certificate = await this.certificatesService.createCertificate(payload);
+            const certificate = await this.certificatesService.createCertificate(event.certificate);
+            await Promise.all(event.items.map((item) => this.certificatesService.createItem(certificate.id, item)));
+            await Promise.all(event.documents.map((document) => this.certificatesService.uploadDocument(certificate.id, document.document_type_id, document.file)));
             this.messageService.add({ severity: 'success', summary: 'Certificado creado', detail: 'El certificado fue registrado correctamente.', life: 2500 });
             await this.router.navigate(['/certificates', certificate.id, 'edit']);
         } catch {

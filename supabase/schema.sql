@@ -356,6 +356,9 @@ create unique index if not exists uq_current_certificate_file
 on public.certificate_files(certificate_id)
 where is_current = true;
 
+create unique index if not exists uq_certificate_file_one_per_certificate
+on public.certificate_files(certificate_id);
+
 -- =========================
 -- Reportes y logs
 -- =========================

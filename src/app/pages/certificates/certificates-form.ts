@@ -115,12 +115,14 @@ export type CertificateFormMode = 'create' | 'edit' | 'detail';
                 }
             </section>
 
-            <div class="flex justify-end gap-3">
-                <p-button type="button" label="Volver" icon="pi pi-arrow-left" severity="secondary" [outlined]="true" routerLink="/certificates" />
-                @if (mode !== 'detail') {
-                    <p-button type="submit" [label]="mode === 'create' ? 'Guardar Certificado' : 'Actualizar Certificado'" icon="pi pi-check" [loading]="saving" [disabled]="form.invalid || saving" />
-                }
-            </div>
+            @if (showActions) {
+                <div class="flex justify-end gap-3">
+                    <p-button type="button" label="Volver" icon="pi pi-arrow-left" severity="secondary" [outlined]="true" routerLink="/certificates" />
+                    @if (mode !== 'detail') {
+                        <p-button type="submit" [label]="mode === 'create' ? 'Guardar Certificado' : 'Actualizar Certificado'" icon="pi pi-check" [loading]="saving" [disabled]="form.invalid || saving" />
+                    }
+                </div>
+            }
         </form>
     `
 })
@@ -132,6 +134,7 @@ export class CertificatesForm implements OnChanges, OnInit {
     @Input() options: CertificateFormOptions = { companies: [], generationTypes: [], templateVersions: [], companyAddresses: [], items: [], quantityTypes: [], documentTypes: [] };
     @Input() nextCertificateNumber: string | null = null;
     @Input() saving = false;
+    @Input() showActions = true;
     @Output() save = new EventEmitter<SaveCertificatePayload>();
 
     readonly showAdditional = signal(false);

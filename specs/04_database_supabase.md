@@ -316,7 +316,7 @@ Metadata de documentos adjuntos.
 
 ### `certificate_files`
 
-Metadata de PDFs generados.
+Metadata del PDF unico generado para cada certificado.
 
 - `id`
 - `certificate_id`
@@ -328,6 +328,10 @@ Metadata de PDFs generados.
 - `is_current`
 - `generated_by`
 - `generated_at`
+
+Restricciones:
+
+- `certificate_id` debe ser unico para mantener la relacion 1:1 entre certificado y PDF.
 
 ### `certificate_template_versions`
 

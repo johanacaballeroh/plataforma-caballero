@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Gestionar la generacion y trazabilidad de PDFs de certificados sin perder historial documental.
+Gestionar la generacion y trazabilidad del PDF unico asociado a cada certificado.
 
 ## Principios
 
@@ -12,6 +12,7 @@ Gestionar la generacion y trazabilidad de PDFs de certificados sin perder histor
 - Los PDFs generados no se guardan como base64 en tablas.
 - Los archivos viven en Supabase Storage.
 - Las tablas guardan metadata y referencias.
+- Cada certificado tiene como maximo un PDF generado.
 
 ## Tablas relacionadas
 
@@ -34,7 +35,7 @@ Campos clave:
 
 ### `certificate_files`
 
-Representa PDFs generados para certificados.
+Representa el PDF generado para cada certificado.
 
 Campos clave:
 
@@ -47,6 +48,10 @@ Campos clave:
 - `is_current`
 - `generated_by`
 - `generated_at`
+
+Restriccion:
+
+- `certificate_id` debe ser unico para mantener relacion 1:1 entre certificado y PDF.
 
 ### `certificates`
 
@@ -73,7 +78,7 @@ Los buckets son privados.
 5. Se genera el PDF.
 6. Se guarda el archivo en `generated-certificates`.
 7. Se crea metadata en `certificate_files`.
-8. Se conserva `template_version_id` en `certificates` o en `certificate_files`.
+8. Se conserva `template_version_id` en `certificates` y/o en `certificate_files`.
 
 ## Permisos
 
@@ -88,7 +93,7 @@ Los buckets son privados.
 - No modificar una plantilla historica usada por certificados emitidos.
 - Una nueva plantilla debe crear nueva version.
 - Al reemplazar una plantilla activa, la anterior debe quedar cerrada mediante `active_to` o `is_active = false`.
-- Un certificado emitido no debe perder su PDF anterior si se regenera; debe versionarse en `certificate_files`.
+- Si se regenera el PDF del certificado, se reemplaza o actualiza la metadata del unico registro asociado.
 
 ## Pendiente de validacion
 

@@ -12,7 +12,7 @@ Gestionar certificados de valorizacion de residuos, sus items, documentos adjunt
 - Detalle de certificado.
 - Gestion de items del certificado.
 - Gestion de documentos adjuntos.
-- Vista o descarga de PDF.
+- Vista o descarga del unico PDF del certificado.
 
 ## Campos detectados en capturas
 
@@ -39,6 +39,8 @@ Formulario:
 - Empresa transportista.
 - Direccion de empresa transportista.
 - Informacion adicional de operacion.
+- Items del certificado dentro del mismo formulario.
+- Documentos adjuntos dentro del mismo formulario.
 
 Items:
 
@@ -56,6 +58,12 @@ Documentos adjuntos:
 - Archivo.
 - Estado del archivo.
 - Accion ver o descargar.
+
+PDF del certificado:
+
+- Cada certificado corresponde a un unico PDF generado.
+- El boton para ver o descargar el PDF solo se muestra en la pantalla de detalle.
+- No existe una seccion visible de PDFs generados dentro del formulario.
 
 ## Campos de datos
 
@@ -113,8 +121,10 @@ Documentos:
 
 - Un certificado puede tener multiples items.
 - Un certificado puede tener multiples documentos adjuntos.
+- La ficha, items y documentos adjuntos conforman un unico formulario de certificado para alta y edicion.
 - El PDF debe generarse desde una plantilla versionada.
 - La plantilla usada debe quedar registrada.
+- Un certificado tiene un solo PDF generado asociado.
 - Cada tipo de generacion esta ligado a una plantilla activa especifica.
 - El numero de certificado no se ingresa manualmente; se genera por anio de emision.
 - Cliente solo ve certificados asociados a sus empresas.
@@ -163,7 +173,7 @@ Documentos:
 - Se puede crear certificado con datos minimos.
 - Se pueden administrar items relacionados.
 - Se pueden adjuntar documentos en Storage.
-- Se puede consultar o descargar el PDF generado.
+- Se puede consultar o descargar el unico PDF generado desde Ver Certificado.
 - Se genera PDF registrando metadata en `certificate_files`.
 - Se conserva `template_version_id`.
 

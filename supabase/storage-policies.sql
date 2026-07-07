@@ -147,7 +147,10 @@ for insert
 to authenticated
 with check (
   bucket_id = 'certificate-documents'
-  and public.has_permission('certificates', 'update')
+  and (
+    public.has_permission('certificates', 'create')
+    or public.has_permission('certificates', 'update')
+  )
 );
 
 drop policy if exists storage_certificate_documents_update on storage.objects;
@@ -161,5 +164,21 @@ using (
 )
 with check (
   bucket_id = 'certificate-documents'
-  and public.has_permission('certificates', 'update')
+  and (
+    public.has_permission('certificates', 'create')
+    or public.has_permission('certificates', 'update')
+  )
+);
+
+drop policy if exists storage_certificate_documents_delete on storage.objects;
+create policy storage_certificate_documents_delete
+on storage.objects
+for delete
+to authenticated
+using (
+  bucket_id = 'certificate-documents'
+  and (
+    public.has_permission('certificates', 'update')
+    or public.has_permission('certificates', 'delete')
+  )
 );

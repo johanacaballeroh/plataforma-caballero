@@ -387,8 +387,8 @@ using (public.has_permission('certificates','view') or (public.has_permission('c
 drop policy if exists certificate_documents_manage on public.certificate_documents;
 create policy certificate_documents_manage on public.certificate_documents
 for all to authenticated
-using (public.has_permission('certificates','update'))
-with check (public.has_permission('certificates','update'));
+using (public.has_permission('certificates','update') or public.has_permission('certificates','delete'))
+with check (public.has_permission('certificates','create') or public.has_permission('certificates','update'));
 
 drop policy if exists certificate_files_select on public.certificate_files;
 create policy certificate_files_select on public.certificate_files

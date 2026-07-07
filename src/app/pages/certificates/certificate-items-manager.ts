@@ -23,7 +23,7 @@ type ItemDialogMode = 'create' | 'edit';
         <p-toast />
         <p-confirmdialog [style]="{ width: '450px' }" />
 
-        <div class="card flex flex-col gap-4">
+        <section [ngClass]="embedded ? 'flex flex-col gap-4 border-t border-surface-200 pt-6 dark:border-surface-700' : 'card flex flex-col gap-4'">
             <div class="flex items-center justify-between gap-3">
                 <div>
                     <h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0">Items del certificado</h2>
@@ -77,7 +77,7 @@ type ItemDialogMode = 'create' | 'edit';
                     </tr>
                 </ng-template>
             </p-table>
-        </div>
+        </section>
 
         <p-dialog [visible]="dialogVisible()" (visibleChange)="dialogVisible.set($event)" [style]="{ width: '720px' }" [header]="dialogMode() === 'create' ? 'Nuevo item' : 'Editar item'" [modal]="true">
             <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -148,9 +148,10 @@ export class CertificateItemsManager implements OnChanges {
     private readonly confirmationService = inject(ConfirmationService);
     private readonly messageService = inject(MessageService);
 
-    @Input({ required: true }) certificateId = '';
+    @Input() certificateId = '';
     @Input() options: CertificateFormOptions = { companies: [], generationTypes: [], templateVersions: [], companyAddresses: [], items: [], quantityTypes: [], documentTypes: [] };
     @Input({ alias: 'readonly' }) isReadonly = false;
+    @Input() embedded = false;
 
     readonly items = signal<CertificateItem[]>([]);
     readonly loading = signal(false);
@@ -174,7 +175,23 @@ export class CertificateItemsManager implements OnChanges {
         }
     }
 
+    getDraftItems(): SaveCertificateItemPayload[] {
+        return this.items().map((item) => ({
+            item_id: item.item_id,
+            quantity_type_id: item.quantity_type_id,
+            quantity: item.quantity,
+            weight: item.weight,
+            price: null,
+            description: item.description,
+            sort_order: item.sort_order
+        }));
+    }
+
     async reload(): Promise<void> {
+        if (!this.certificateId) {
+            return;
+        }
+
         this.loading.set(true);
 
         try {
@@ -234,6 +251,11 @@ export class CertificateItemsManager implements OnChanges {
             sort_order: value.sort_order
         };
 
+        if (!this.certificateId) {
+            this.saveDraft(payload);
+            return;
+        }
+
         this.saving.set(true);
 
         try {
@@ -269,6 +291,11 @@ export class CertificateItemsManager implements OnChanges {
     }
 
     async delete(item: CertificateItem): Promise<void> {
+        if (!this.certificateId || item.id.startsWith('draft-')) {
+            this.items.set(this.items().filter((currentItem) => currentItem.id !== item.id));
+            return;
+        }
+
         try {
             await this.certificatesService.deleteItem(item.id);
             this.messageService.add({ severity: 'success', summary: 'Item eliminado', detail: 'El item fue eliminado correctamente.', life: 2500 });
@@ -276,5 +303,42 @@ export class CertificateItemsManager implements OnChanges {
         } catch {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el item.', life: 3500 });
         }
+    }
+
+    private saveDraft(payload: SaveCertificateItemPayload): void {
+        const row = this.toDraftRow(payload, this.selectedItem()?.id ?? `draft-${crypto.randomUUID()}`);
+        const selectedItem = this.selectedItem();
+
+        if (selectedItem) {
+            this.items.set(this.items().map((item) => (item.id === selectedItem.id ? row : item)));
+        } else {
+            this.items.set([...this.items(), row]);
+        }
+
+        this.dialogVisible.set(false);
+        this.selectedItem.set(null);
+        this.messageService.add({ severity: 'success', summary: 'Agregado', detail: 'Item agregado al certificado.', life: 2500 });
+    }
+
+    private toDraftRow(payload: SaveCertificateItemPayload, id: string): CertificateItem {
+        const item = this.options.items.find((option) => option.id === payload.item_id) ?? null;
+        const quantityType = this.options.quantityTypes.find((option) => option.id === payload.quantity_type_id) ?? null;
+        const now = new Date().toISOString();
+
+        return {
+            id,
+            certificate_id: '',
+            item_id: payload.item_id,
+            quantity_type_id: payload.quantity_type_id,
+            quantity: payload.quantity,
+            weight: payload.weight,
+            price: null,
+            description: payload.description,
+            sort_order: payload.sort_order,
+            created_at: now,
+            updated_at: now,
+            item,
+            quantity_type: quantityType
+        };
     }
 }
