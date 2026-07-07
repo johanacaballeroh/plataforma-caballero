@@ -20,6 +20,7 @@
 | 14 | Tipos de generacion de certificado | `/specs/modules/14-certificate-generation-types.md` | `certificate_generation_types.view` |
 | 15 | Tipos de cantidad | `/specs/modules/15-quantity-types.md` | `quantity_types.view` |
 | 16 | Tipos de documentos | `/specs/modules/16-document-types.md` | `document_types.view` |
+| 17 | Logs de auditoria | `/specs/modules/17-audit-logs.md` | `logs.view` |
 
 ## Modulos transversales
 
@@ -29,12 +30,7 @@ Proviene de Sakai NG. No es modulo de negocio.
 
 ### Logs
 
-No tiene spec de modulo separada en la lista original, pero debe existir como entrada operativa para Administrador usando:
-
-- `audit_logs`
-- permiso `logs.view`
-
-Puede implementarse dentro de `reports` o como feature `audit-logs` si se decide ampliar el indice.
+Entrada operativa para Administrador usando `audit_logs` y permiso `logs.view`.
 
 ## Dependencias funcionales
 

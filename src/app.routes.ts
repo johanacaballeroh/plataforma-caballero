@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AppLayout } from './app/layout/component/app.layout';
 import { authGuard } from './app/core/guards/auth.guard';
 import { permissionGuard } from './app/core/guards/permission.guard';
+import { AuditLogs } from './app/pages/audit-logs/audit-logs';
 import { BaselCodes } from './app/pages/basel-codes/basel-codes';
 import { BaselCodesDetail } from './app/pages/basel-codes/basel-codes-detail';
 import { BaselCodesEdit } from './app/pages/basel-codes/basel-codes-edit';
@@ -40,6 +41,7 @@ import { QuantityTypes } from './app/pages/quantity-types/quantity-types';
 import { QuantityTypesDetail } from './app/pages/quantity-types/quantity-types-detail';
 import { QuantityTypesEdit } from './app/pages/quantity-types/quantity-types-edit';
 import { QuantityTypesNew } from './app/pages/quantity-types/quantity-types-new';
+import { Reports } from './app/pages/reports/reports';
 import { Roles } from './app/pages/roles/roles';
 import { RolesDetail } from './app/pages/roles/roles-detail';
 import { RolesEdit } from './app/pages/roles/roles-edit';
@@ -50,7 +52,6 @@ import { UnitsEdit } from './app/pages/units/units-edit';
 import { UnitsNew } from './app/pages/units/units-new';
 import { Users } from './app/pages/users/users';
 import { UsersNew } from './app/pages/users/users-new';
-import { FeaturePlaceholder } from './app/shared/components/feature-placeholder/feature-placeholder';
 import { Notfound } from './app/pages/notfound/notfound';
 
 export const appRoutes: Routes = [
@@ -107,8 +108,8 @@ export const appRoutes: Routes = [
             { path: 'roles/:id/edit', component: RolesEdit, canActivate: [permissionGuard], data: { permissions: ['roles.update'] } },
             { path: 'roles/:id', component: RolesDetail, canActivate: [permissionGuard], data: { permissions: ['roles.view'] } },
             { path: 'roles', component: Roles, canActivate: [permissionGuard], data: { permissions: ['roles.view'] } },
-            { path: 'reports', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Reportes', description: 'Modulo preparado para reporte de certificados y exportaciones.', permissions: ['reports.view'] } },
-            { path: 'audit-logs', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Logs', description: 'Modulo preparado para auditoria en solo lectura.', permissions: ['logs.view'] } }
+            { path: 'reports', component: Reports, canActivate: [permissionGuard], data: { permissions: ['reports.view'] } },
+            { path: 'audit-logs', component: AuditLogs, canActivate: [permissionGuard], data: { permissions: ['logs.view'] } }
         ]
     },
     { path: 'notfound', component: Notfound },
