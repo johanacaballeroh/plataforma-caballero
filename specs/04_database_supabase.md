@@ -211,7 +211,7 @@ Valores de `branch_type`:
 
 - `id`
 - `name`
-- `description`
+- `description` (Declaracion Legal para el PDF)
 - `show_final_destination_company`
 - `show_destination_place`
 - `status`

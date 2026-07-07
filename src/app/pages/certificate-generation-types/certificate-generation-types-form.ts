@@ -30,7 +30,7 @@ export type CertificateGenerationTypeFormMode = 'create' | 'edit' | 'detail';
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <label for="description" class="font-medium">Descripcion</label>
+                    <label for="description" class="font-medium">Declaracion Legal</label>
                     <textarea pTextarea id="description" formControlName="description" rows="5" [readonly]="mode === 'detail'"></textarea>
                 </div>
 

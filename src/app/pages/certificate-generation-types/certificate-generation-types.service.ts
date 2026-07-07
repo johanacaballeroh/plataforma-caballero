@@ -170,7 +170,7 @@ export class CertificateGenerationTypesService {
     }
 
     async updateGenerationType(generationTypeId: string, payload: SaveCertificateGenerationTypePayload): Promise<ManagedCertificateGenerationType> {
-        const { error } = await this.supabase
+        const { data, error } = await this.supabase
             .from('certificate_generation_types')
             .update({
                 name: payload.name.trim(),
@@ -179,10 +179,17 @@ export class CertificateGenerationTypesService {
                 show_destination_place: payload.show_destination_place,
                 status: payload.status
             })
-            .eq('id', generationTypeId);
+            .eq('id', generationTypeId)
+            .select('id')
+            .maybeSingle()
+            .returns<{ id: string }>();
 
         if (error) {
             throw error;
+        }
+
+        if (!data) {
+            throw new Error('No se actualizo el tipo de generacion. Revisa permisos RLS o que el registro exista.');
         }
 
         if (payload.template_file) {
@@ -193,10 +200,14 @@ export class CertificateGenerationTypesService {
     }
 
     async updateStatus(generationTypeId: string, status: CertificateGenerationTypeStatus): Promise<void> {
-        const { error } = await this.supabase.from('certificate_generation_types').update({ status }).eq('id', generationTypeId);
+        const { data, error } = await this.supabase.from('certificate_generation_types').update({ status }).eq('id', generationTypeId).select('id').maybeSingle().returns<{ id: string }>();
 
         if (error) {
             throw error;
+        }
+
+        if (!data) {
+            throw new Error('No se actualizo el estado del tipo de generacion. Revisa permisos RLS o que el registro exista.');
         }
     }
 

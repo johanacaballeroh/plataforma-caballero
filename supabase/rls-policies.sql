@@ -321,18 +321,62 @@ with check (public.has_permission('items','update') or public.has_permission('it
 drop policy if exists certificate_generation_types_select on public.certificate_generation_types;
 create policy certificate_generation_types_select on public.certificate_generation_types
 for select to authenticated
-using (public.has_permission('certificate_generation_types','view') or public.has_permission('certificates','view') or public.has_permission('certificates','view_own'));
+using (
+  public.has_permission('certificate_generation_types','view')
+  or public.has_permission('certificate_generation_types','create')
+  or public.has_permission('certificate_generation_types','update')
+  or public.has_permission('certificate_generation_types','delete')
+  or public.has_permission('certificates','view')
+  or public.has_permission('certificates','view_own')
+  or public.has_permission('certificates','create')
+  or public.has_permission('certificates','update')
+  or public.has_permission('certificates','issue')
+);
 
 drop policy if exists certificate_generation_types_manage on public.certificate_generation_types;
-create policy certificate_generation_types_manage on public.certificate_generation_types
-for all to authenticated
-using (public.has_permission('certificate_generation_types','update') or public.has_permission('certificate_generation_types','create') or public.has_permission('certificate_generation_types','delete'))
-with check (public.has_permission('certificate_generation_types','update') or public.has_permission('certificate_generation_types','create'));
+drop policy if exists certificate_generation_types_insert on public.certificate_generation_types;
+create policy certificate_generation_types_insert on public.certificate_generation_types
+for insert to authenticated
+with check (
+  public.has_permission('certificate_generation_types','create')
+  or public.has_role('Administrador')
+  or public.has_role('Gerente')
+);
+
+drop policy if exists certificate_generation_types_update on public.certificate_generation_types;
+create policy certificate_generation_types_update on public.certificate_generation_types
+for update to authenticated
+using (
+  public.has_permission('certificate_generation_types','update')
+  or public.has_role('Administrador')
+  or public.has_role('Gerente')
+)
+with check (
+  public.has_permission('certificate_generation_types','update')
+  or public.has_role('Administrador')
+  or public.has_role('Gerente')
+);
+
+drop policy if exists certificate_generation_types_delete on public.certificate_generation_types;
+create policy certificate_generation_types_delete on public.certificate_generation_types
+for delete to authenticated
+using (
+  public.has_permission('certificate_generation_types','delete')
+  or public.has_role('Administrador')
+  or public.has_role('Gerente')
+);
 
 drop policy if exists certificate_template_versions_select on public.certificate_template_versions;
 create policy certificate_template_versions_select on public.certificate_template_versions
 for select to authenticated
-using (public.has_permission('certificate_templates','view') or public.has_permission('certificates','view') or public.has_permission('certificates','view_own'));
+using (
+  public.has_permission('certificate_templates','view')
+  or public.has_permission('certificates','view')
+  or public.has_permission('certificates','view_own')
+  or public.has_permission('certificates','create')
+  or public.has_permission('certificates','update')
+  or public.has_permission('certificates','issue')
+);
 
 drop policy if exists certificate_template_versions_manage on public.certificate_template_versions;
 create policy certificate_template_versions_manage on public.certificate_template_versions
@@ -398,7 +442,25 @@ using (public.has_permission('certificates','view') or (public.has_permission('c
 drop policy if exists certificate_files_insert on public.certificate_files;
 create policy certificate_files_insert on public.certificate_files
 for insert to authenticated
-with check (public.has_permission('certificates','issue'));
+with check (
+  public.has_permission('certificates','create')
+  or public.has_permission('certificates','update')
+  or public.has_permission('certificates','issue')
+);
+
+drop policy if exists certificate_files_update on public.certificate_files;
+create policy certificate_files_update on public.certificate_files
+for update to authenticated
+using (
+  public.has_permission('certificates','create')
+  or public.has_permission('certificates','update')
+  or public.has_permission('certificates','issue')
+)
+with check (
+  public.has_permission('certificates','create')
+  or public.has_permission('certificates','update')
+  or public.has_permission('certificates','issue')
+);
 
 -- =========================
 -- Reportes y logs

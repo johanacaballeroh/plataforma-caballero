@@ -38,10 +38,10 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
                                 <span class="mb-6"></span>
                             }
 
-                            <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Contrasena</label>
-                            <p-password id="password1" formControlName="password" placeholder="Contrasena" [toggleMask]="true" styleClass="mb-2" [fluid]="true" [feedback]="false" autocomplete="current-password"></p-password>
+                            <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Contraseña</label>
+                            <p-password id="password1" formControlName="password" placeholder="Contraseña" [toggleMask]="true" styleClass="mb-2" [fluid]="true" [feedback]="false" autocomplete="current-password"></p-password>
                             @if (form.controls.password.touched && form.controls.password.invalid) {
-                                <small class="text-red-500 mb-6">Ingresa tu contrasena.</small>
+                                <small class="text-red-500 mb-6">Ingresa tu contraseña.</small>
                             } @else {
                                 <span class="mb-6"></span>
                             }

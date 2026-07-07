@@ -17,7 +17,7 @@ Gestionar tipos de generacion de certificado y reglas visuales/funcionales asoci
 Desde `certificate_generation_types`:
 
 - `name`
-- `description`
+- `description` (Declaracion Legal usada como texto del certificado PDF)
 - `show_final_destination_company`
 - `show_destination_place`
 - `status`
@@ -48,7 +48,7 @@ Relaciones indirectas:
 ## Validaciones sugeridas
 
 - Nombre obligatorio y unico.
-- Descripcion opcional.
+- Declaracion Legal opcional.
 - Flags booleanos obligatorios.
 - Estado permitido: `active`, `inactive`.
 

@@ -43,7 +43,7 @@ import { CertificateGenerationTypesService, CertificateGenerationTypeStatus, Man
                 <form [formGroup]="filtersForm" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 mb-5" (ngSubmit)="applyFilters()">
                     <div class="flex flex-col gap-2 xl:col-span-2">
                         <label for="search" class="font-medium">Buscar</label>
-                        <input pInputText id="search" formControlName="search" placeholder="Nombre o descripcion" />
+                        <input pInputText id="search" formControlName="search" placeholder="Nombre o declaracion legal" />
                     </div>
 
                     <div class="flex flex-col gap-2">
@@ -105,7 +105,7 @@ import { CertificateGenerationTypesService, CertificateGenerationTypeStatus, Man
                                     </div>
                                     <div>
                                         <div class="font-medium text-surface-900 dark:text-surface-0">{{ generationType.name }}</div>
-                                        <small class="text-muted-color">certificate_generation_types</small>
+                                        <small class="text-muted-color line-clamp-2">{{ generationType.description || 'Sin declaracion legal registrada' }}</small>
                                     </div>
                                 </div>
                             </td>

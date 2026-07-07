@@ -57,6 +57,9 @@ using (
     public.has_permission('certificate_templates', 'view')
     or public.has_permission('certificates', 'view')
     or public.has_permission('certificates', 'view_own')
+    or public.has_permission('certificates', 'create')
+    or public.has_permission('certificates', 'update')
+    or public.has_permission('certificates', 'issue')
   )
 );
 
@@ -100,6 +103,9 @@ using (
   bucket_id = 'generated-certificates'
   and (
     public.has_permission('certificates', 'view')
+    or public.has_permission('certificates', 'create')
+    or public.has_permission('certificates', 'update')
+    or public.has_permission('certificates', 'issue')
     or exists (
       select 1
       from public.certificate_files cf
@@ -117,7 +123,33 @@ for insert
 to authenticated
 with check (
   bucket_id = 'generated-certificates'
-  and public.has_permission('certificates', 'issue')
+  and (
+    public.has_permission('certificates', 'create')
+    or public.has_permission('certificates', 'update')
+    or public.has_permission('certificates', 'issue')
+  )
+);
+
+drop policy if exists storage_generated_certificates_update on storage.objects;
+create policy storage_generated_certificates_update
+on storage.objects
+for update
+to authenticated
+using (
+  bucket_id = 'generated-certificates'
+  and (
+    public.has_permission('certificates', 'create')
+    or public.has_permission('certificates', 'update')
+    or public.has_permission('certificates', 'issue')
+  )
+)
+with check (
+  bucket_id = 'generated-certificates'
+  and (
+    public.has_permission('certificates', 'create')
+    or public.has_permission('certificates', 'update')
+    or public.has_permission('certificates', 'issue')
+  )
 );
 
 -- =========================

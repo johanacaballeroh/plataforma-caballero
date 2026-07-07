@@ -125,6 +125,8 @@ Documentos:
 - El PDF debe generarse desde una plantilla versionada.
 - La plantilla usada debe quedar registrada.
 - Un certificado tiene un solo PDF generado asociado.
+- Al guardar un certificado nuevo se genera el PDF y luego se muestra la pantalla de detalle.
+- Al editar y guardar un certificado se regenera el PDF snapshot con el contenido vigente.
 - Cada tipo de generacion esta ligado a una plantilla activa especifica.
 - El numero de certificado no se ingresa manualmente; se genera por anio de emision.
 - Cliente solo ve certificados asociados a sus empresas.
@@ -174,7 +176,7 @@ Documentos:
 - Se pueden administrar items relacionados.
 - Se pueden adjuntar documentos en Storage.
 - Se puede consultar o descargar el unico PDF generado desde Ver Certificado.
-- Se genera PDF registrando metadata en `certificate_files`.
+- Se genera PDF al crear y al editar, registrando metadata en `certificate_files`.
 - Se conserva `template_version_id`.
 
 ## Pendiente de validacion

@@ -87,8 +87,9 @@ export class CertificateGenerationTypesEdit implements OnInit {
             await this.generationTypesService.updateGenerationType(generationType.id, payload);
             this.messageService.add({ severity: 'success', summary: 'Guardado', detail: 'Tipo de generacion actualizado correctamente.', life: 2500 });
             await this.router.navigate(['/certificate-generation-types']);
-        } catch {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el tipo de generacion. Revisa permisos, nombre unico y RLS.', life: 4500 });
+        } catch (error) {
+            const detail = error instanceof Error ? error.message : 'No se pudo actualizar el tipo de generacion. Revisa permisos, nombre unico y RLS.';
+            this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 4500 });
         } finally {
             this.saving.set(false);
         }

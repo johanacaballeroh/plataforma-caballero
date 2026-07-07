@@ -59,8 +59,9 @@ export class CertificatesNew implements OnInit {
             const certificate = await this.certificatesService.createCertificate(event.certificate);
             await Promise.all(event.items.map((item) => this.certificatesService.createItem(certificate.id, item)));
             await Promise.all(event.documents.map((document) => this.certificatesService.uploadDocument(certificate.id, document.document_type_id, document.file)));
+            await this.certificatesService.generateAndStoreCertificatePdf(certificate.id);
             this.messageService.add({ severity: 'success', summary: 'Certificado creado', detail: 'El certificado fue registrado correctamente.', life: 2500 });
-            await this.router.navigate(['/certificates', certificate.id, 'edit']);
+            await this.router.navigate(['/certificates', certificate.id]);
         } catch {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear el certificado. Revisa numero unico, permisos y RLS.', life: 4000 });
         } finally {

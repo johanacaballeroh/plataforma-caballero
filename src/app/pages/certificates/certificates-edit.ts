@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
@@ -44,6 +44,7 @@ import { CertificateFormOptions, CertificatesService, ManagedCertificate } from 
 export class CertificatesEdit implements OnInit {
     private readonly certificatesService = inject(CertificatesService);
     private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
     private readonly messageService = inject(MessageService);
 
     readonly certificate = signal<ManagedCertificate | null>(null);
@@ -79,8 +80,11 @@ export class CertificatesEdit implements OnInit {
         this.saving.set(true);
 
         try {
-            this.certificate.set(await this.certificatesService.updateCertificate(currentCertificate.id, event.certificate));
+            const certificate = await this.certificatesService.updateCertificate(currentCertificate.id, event.certificate);
+            await this.certificatesService.generateAndStoreCertificatePdf(certificate.id);
+            this.certificate.set(certificate);
             this.messageService.add({ severity: 'success', summary: 'Certificado actualizado', detail: 'El certificado fue actualizado correctamente.', life: 2500 });
+            await this.router.navigate(['/certificates', certificate.id]);
         } catch {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el certificado.', life: 3500 });
         } finally {
