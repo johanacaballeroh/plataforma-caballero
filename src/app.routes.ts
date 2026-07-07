@@ -14,6 +14,10 @@ import { CertificateGenerationTypes } from './app/pages/certificate-generation-t
 import { CertificateGenerationTypesDetail } from './app/pages/certificate-generation-types/certificate-generation-types-detail';
 import { CertificateGenerationTypesEdit } from './app/pages/certificate-generation-types/certificate-generation-types-edit';
 import { CertificateGenerationTypesNew } from './app/pages/certificate-generation-types/certificate-generation-types-new';
+import { Certificates } from './app/pages/certificates/certificates';
+import { CertificatesDetail } from './app/pages/certificates/certificates-detail';
+import { CertificatesEdit } from './app/pages/certificates/certificates-edit';
+import { CertificatesNew } from './app/pages/certificates/certificates-new';
 import { Companies } from './app/pages/companies/companies';
 import { CompaniesDetail } from './app/pages/companies/companies-detail';
 import { CompaniesEdit } from './app/pages/companies/companies-edit';
@@ -57,7 +61,10 @@ export const appRoutes: Routes = [
         children: [
             { path: '', component: Dashboard, canActivate: [permissionGuard], data: { permissions: ['dashboard.view'] } },
             { path: 'profile', component: Profile },
-            { path: 'certificates', component: FeaturePlaceholder, canActivate: [permissionGuard], data: { title: 'Certificados', description: 'Modulo preparado para listado, emision, documentos y PDF de certificados.', permissions: ['certificates.view', 'certificates.view_own'] } },
+            { path: 'certificates/new', component: CertificatesNew, canActivate: [permissionGuard], data: { permissions: ['certificates.create'] } },
+            { path: 'certificates/:id/edit', component: CertificatesEdit, canActivate: [permissionGuard], data: { permissions: ['certificates.update'] } },
+            { path: 'certificates/:id', component: CertificatesDetail, canActivate: [permissionGuard], data: { permissions: ['certificates.view', 'certificates.view_own'] } },
+            { path: 'certificates', component: Certificates, canActivate: [permissionGuard], data: { permissions: ['certificates.view', 'certificates.view_own'] } },
             { path: 'companies/new', component: CompaniesNew, canActivate: [permissionGuard], data: { permissions: ['companies.create'] } },
             { path: 'companies/:id/edit', component: CompaniesEdit, canActivate: [permissionGuard], data: { permissions: ['companies.update'] } },
             { path: 'companies/:id', component: CompaniesDetail, canActivate: [permissionGuard], data: { permissions: ['companies.view'] } },

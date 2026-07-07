@@ -20,7 +20,7 @@ Este documento resume el contrato de datos para implementacion frontend. Si hay 
 - Primary keys UUID con `gen_random_uuid()`, salvo `profiles.id` que referencia `auth.users(id)`.
 - Fechas estandar: `created_at`, `updated_at`.
 - Estados comunes: `active`, `inactive`.
-- Estados de certificados: `draft`, `issued`, `cancelled`, `inactive`.
+- Estados de certificados: `active`, `inactive`.
 - No guardar PDFs ni documentos como base64.
 - Almacenar archivos en Supabase Storage y guardar metadata en tablas.
 
@@ -254,10 +254,11 @@ Relaciones:
 - `generation_type_id`
 - `template_version_id`
 - `issue_date`
-- `service_date`
-- `plate`
+- `operation_date`
+- `guide_number`
 - `generation_source`
-- `arrival_address`
+- `generator_address`
+- `transporter_address`
 - `generator_company_id`
 - `transporter_company_id`
 - `final_destination_company_id`
@@ -280,8 +281,9 @@ Relaciones:
 
 Pendiente de validacion:
 
+- `service_date`, `plate` y `arrival_address` existen como columnas legadas nullable en el SQL actual, pero no forman parte del formulario identificado en capturas.
 - Si se requiere `start_date` y `end_date`, no existen en el esquema actual.
-- Si se requiere `origin_place`, no existe en el esquema actual; podria estar representado por `generation_source` o `arrival_address`, pero debe validarse.
+- Si se requiere `origin_place`, no existe en el esquema actual; podria estar representado por `generation_source`, pero debe validarse.
 
 ### `certificate_items`
 
@@ -291,7 +293,7 @@ Pendiente de validacion:
 - `quantity_type_id`
 - `quantity`
 - `weight`
-- `price`
+- `price` (legado o no visible en capturas actuales)
 - `description`
 - `sort_order`
 - `created_at`

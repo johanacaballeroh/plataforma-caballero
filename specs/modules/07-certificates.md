@@ -2,7 +2,7 @@
 
 ## Proposito
 
-Gestionar certificados de valorizacion de residuos, sus items, documentos adjuntos, emision y PDF generado.
+Gestionar certificados de valorizacion de residuos, sus items, documentos adjuntos y PDF generado.
 
 ## Pantallas identificadas
 
@@ -13,45 +13,87 @@ Gestionar certificados de valorizacion de residuos, sus items, documentos adjunt
 - Gestion de items del certificado.
 - Gestion de documentos adjuntos.
 - Vista o descarga de PDF.
-- Emision de certificado.
 
-## Campos detectados
+## Campos detectados en capturas
 
-Desde `certificates`:
+Listado:
 
-- `certificate_number`
-- `generation_type_id`
-- `template_version_id`
-- `issue_date`
-- `service_date`
-- `plate`
-- `generation_source`
-- `arrival_address`
-- `generator_company_id`
-- `transporter_company_id`
-- `final_destination_company_id`
-- `destination_place`
-- `observations`
-- `status`
-- `issued_at`
+- ID visual de fila.
+- Numero.
+- Empresa generadora.
+- Empresa transportista.
+- Fecha de emision.
+- Estado.
+- Acciones.
+
+Formulario:
+
+- Numero de documento generado automaticamente.
+- Tipo de generacion.
+- Fecha de operacion.
+- Fecha de emision.
+- Numero de guia.
+- Empresa generadora.
+- Direccion de empresa generadora.
+- Origen de la generacion.
+- Empresa transportista.
+- Direccion de empresa transportista.
+- Informacion adicional de operacion.
 
 Items:
 
-- `item_id`
-- `quantity_type_id`
-- `quantity`
-- `weight`
-- `price`
-- `description`
-- `sort_order`
+- Item.
+- Unidad derivada del item.
+- Codigo Basilea derivado del item.
+- Tipo de cantidad.
+- Cantidad.
+- Peso.
+- Descripcion.
+
+Documentos adjuntos:
+
+- Tipo de documento.
+- Archivo.
+- Estado del archivo.
+- Accion ver o descargar.
+
+## Campos de datos
+
+Desde `certificates`:
+
+- `certificate_number` generado automaticamente con formato `YYYY - NNNN`.
+- `generation_type_id`.
+- `template_version_id` resuelto automaticamente desde la plantilla activa del tipo de generacion.
+- `issue_date`.
+- `operation_date`.
+- `guide_number`.
+- `generation_source`.
+- `generator_address`.
+- `transporter_address`.
+- `generator_company_id`.
+- `transporter_company_id`.
+- `final_destination_company_id`.
+- `destination_place`.
+- `observations`.
+- `status`.
+- `issued_at`.
+
+Items:
+
+- `item_id`.
+- `quantity_type_id`.
+- `quantity`.
+- `weight`.
+- `description`.
+- `sort_order`.
 
 Documentos:
 
-- `document_type_id`
-- `file_name`
-- `storage_path`
-- `mime_type`
-- `size_bytes`
+- `document_type_id`.
+- `file_name`.
+- `storage_path`.
+- `mime_type`.
+- `size_bytes`.
 
 ## Entidades relacionadas
 
@@ -73,19 +115,22 @@ Documentos:
 - Un certificado puede tener multiples documentos adjuntos.
 - El PDF debe generarse desde una plantilla versionada.
 - La plantilla usada debe quedar registrada.
+- Cada tipo de generacion esta ligado a una plantilla activa especifica.
+- El numero de certificado no se ingresa manualmente; se genera por anio de emision.
 - Cliente solo ve certificados asociados a sus empresas.
-- Emitir certificado requiere permiso especifico.
-- El estado `issued` debe preservar trazabilidad.
 
 ## Validaciones sugeridas
 
-- Numero obligatorio y unico.
+- Numero obligatorio y unico, generado por sistema.
 - Tipo de generacion obligatorio.
+- Fecha de operacion obligatoria.
 - Fecha de emision obligatoria.
+- Numero de guia obligatorio.
 - Empresa generadora obligatoria.
+- Empresa transportista obligatoria.
 - Empresas seleccionadas deben estar activas.
-- Al menos un item antes de emitir: `Pendiente de validación`.
-- Cantidades, pesos y precios no negativos.
+- Al menos un item antes de generar PDF: `Pendiente de validacion`.
+- Cantidades y pesos no negativos.
 - Documentos con tipo valido y tamano permitido.
 
 ## Permisos requeridos
@@ -118,13 +163,12 @@ Documentos:
 - Se puede crear certificado con datos minimos.
 - Se pueden administrar items relacionados.
 - Se pueden adjuntar documentos en Storage.
-- Se puede emitir certificado si cumple validaciones.
+- Se puede consultar o descargar el PDF generado.
 - Se genera PDF registrando metadata en `certificate_files`.
 - Se conserva `template_version_id`.
 
-## Pendiente de validación
+## Pendiente de validacion
 
-- Reglas de numeracion.
-- Estados y transiciones exactas.
-- Obligatoriedad de transportista y destino final por tipo de generacion.
+- Transiciones exactas para activar/inactivar certificados.
+- Obligatoriedad de destino final por tipo de generacion.
 - Campos `start_date`, `end_date` u `origin_place` mencionados en documentacion previa no existen en esquema actual.

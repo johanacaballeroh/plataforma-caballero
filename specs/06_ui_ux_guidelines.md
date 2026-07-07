@@ -97,6 +97,8 @@ Estados comunes:
 - `issued` -> tag positivo.
 - `cancelled` -> tag danger.
 
+En certificados reconstruidos desde capturas se usan `active` e `inactive` salvo que una regla posterior valide otros estados.
+
 La severidad exacta debe elegirse usando el sistema visual de PrimeNG/Sakai.
 
 ## Menu lateral
