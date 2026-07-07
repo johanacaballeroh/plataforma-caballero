@@ -67,7 +67,10 @@ for insert
 to authenticated
 with check (
   bucket_id = 'certificate-templates'
-  and public.has_permission('certificate_templates', 'create')
+  and (
+    public.has_permission('certificate_templates', 'create')
+    or public.has_permission('certificate_templates', 'update')
+  )
 );
 
 drop policy if exists storage_certificate_templates_update on storage.objects;

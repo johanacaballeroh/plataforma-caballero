@@ -10,7 +10,7 @@ Gestionar tipos de generacion de certificado y reglas visuales/funcionales asoci
 - Crear tipo de generacion.
 - Editar tipo de generacion.
 - Detalle de tipo de generacion.
-- Asociacion con plantillas PDF: `Pendiente de validación`.
+- Asociacion con plantilla PDF activa para generacion de certificados.
 
 ## Campos detectados
 
@@ -39,6 +39,11 @@ Relaciones indirectas:
 - `show_destination_place` controla si el formulario de certificado debe mostrar lugar de destino.
 - Tipos inactivos no deberian seleccionarse en nuevos certificados.
 - Las plantillas PDF se versionan por tipo de generacion.
+- Cada tipo de generacion debe tener una plantilla PDF asociada.
+- Al adjuntar un nuevo PDF desde el formulario se crea una nueva version activa en `certificate_template_versions`.
+- La plantilla activa anterior debe quedar inactiva para no modificar certificados historicos.
+- En el detalle debe existir un boton `Ver PDF` para abrir la plantilla de certificado activa mediante URL firmada.
+- En las vistas de editar y detalle debe mostrarse el historial de plantillas con version, fecha de subida, cantidad de certificados asociados y accion para ver el PDF.
 
 ## Validaciones sugeridas
 
@@ -67,11 +72,14 @@ Relaciones indirectas:
 
 - El listado usa paginado, filtros y ordenamiento por servidor.
 - Se puede crear, editar y ver detalle.
+- El formulario permite adjuntar la plantilla de certificado en PDF.
+- La vista detalle permite abrir la plantilla activa con `Ver PDF`.
+- Las vistas de editar y detalle muestran el historial de plantillas versionadas.
+- Cada plantilla historica muestra cuantos certificados usan esa version.
 - Los flags afectan formularios futuros de certificados.
 - RLS impide acciones sin permisos.
 - No se modifican certificados historicos al cambiar plantillas.
 
 ## Pendiente de validación
 
-- Si la gestion de plantillas vive en este modulo o en Certificados.
 - Si existen mas flags funcionales observados en capturas que aun no estan en SQL.

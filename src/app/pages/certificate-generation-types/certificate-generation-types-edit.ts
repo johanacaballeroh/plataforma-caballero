@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AuthService } from '@/app/core/auth/auth.service';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { CertificateGenerationTypesForm } from './certificate-generation-types-form';
-import { CertificateGenerationTypesService, ManagedCertificateGenerationType, SaveCertificateGenerationTypePayload } from './certificate-generation-types.service';
+import { CertificateGenerationTypesService, CertificateTemplateVersion, ManagedCertificateGenerationType, SaveCertificateGenerationTypePayload } from './certificate-generation-types.service';
 
 @Component({
     selector: 'app-certificate-generation-types-edit',
@@ -26,7 +27,14 @@ import { CertificateGenerationTypesService, ManagedCertificateGenerationType, Sa
                 <div class="card">Cargando tipo de generacion...</div>
             } @else if (generationType(); as currentGenerationType) {
                 <div class="card">
-                    <app-certificate-generation-types-form mode="edit" [generationType]="currentGenerationType" [saving]="saving()" (save)="updateGenerationType($event)" />
+                    <app-certificate-generation-types-form
+                        mode="edit"
+                        [generationType]="currentGenerationType"
+                        [saving]="saving()"
+                        [canViewTemplates]="auth.hasPermission('certificate_templates.view')"
+                        (save)="updateGenerationType($event)"
+                        (viewTemplate)="openTemplate(currentGenerationType, $event)"
+                    />
                 </div>
             } @else {
                 <div class="card flex flex-col gap-4">
@@ -39,6 +47,7 @@ import { CertificateGenerationTypesService, ManagedCertificateGenerationType, Sa
     `
 })
 export class CertificateGenerationTypesEdit implements OnInit {
+    readonly auth = inject(AuthService);
     private readonly generationTypesService = inject(CertificateGenerationTypesService);
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -82,6 +91,20 @@ export class CertificateGenerationTypesEdit implements OnInit {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el tipo de generacion. Revisa permisos, nombre unico y RLS.', life: 4500 });
         } finally {
             this.saving.set(false);
+        }
+    }
+
+    async openTemplate(generationType: ManagedCertificateGenerationType, template: CertificateTemplateVersion): Promise<void> {
+        try {
+            const pdf = await this.generationTypesService.createTemplatePdfUrl(generationType.id, template);
+            window.open(pdf.url, '_blank', 'noopener,noreferrer');
+
+            if (pdf.usedFallback) {
+                this.messageService.add({ severity: 'warn', summary: 'PDF', detail: `La plantilla seleccionada no se encontro en Storage. Se abrio ${pdf.template.name} v${pdf.template.version_number}.`, life: 5000 });
+            }
+        } catch (error) {
+            const detail = error instanceof Error ? error.message : 'No se pudo abrir la plantilla PDF.';
+            this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 5000 });
         }
     }
 }

@@ -83,14 +83,11 @@ import { CertificateGenerationTypesService, CertificateGenerationTypeStatus, Man
                     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} tipos"
                     [showCurrentPageReport]="true"
                     responsiveLayout="scroll"
-                    [tableStyle]="{ 'min-width': '86rem' }"
+                    [tableStyle]="{ 'min-width': '58rem' }"
                 >
                     <ng-template #header>
                         <tr>
                             <th pSortableColumn="name" style="min-width: 18rem">Tipo de generacion <p-sortIcon field="name" /></th>
-                            <th style="min-width: 18rem">Descripcion</th>
-                            <th pSortableColumn="show_final_destination_company" style="min-width: 12rem">Destino final <p-sortIcon field="show_final_destination_company" /></th>
-                            <th pSortableColumn="show_destination_place" style="min-width: 12rem">Lugar destino <p-sortIcon field="show_destination_place" /></th>
                             <th style="min-width: 10rem">Certificados</th>
                             <th style="min-width: 10rem">Plantillas</th>
                             <th pSortableColumn="status" style="min-width: 10rem">Estado <p-sortIcon field="status" /></th>
@@ -112,9 +109,6 @@ import { CertificateGenerationTypesService, CertificateGenerationTypeStatus, Man
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ generationType.description || 'Sin descripcion' }}</td>
-                            <td><p-tag [value]="generationType.show_final_destination_company ? 'Visible' : 'Oculto'" [severity]="generationType.show_final_destination_company ? 'info' : 'secondary'" /></td>
-                            <td><p-tag [value]="generationType.show_destination_place ? 'Visible' : 'Oculto'" [severity]="generationType.show_destination_place ? 'info' : 'secondary'" /></td>
                             <td>{{ generationType.certificates_count }}</td>
                             <td>{{ generationType.templates_count }}</td>
                             <td><p-tag [value]="statusLabel(generationType.status)" [severity]="generationType.status === 'active' ? 'success' : 'danger'" /></td>
@@ -146,7 +140,7 @@ import { CertificateGenerationTypesService, CertificateGenerationTypeStatus, Man
 
                     <ng-template #emptymessage>
                         <tr>
-                            <td colspan="9">No se encontraron tipos de generacion.</td>
+                            <td colspan="6">No se encontraron tipos de generacion.</td>
                         </tr>
                     </ng-template>
                 </p-table>

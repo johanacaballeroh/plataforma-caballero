@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { CertificateGenerationTypesForm } from './certificate-generation-types-form';
-import { CertificateGenerationTypesService, ManagedCertificateGenerationType } from './certificate-generation-types.service';
+import { CertificateGenerationTypesService, CertificateTemplateVersion, ManagedCertificateGenerationType } from './certificate-generation-types.service';
 
 @Component({
     selector: 'app-certificate-generation-types-detail',
@@ -25,7 +25,10 @@ import { CertificateGenerationTypesService, ManagedCertificateGenerationType } f
                         <p class="text-muted-color max-w-3xl mt-2">Consulta datos, reglas de destino y relaciones con certificados o plantillas.</p>
                     </div>
                     @if (generationType(); as currentGenerationType) {
-                        <p-button label="Editar" icon="pi pi-pencil" [routerLink]="['/certificate-generation-types', currentGenerationType.id, 'edit']" [disabled]="!auth.hasPermission('certificate_generation_types.update')" />
+                        <div class="flex flex-wrap gap-2">
+                            <p-button label="Ver PDF" icon="pi pi-file-pdf" severity="danger" (onClick)="openActiveTemplate(currentGenerationType)" [disabled]="!currentGenerationType.active_template || !auth.hasPermission('certificate_templates.view')" />
+                            <p-button label="Editar" icon="pi pi-pencil" [routerLink]="['/certificate-generation-types', currentGenerationType.id, 'edit']" [disabled]="!auth.hasPermission('certificate_generation_types.update')" />
+                        </div>
                     }
                 </div>
             </div>
@@ -34,7 +37,7 @@ import { CertificateGenerationTypesService, ManagedCertificateGenerationType } f
                 <div class="card">Cargando tipo de generacion...</div>
             } @else if (generationType(); as currentGenerationType) {
                 <div class="card">
-                    <app-certificate-generation-types-form mode="detail" [generationType]="currentGenerationType" />
+                    <app-certificate-generation-types-form mode="detail" [generationType]="currentGenerationType" [canViewTemplates]="auth.hasPermission('certificate_templates.view')" (viewTemplate)="openTemplate(currentGenerationType, $event)" />
                 </div>
             } @else {
                 <div class="card flex flex-col gap-4">
@@ -69,6 +72,31 @@ export class CertificateGenerationTypesDetail implements OnInit {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar el tipo de generacion.', life: 3500 });
         } finally {
             this.loading.set(false);
+        }
+    }
+
+    async openActiveTemplate(generationType: ManagedCertificateGenerationType): Promise<void> {
+        const template = generationType.active_template;
+
+        if (!template) {
+            this.messageService.add({ severity: 'warn', summary: 'PDF', detail: 'Este tipo no tiene plantilla de certificado activa.', life: 3000 });
+            return;
+        }
+
+        await this.openTemplate(generationType, template);
+    }
+
+    async openTemplate(generationType: ManagedCertificateGenerationType, template: CertificateTemplateVersion): Promise<void> {
+        try {
+            const pdf = await this.generationTypesService.createTemplatePdfUrl(generationType.id, template);
+            window.open(pdf.url, '_blank', 'noopener,noreferrer');
+
+            if (pdf.usedFallback) {
+                this.messageService.add({ severity: 'warn', summary: 'PDF', detail: `La plantilla activa no se encontro en Storage. Se abrio ${pdf.template.name} v${pdf.template.version_number}.`, life: 5000 });
+            }
+        } catch (error) {
+            const detail = error instanceof Error ? error.message : 'No se pudo abrir la plantilla PDF.';
+            this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 5000 });
         }
     }
 }
