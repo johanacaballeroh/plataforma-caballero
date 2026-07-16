@@ -37,6 +37,8 @@ yarn-error.log
 testem.log
 /typings
 .vscode
+.codex-captures/
+reference/
 
 # System files
 .DS_Store
