@@ -35,6 +35,7 @@ export class FeaturePlaceholder {
     readonly description = computed(() => this.route.snapshot.data['description'] ?? 'Modulo preparado para una futura pantalla funcional.');
     readonly permissionLabel = computed(() => {
         const permissions = this.route.snapshot.data['permissions'] as string[] | undefined;
+
         return permissions?.length ? permissions.join(' / ') : 'Usuario autenticado';
     });
 }

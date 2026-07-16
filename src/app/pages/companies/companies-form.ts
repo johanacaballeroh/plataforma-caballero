@@ -154,6 +154,7 @@ export class CompaniesForm implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         if (!value.company_type || !value.ruc || !value.business_name || !value.status) {
             return;
         }
@@ -199,6 +200,7 @@ export class CompaniesForm implements OnChanges {
 
         if (this.mode === 'detail') {
             this.form.disable();
+
             return;
         }
 

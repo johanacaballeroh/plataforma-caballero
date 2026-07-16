@@ -61,11 +61,13 @@ export class ItemsDetail implements OnInit {
 
         if (!itemId) {
             this.loading.set(false);
+
             return;
         }
 
         try {
             const [item, options] = await Promise.all([this.itemsService.getItem(itemId), this.itemsService.getFormOptions()]);
+
             this.item.set(item);
             this.options.set(options);
         } catch {

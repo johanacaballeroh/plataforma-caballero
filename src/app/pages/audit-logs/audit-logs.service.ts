@@ -57,6 +57,7 @@ export class AuditLogsService {
         let query = this.supabase.from('audit_logs').select('id, user_id, action, table_name, record_id, old_data, new_data, created_at, user:profiles(full_name, email)', { count: 'exact' });
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${this.escapeLikeValue(search)}%`;
             const clauses = [`table_name.ilike.${pattern}`, `action.ilike.${pattern}`];
@@ -81,6 +82,7 @@ export class AuditLogsService {
         }
 
         const recordId = params.filters.recordId?.trim();
+
         if (recordId) {
             query = query.eq('record_id', recordId);
         }
@@ -94,6 +96,7 @@ export class AuditLogsService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<AuditLog[]>();

@@ -55,8 +55,10 @@ export class CategoriesService {
         let query = this.supabase.from('categories').select('id, name, description, status, created_at, updated_at', { count: 'exact' });
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.or(`name.ilike.${pattern},description.ilike.${pattern}`);
         }
 
@@ -65,6 +67,7 @@ export class CategoriesService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<CategoryRow[]>();
@@ -89,6 +92,7 @@ export class CategoriesService {
         }
 
         const itemCounts = await this.getItemCounts([categoryId]);
+
         return this.mapCategory(data, itemCounts.get(categoryId) ?? 0);
     }
 

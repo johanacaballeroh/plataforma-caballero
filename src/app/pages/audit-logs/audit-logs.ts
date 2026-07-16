@@ -11,7 +11,7 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
-import { AuditAction, AuditData, AuditLog, AuditLogsService, AuditUserOption } from './audit-logs.service';
+import { AuditAction, AuditLog, AuditLogsService, AuditUserOption } from './audit-logs.service';
 
 interface AuditTableOption {
     label: string;
@@ -320,6 +320,7 @@ export class AuditLogs implements OnInit {
     readonly visibleTableCount = computed(() => new Set(this.logs().map((log) => log.table_name)).size);
     readonly selectedDiff = computed(() => {
         const log = this.selectedLog();
+
         return log ? this.diffLog(log) : [];
     });
 
@@ -368,6 +369,7 @@ export class AuditLogs implements OnInit {
 
         if (dateFrom && dateTo && dateFrom > dateTo) {
             this.messageService.add({ severity: 'warn', summary: 'Fechas invalidas', detail: 'La fecha desde no puede ser mayor que la fecha hasta.', life: 3500 });
+
             return;
         }
 
@@ -451,6 +453,7 @@ export class AuditLogs implements OnInit {
         }
 
         const changed = this.diffLog(log).length;
+
         return changed === 1 ? '1 campo modificado' : `${changed} campos modificados`;
     }
 

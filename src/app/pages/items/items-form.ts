@@ -175,6 +175,7 @@ export class ItemsForm implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         if (!value.code || !value.name || !value.unit_id || !value.category_id || !value.item_type_id || !value.status) {
             return;
         }
@@ -213,6 +214,7 @@ export class ItemsForm implements OnChanges {
 
         if (this.mode === 'detail') {
             this.form.disable();
+
             return;
         }
 

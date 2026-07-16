@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -391,6 +391,9 @@ interface expandedRows {
     providers: [ConfirmationService, MessageService, CustomerService, ProductService]
 })
 export class TableDemo implements OnInit {
+    private customerService = inject(CustomerService);
+    private productService = inject(ProductService);
+
     customers1: Customer[] = [];
 
     customers2: Customer[] = [];
@@ -421,17 +424,12 @@ export class TableDemo implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(
-        private customerService: CustomerService,
-        private productService: ProductService
-    ) {}
-
     ngOnInit() {
         this.customerService.getCustomersLarge().then((customers) => {
             this.customers1 = customers;
             this.loading = false;
 
-            // @ts-ignore
+            // @ts-expect-error Sakai demo data stores dates as strings before table normalization.
             this.customers1.forEach((customer) => (customer.date = new Date(customer.date)));
         });
         this.customerService.getCustomersMedium().then((customers) => (this.customers2 = customers));
@@ -478,6 +476,7 @@ export class TableDemo implements OnInit {
                 } else {
                     const previousRowData = this.customers3[i - 1];
                     const previousRowGroup = previousRowData?.representative?.name;
+
                     if (representativeName === previousRowGroup) {
                         this.rowGroupMetadata[representativeName].size++;
                     } else {
@@ -495,6 +494,7 @@ export class TableDemo implements OnInit {
                     if (p.id) {
                         acc[p.id] = true;
                     }
+
                     return acc;
                 },
                 {} as { [key: string]: boolean }

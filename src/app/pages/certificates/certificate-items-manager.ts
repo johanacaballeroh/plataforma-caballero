@@ -29,7 +29,7 @@ type ItemDialogMode = 'create' | 'edit';
                     <h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0">Items del certificado</h2>
                     <p class="text-muted-color text-sm">Residuos, unidades, codigo Basilea, cantidades y pesos asociados.</p>
                 </div>
-                @if (!isReadonly) {
+                @if (!readOnly) {
                     <p-button label="Agregar Item" icon="pi pi-plus" size="small" (onClick)="openCreate()" />
                 }
             </div>
@@ -62,7 +62,7 @@ type ItemDialogMode = 'create' | 'edit';
                         <td>{{ row.weight ?? '-' }}</td>
                         <td>{{ row.description || 'Sin descripcion' }}</td>
                         <td>
-                            @if (!isReadonly) {
+                            @if (!readOnly) {
                                 <div class="flex justify-end gap-2">
                                     <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (onClick)="openEdit(row)" />
                                     <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" (onClick)="confirmDelete(row)" />
@@ -150,7 +150,7 @@ export class CertificateItemsManager implements OnChanges {
 
     @Input() certificateId = '';
     @Input() options: CertificateFormOptions = { companies: [], generationTypes: [], templateVersions: [], companyAddresses: [], items: [], quantityTypes: [], documentTypes: [] };
-    @Input({ alias: 'readonly' }) isReadonly = false;
+    @Input() readOnly = false;
     @Input() embedded = false;
 
     readonly items = signal<CertificateItem[]>([]);
@@ -226,6 +226,7 @@ export class CertificateItemsManager implements OnChanges {
 
     selectedItemOption(): CertificateFormOptions['items'][number] | null {
         const itemId = this.form.controls.item_id.value;
+
         return this.options.items.find((item) => item.id === itemId) ?? null;
     }
 
@@ -237,6 +238,7 @@ export class CertificateItemsManager implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         if (!value.item_id || !value.sort_order) {
             return;
         }
@@ -253,6 +255,7 @@ export class CertificateItemsManager implements OnChanges {
 
         if (!this.certificateId) {
             this.saveDraft(payload);
+
             return;
         }
 
@@ -260,6 +263,7 @@ export class CertificateItemsManager implements OnChanges {
 
         try {
             const selectedItem = this.selectedItem();
+
             if (selectedItem) {
                 await this.certificatesService.updateItem(selectedItem.id, payload);
             } else {
@@ -293,6 +297,7 @@ export class CertificateItemsManager implements OnChanges {
     async delete(item: CertificateItem): Promise<void> {
         if (!this.certificateId || item.id.startsWith('draft-')) {
             this.items.set(this.items().filter((currentItem) => currentItem.id !== item.id));
+
             return;
         }
 

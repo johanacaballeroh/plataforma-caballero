@@ -55,8 +55,10 @@ export class BaselCodesService {
         let query = this.supabase.from('basel_codes').select('id, code, description, status, created_at, updated_at', { count: 'exact' });
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.or(`code.ilike.${pattern},description.ilike.${pattern}`);
         }
 
@@ -65,6 +67,7 @@ export class BaselCodesService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<BaselCodeRow[]>();
@@ -89,6 +92,7 @@ export class BaselCodesService {
         }
 
         const itemCounts = await this.getItemCounts([baselCodeId]);
+
         return this.mapBaselCode(data, itemCounts.get(baselCodeId) ?? 0);
     }
 

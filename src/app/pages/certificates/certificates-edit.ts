@@ -57,11 +57,13 @@ export class CertificatesEdit implements OnInit {
 
         if (!certificateId) {
             this.loading.set(false);
+
             return;
         }
 
         try {
             const [certificate, options] = await Promise.all([this.certificatesService.getCertificate(certificateId), this.certificatesService.getFormOptions()]);
+
             this.certificate.set(certificate);
             this.options.set(options);
         } catch {
@@ -73,6 +75,7 @@ export class CertificatesEdit implements OnInit {
 
     async updateCertificate(event: CertificateCompleteSaveEvent): Promise<void> {
         const currentCertificate = this.certificate();
+
         if (!currentCertificate) {
             return;
         }
@@ -81,6 +84,7 @@ export class CertificatesEdit implements OnInit {
 
         try {
             const certificate = await this.certificatesService.updateCertificate(currentCertificate.id, event.certificate);
+
             await this.certificatesService.generateAndStoreCertificatePdf(certificate.id);
             this.certificate.set(certificate);
             this.messageService.add({ severity: 'success', summary: 'Certificado actualizado', detail: 'El certificado fue actualizado correctamente.', life: 2500 });

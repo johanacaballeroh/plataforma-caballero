@@ -263,13 +263,16 @@ export class CertificatesService {
         let query = this.supabase.from('certificates').select(CERTIFICATE_SELECT, { count: 'exact' });
 
         const series = params.filters.series?.trim();
+
         if (series) {
             query = query.ilike('certificate_number', `${series.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`);
         }
 
         const number = params.filters.number?.trim();
+
         if (number) {
             const pattern = `%${number.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.or(`certificate_number.ilike.${pattern},guide_number.ilike.${pattern}`);
         }
 
@@ -282,6 +285,7 @@ export class CertificatesService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<CertificateRow[]>();
@@ -307,6 +311,7 @@ export class CertificatesService {
         }
 
         const [itemCounts, documentCounts, fileCounts] = await Promise.all([this.countByCertificate('certificate_items', [certificateId]), this.countByCertificate('certificate_documents', [certificateId]), this.countByCertificate('certificate_files', [certificateId])]);
+
         return this.mapCertificate(data, itemCounts.get(certificateId) ?? 0, documentCounts.get(certificateId) ?? 0, fileCounts.get(certificateId) ?? 0);
     }
 
@@ -533,6 +538,7 @@ quantity_type:quantity_types(id, name, status)
 
         if (template.id !== certificate.template_version_id) {
             const { error } = await this.supabase.from('certificates').update({ template_version_id: template.id }).eq('id', certificate.id);
+
             if (error) {
                 throw error;
             }
@@ -553,17 +559,20 @@ quantity_type:quantity_types(id, name, status)
 
         if (existing) {
             const { error } = await this.supabase.from('certificate_files').update(payload).eq('id', existing.id);
+
             if (error) {
                 throw error;
             }
         } else {
             const { error } = await this.supabase.from('certificate_files').insert(payload);
+
             if (error) {
                 throw error;
             }
         }
 
         const generated = await this.getCertificatePdf(effectiveCertificate.id);
+
         if (!generated) {
             throw new Error('No se pudo registrar el PDF generado.');
         }
@@ -587,6 +596,7 @@ quantity_type:quantity_types(id, name, status)
 
         for (const template of templates) {
             const pdf = await this.tryDownloadTemplatePdf(template);
+
             if (pdf) {
                 return { template, pdf };
             }
@@ -615,6 +625,7 @@ quantity_type:quantity_types(id, name, status)
         }
 
         const templates = data ?? [];
+
         if (!preferredTemplateVersionId) {
             return templates;
         }
@@ -656,6 +667,7 @@ quantity_type:quantity_types(id, name, status)
         }
 
         const storageError = error as { statusCode?: string | number; status?: string | number; error?: string; message?: string };
+
         return storageError.statusCode === 404 || storageError.statusCode === '404' || storageError.status === 404 || storageError.status === '404' || storageError.error === 'not_found' || storageError.message === 'Object not found';
     }
 
@@ -808,6 +820,7 @@ quantity_type:quantity_types(id, name, status)
         const next =
             (data ?? []).reduce((max, row) => {
                 const sequence = this.extractCertificateSequence(row.certificate_number, year);
+
                 return sequence === null ? max : Math.max(max, sequence);
             }, 0) + 1;
 
@@ -817,11 +830,13 @@ quantity_type:quantity_types(id, name, status)
     private extractCertificateSequence(certificateNumber: string, year: number): number | null {
         const normalized = certificateNumber.trim();
         const currentFormat = normalized.match(/^(\d{4})\s*-\s*(\d+)$/);
+
         if (currentFormat && Number(currentFormat[1]) === year) {
             return Number(currentFormat[2]);
         }
 
         const legacyFormat = normalized.match(new RegExp(`(?:^|\\D)${year}\\D+(\\d+)$`));
+
         return legacyFormat ? Number(legacyFormat[1]) : null;
     }
 
@@ -928,40 +943,50 @@ quantity_type:quantity_types(id, name, status)
         const borderColor = rgb(0.15, 0.15, 0.15);
 
         const y = (fromTop: number): number => height - fromTop;
+
         const drawText = (x: number, fromTop: number, value: string, size = 10, bold = false, color = textColor, normalize = true): void => {
             const font = bold ? boldFont : regularFont;
             const text = normalize ? this.normalizePdfText(value) : value;
+
             page.drawText(text, { x, y: y(fromTop), size, font, color });
         };
+
         const drawCenteredText = (fromTop: number, value: string, size = 12, bold = false, color = textColor): void => {
             const font = bold ? boldFont : regularFont;
             const text = this.normalizePdfText(value);
             const textWidth = font.widthOfTextAtSize(text, size);
+
             page.drawText(text, { x: Math.max(45, (width - textWidth) / 2), y: y(fromTop), size, font, color });
         };
+
         const drawLine = (x1: number, top1: number, x2: number, top2: number): void => {
             page.drawLine({ start: { x: x1, y: y(top1) }, end: { x: x2, y: y(top2) }, thickness: 0.7, color: borderColor });
         };
+
         const drawRect = (x: number, top: number, w: number, h: number): void => {
             page.drawRectangle({ x, y: y(top + h), width: w, height: h, borderColor, borderWidth: 0.7 });
         };
+
         const drawCellText = (x: number, top: number, w: number, value: string, maxLength: number, centered = false, bold = false): void => {
             const font = bold ? boldFont : regularFont;
             const text = this.truncatePdfText(value, maxLength);
             const size = 7.5;
             const textWidth = font.widthOfTextAtSize(text, size);
             const textX = centered ? x + Math.max(4, (w - textWidth) / 2) : x + 5;
+
             page.drawText(text, { x: textX, y: y(top + 15), size, font, color: textColor });
         };
 
         drawText(width - 150, 42, `N\u00ba ${this.normalizePdfText(certificate.certificate_number)}`, 14, true, blueColor, false);
 
         const title = (certificate.generation_type?.name || 'Certificado').toUpperCase();
+
         this.wrapPdfText(title, 54)
             .slice(0, 2)
             .forEach((line, index) => drawCenteredText(116 + index * 20, line, 15, true, rgb(0, 0, 0)));
 
         const legalDeclaration = certificate.generation_type?.description?.trim() ?? '';
+
         this.wrapPdfText(legalDeclaration, 88)
             .slice(0, 4)
             .forEach((line, index) => drawText(70, 190 + index * 17, line, 9.5));
@@ -981,7 +1006,9 @@ quantity_type:quantity_types(id, name, status)
                 if (index > 0) {
                     drawLine(columnX, top, columnX, top + rowHeight);
                 }
+
                 const maxLength = index === 2 ? 42 : 16;
+
                 drawCellText(columnX, top, columnWidth, values[index] ?? '', maxLength, index !== 2, isHeader || index === 0);
                 columnX += columnWidth;
             });
@@ -1021,6 +1048,7 @@ quantity_type:quantity_types(id, name, status)
 
         detailLines.forEach(([label, value], index) => {
             const top = detailTop + index * 24;
+
             drawText(70, top, label, 10.5, true);
             drawText(175, top, this.truncatePdfText(value, 70), 10.5);
         });
@@ -1034,6 +1062,7 @@ quantity_type:quantity_types(id, name, status)
 
         const pdfBytes = await pdfDoc.save();
         const pdfBuffer = new ArrayBuffer(pdfBytes.byteLength);
+
         new Uint8Array(pdfBuffer).set(pdfBytes);
 
         return new Blob([pdfBuffer], { type: 'application/pdf' });
@@ -1047,9 +1076,11 @@ quantity_type:quantity_types(id, name, status)
         const text = (x: number, y: number, value: string, size = 10, bold = false, color = '0 0 0'): void => {
             content.push(`${color} rg BT /${bold ? 'F2' : 'F1'} ${size} Tf ${x} ${y} Td (${this.escapePdfText(value)}) Tj ET`);
         };
+
         const line = (x1: number, y1: number, x2: number, y2: number): void => {
             content.push(`0 0 0 RG ${x1} ${y1} m ${x2} ${y2} l S`);
         };
+
         const rect = (x: number, y: number, w: number, h: number): void => {
             content.push(`0 0 0 RG ${x} ${y} ${w} ${h} re S`);
         };
@@ -1059,6 +1090,7 @@ quantity_type:quantity_types(id, name, status)
 
         const intro =
             'Mediante el presente documento la empresa CABALLERO SOLUCIONES AMBIENTALES S.A.C. certifica haber realizado la valorizacion correspondiente dentro de su infraestructura autorizada a los siguientes residuos. Dando cumplimiento a la normativa legal vigente de nuestro pais.';
+
         this.wrapPdfText(intro, 80).forEach((lineText, index) => text(70, 690 - index * 18, lineText, 10));
 
         const tableTop = 590;
@@ -1072,6 +1104,7 @@ quantity_type:quantity_types(id, name, status)
             if (index > 0) {
                 line(x, tableTop, x, tableTop + rowHeight);
             }
+
             text(x + 5, tableTop + 8, header, 8, true);
             x += columns[index];
         });
@@ -1094,12 +1127,14 @@ quantity_type:quantity_types(id, name, status)
                 if (index > 0) {
                     line(x, y, x, y + rowHeight);
                 }
+
                 text(x + 5, y + 8, this.truncatePdfText(value, index === 2 ? 42 : 14), 8, index === 0);
                 x += columns[index];
             });
         });
 
         const detailY = Math.max(180, tableTop - rowHeight * (items.length + 2));
+
         text(70, detailY, 'Generador:', 11, true);
         text(175, detailY, certificate.generator_company?.business_name || '-', 11);
         text(70, detailY - 24, 'Ubicacion:', 11, true);
@@ -1131,10 +1166,13 @@ quantity_type:quantity_types(id, name, status)
         }
 
         const xrefOffset = encoder.encode(pdf).length;
+
         pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+
         for (let index = 1; index < offsets.length; index++) {
             pdf += `${String(offsets[index]).padStart(10, '0')} 00000 n \n`;
         }
+
         pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
 
         return new Blob([pdf], { type: 'application/pdf' });
@@ -1147,6 +1185,7 @@ quantity_type:quantity_types(id, name, status)
 
         for (const word of words) {
             const next = current ? `${current} ${word}` : word;
+
             if (next.length > maxLength) {
                 lines.push(current);
                 current = word;
@@ -1175,6 +1214,7 @@ quantity_type:quantity_types(id, name, status)
 
     private truncatePdfText(value: string, maxLength: number): string {
         const normalized = this.normalizePdfText(value);
+
         return normalized.length > maxLength ? `${normalized.slice(0, Math.max(0, maxLength - 3))}...` : normalized;
     }
 
@@ -1185,6 +1225,7 @@ quantity_type:quantity_types(id, name, status)
     private formatPdfDate(value: string): string {
         const date = new Date(`${value}T00:00:00`);
         const months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+
         return `${String(date.getDate()).padStart(2, '0')} DE ${months[date.getMonth()]} DEL ${date.getFullYear()}`;
     }
 }

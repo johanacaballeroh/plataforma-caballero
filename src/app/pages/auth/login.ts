@@ -80,8 +80,10 @@ export class Login {
 
         try {
             const { email, password } = this.form.getRawValue();
+
             await this.auth.signIn(email, password);
             const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+
             await this.router.navigateByUrl(returnUrl);
         } catch {
             this.error.set('No se pudo iniciar sesion. Verifica tus credenciales y estado de usuario.');

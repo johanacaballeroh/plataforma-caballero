@@ -63,6 +63,7 @@ export class CertificateGenerationTypesDetail implements OnInit {
 
         if (!generationTypeId) {
             this.loading.set(false);
+
             return;
         }
 
@@ -80,6 +81,7 @@ export class CertificateGenerationTypesDetail implements OnInit {
 
         if (!template) {
             this.messageService.add({ severity: 'warn', summary: 'PDF', detail: 'Este tipo no tiene plantilla de certificado activa.', life: 3000 });
+
             return;
         }
 
@@ -89,6 +91,7 @@ export class CertificateGenerationTypesDetail implements OnInit {
     async openTemplate(generationType: ManagedCertificateGenerationType, template: CertificateTemplateVersion): Promise<void> {
         try {
             const pdf = await this.generationTypesService.createTemplatePdfUrl(generationType.id, template);
+
             window.open(pdf.url, '_blank', 'noopener,noreferrer');
 
             if (pdf.usedFallback) {
@@ -96,6 +99,7 @@ export class CertificateGenerationTypesDetail implements OnInit {
             }
         } catch (error) {
             const detail = error instanceof Error ? error.message : 'No se pudo abrir la plantilla PDF.';
+
             this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 5000 });
         }
     }

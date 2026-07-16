@@ -91,8 +91,10 @@ export class CertificateGenerationTypesService {
         let query = this.supabase.from('certificate_generation_types').select('id, name, description, show_final_destination_company, show_destination_place, status, created_at, updated_at', { count: 'exact' });
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.or(`name.ilike.${pattern},description.ilike.${pattern}`);
         }
 
@@ -109,6 +111,7 @@ export class CertificateGenerationTypesService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<CertificateGenerationTypeRow[]>();
@@ -307,9 +310,11 @@ export class CertificateGenerationTypesService {
             }
         } catch (error) {
             await this.supabase.storage.from(bucket).remove([storagePath]);
+
             if (insertedTemplateId) {
                 await this.supabase.from('certificate_template_versions').delete().eq('id', insertedTemplateId);
             }
+
             throw error;
         }
     }

@@ -153,6 +153,7 @@ export class RolesForm implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         this.save.emit({
             name: value.name,
             description: value.description || null,
@@ -166,6 +167,7 @@ export class RolesForm implements OnChanges {
 
         for (const permission of this.permissions) {
             const list = groups.get(permission.module_key) ?? [];
+
             list.push(permission);
             groups.set(permission.module_key, list);
         }
@@ -207,6 +209,7 @@ export class RolesForm implements OnChanges {
 
     selectedInGroup(group: PermissionGroup): number {
         const selected = new Set(this.selectedPermissionIds);
+
         return group.permissions.filter((permission) => selected.has(permission.id)).length;
     }
 
@@ -267,6 +270,7 @@ export class RolesForm implements OnChanges {
 
         if (this.mode === 'detail') {
             this.form.disable();
+
             return;
         }
 

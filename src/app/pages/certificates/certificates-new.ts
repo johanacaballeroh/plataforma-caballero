@@ -43,6 +43,7 @@ export class CertificatesNew implements OnInit {
         try {
             const today = new Date().toISOString().slice(0, 10);
             const [options, nextCertificateNumber] = await Promise.all([this.certificatesService.getFormOptions(), this.certificatesService.previewNextCertificateNumber(today)]);
+
             this.options.set(options);
             this.nextCertificateNumber.set(nextCertificateNumber);
         } catch {
@@ -57,6 +58,7 @@ export class CertificatesNew implements OnInit {
 
         try {
             const certificate = await this.certificatesService.createCertificate(event.certificate);
+
             await Promise.all(event.items.map((item) => this.certificatesService.createItem(certificate.id, item)));
             await Promise.all(event.documents.map((document) => this.certificatesService.uploadDocument(certificate.id, document.document_type_id, document.file)));
             await this.certificatesService.generateAndStoreCertificatePdf(certificate.id);

@@ -125,6 +125,7 @@ export class UnitsForm implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         this.save.emit({
             code: value.code,
             name: value.name,
@@ -151,6 +152,7 @@ export class UnitsForm implements OnChanges {
 
         if (this.mode === 'detail') {
             this.form.disable();
+
             return;
         }
 

@@ -89,6 +89,7 @@ export class ReportsService {
         let query = this.buildCertificateReportQuery(params.filters, { count: 'exact' });
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'fecha';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1, nullsFirst: false }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<CertificateReportRow[]>();
@@ -169,8 +170,10 @@ export class ReportsService {
             );
 
         const search = filters.search?.trim();
+
         if (search) {
             const pattern = `%${this.escapeLikeValue(search)}%`;
+
             query = query.or(
                 [
                     `numero_ticket.ilike.${pattern}`,
@@ -202,6 +205,7 @@ export class ReportsService {
         }
 
         const baselCode = filters.baselCode?.trim();
+
         if (baselCode) {
             query = query.ilike('codigo_basilea', `%${this.escapeLikeValue(baselCode)}%`);
         }

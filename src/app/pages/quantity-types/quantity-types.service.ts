@@ -56,8 +56,10 @@ export class QuantityTypesService {
         let query = this.supabase.from('quantity_types').select('id, name, show_value, status, created_at, updated_at', { count: 'exact' });
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.ilike('name', pattern);
         }
 
@@ -70,6 +72,7 @@ export class QuantityTypesService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<QuantityTypeRow[]>();
@@ -94,6 +97,7 @@ export class QuantityTypesService {
         }
 
         const itemCounts = await this.getCertificateItemCounts([quantityTypeId]);
+
         return this.mapQuantityType(data, itemCounts.get(quantityTypeId) ?? 0);
     }
 

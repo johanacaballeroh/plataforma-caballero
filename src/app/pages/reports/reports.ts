@@ -251,6 +251,7 @@ export class Reports implements OnInit {
 
         if (dateFrom && dateTo && dateFrom > dateTo) {
             this.messageService.add({ severity: 'warn', summary: 'Fechas invalidas', detail: 'La fecha desde no puede ser mayor que la fecha hasta.', life: 3500 });
+
             return;
         }
 
@@ -271,6 +272,7 @@ export class Reports implements OnInit {
 
         try {
             const result = await this.reportsService.exportCertificateReport(this.getNormalizedFilters(), this.normalizeSortField(this.lastLazyEvent.sortField), this.lastLazyEvent.sortOrder === 1 ? 1 : -1);
+
             this.downloadExcelFile(result.fileName, result.rows);
             await this.loadRecentExports();
             this.messageService.add({ severity: 'success', summary: 'Reporte exportado', detail: 'La exportacion fue registrada y descargada.', life: 3500 });
@@ -359,6 +361,7 @@ export class Reports implements OnInit {
 
     private companyName(companyId: string): string | null {
         const company = this.companies().find((option) => option.id === companyId);
+
         return company ? `${company.name} (${company.ruc})` : companyId;
     }
 
@@ -385,6 +388,7 @@ export class Reports implements OnInit {
         }
 
         const pad = (datePart: number): string => String(datePart).padStart(2, '0');
+
         return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}`;
     }
 
@@ -447,6 +451,7 @@ export class Reports implements OnInit {
         }
 
         const [year, month, day] = value.split('-');
+
         return year && month && day ? `${day}/${month}/${year}` : value;
     }
 

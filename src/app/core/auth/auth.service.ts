@@ -51,6 +51,7 @@ export class AuthService {
 
         this.initialized = true;
         const { data } = await this.supabase.auth.getSession();
+
         await this.setSession(data.session);
     }
 
@@ -95,6 +96,7 @@ export class AuthService {
 
     async refreshCurrentUser(): Promise<void> {
         const session = this.session();
+
         await this.setSession(session);
     }
 
@@ -110,6 +112,7 @@ export class AuthService {
                 companyIds: [],
                 loading: false
             });
+
             return;
         }
 
@@ -130,6 +133,7 @@ export class AuthService {
 
         if (error) {
             console.error('No se pudo cargar el perfil autenticado.', error);
+
             return null;
         }
 
@@ -145,6 +149,7 @@ export class AuthService {
 
         if (error) {
             console.error('No se pudieron cargar los permisos del usuario.', error);
+
             return [];
         }
 
@@ -157,6 +162,7 @@ export class AuthService {
 
             for (const rolePermission of userRole.roles.role_permissions ?? []) {
                 const permission = rolePermission.permissions;
+
                 if (permission) {
                     permissions.add(`${permission.module_key}.${permission.action_key}`);
                 }
@@ -171,6 +177,7 @@ export class AuthService {
 
         if (error) {
             console.error('No se pudieron cargar las empresas asociadas al usuario.', error);
+
             return [];
         }
 

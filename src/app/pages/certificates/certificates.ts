@@ -225,6 +225,7 @@ export class Certificates implements OnInit {
             await this.reload();
         } catch (error) {
             const detail = error instanceof Error ? error.message : 'No se pudo eliminar el certificado.';
+
             this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 4000 });
         }
     }

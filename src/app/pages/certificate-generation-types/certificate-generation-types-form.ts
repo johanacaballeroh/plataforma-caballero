@@ -227,6 +227,7 @@ export class CertificateGenerationTypesForm implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         this.save.emit({
             name: value.name,
             description: value.description || null,
@@ -288,6 +289,7 @@ export class CertificateGenerationTypesForm implements OnChanges {
 
         if (this.mode === 'detail') {
             this.form.disable();
+
             return;
         }
 
@@ -297,6 +299,7 @@ export class CertificateGenerationTypesForm implements OnChanges {
     private resetTemplateFile(): void {
         this.selectedTemplateFile.set(null);
         this.templateFileError.set(this.validateTemplateFile(null));
+
         if (this.templateFileInput?.nativeElement) {
             this.templateFileInput.nativeElement.value = '';
         }
@@ -312,6 +315,7 @@ export class CertificateGenerationTypesForm implements OnChanges {
         }
 
         const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+
         if (!isPdf) {
             return 'La plantilla debe ser un archivo PDF.';
         }

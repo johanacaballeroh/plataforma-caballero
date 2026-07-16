@@ -38,7 +38,7 @@ import { CompaniesService, ManagedCompany } from './companies.service';
                     <app-companies-form mode="detail" [company]="currentCompany" />
                 </div>
 
-                <app-companies-relations [companyId]="currentCompany.id" [readonly]="true" />
+                <app-companies-relations [companyId]="currentCompany.id" [readOnly]="true" />
             } @else {
                 <div class="card flex flex-col gap-4">
                     <h2 class="text-xl font-semibold">Empresa no encontrada</h2>
@@ -63,6 +63,7 @@ export class CompaniesDetail implements OnInit {
 
         if (!companyId) {
             this.loading.set(false);
+
             return;
         }
 

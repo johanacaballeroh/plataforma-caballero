@@ -122,6 +122,7 @@ export class QuantityTypesForm implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         this.save.emit({
             name: value.name,
             show_value: value.show_value,
@@ -146,6 +147,7 @@ export class QuantityTypesForm implements OnChanges {
 
         if (this.mode === 'detail') {
             this.form.disable();
+
             return;
         }
 

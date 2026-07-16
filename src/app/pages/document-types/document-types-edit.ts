@@ -53,6 +53,7 @@ export class DocumentTypesEdit implements OnInit {
 
         if (!documentTypeId) {
             this.loading.set(false);
+
             return;
         }
 

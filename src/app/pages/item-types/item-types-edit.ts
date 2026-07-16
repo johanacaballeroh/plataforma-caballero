@@ -53,6 +53,7 @@ export class ItemTypesEdit implements OnInit {
 
         if (!itemTypeId) {
             this.loading.set(false);
+
             return;
         }
 

@@ -108,6 +108,7 @@ export class ItemTypesForm implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         this.save.emit({
             name: value.name,
             status: value.status
@@ -130,6 +131,7 @@ export class ItemTypesForm implements OnChanges {
 
         if (this.mode === 'detail') {
             this.form.disable();
+
             return;
         }
 

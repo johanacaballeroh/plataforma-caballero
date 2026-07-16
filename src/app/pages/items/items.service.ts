@@ -129,8 +129,10 @@ export class ItemsService {
             );
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.or(`code.ilike.${pattern},name.ilike.${pattern},description.ilike.${pattern}`);
         }
 
@@ -155,6 +157,7 @@ export class ItemsService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<ItemRow[]>();
@@ -202,6 +205,7 @@ export class ItemsService {
         }
 
         const certificateItemCounts = await this.getCertificateItemCounts([itemId]);
+
         return this.mapItem(data, certificateItemCounts.get(itemId) ?? 0);
     }
 

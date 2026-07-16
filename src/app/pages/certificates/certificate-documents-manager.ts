@@ -27,7 +27,7 @@ import { CertificateDocument, CertificateDraftDocument, CertificateFormOptions, 
                 </div>
             </div>
 
-            @if (!isReadonly) {
+            @if (!readOnly) {
                 <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                     <div class="flex flex-col gap-2">
                         <label for="documentType" class="font-medium">Tipo documento</label>
@@ -71,7 +71,7 @@ import { CertificateDocument, CertificateDraftDocument, CertificateFormOptions, 
                         <td>
                             <div class="flex justify-end gap-2">
                                 <p-button icon="pi pi-download" label="Ver/Descargar" [outlined]="true" severity="secondary" (onClick)="download(document)" />
-                                @if (!isReadonly) {
+                                @if (!readOnly) {
                                     <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger" (onClick)="confirmDelete(document)" />
                                 }
                             </div>
@@ -96,7 +96,7 @@ export class CertificateDocumentsManager implements OnChanges {
     @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
     @Input() certificateId = '';
     @Input() options: CertificateFormOptions = { companies: [], generationTypes: [], templateVersions: [], companyAddresses: [], items: [], quantityTypes: [], documentTypes: [] };
-    @Input({ alias: 'readonly' }) isReadonly = false;
+    @Input() readOnly = false;
     @Input() embedded = false;
 
     readonly documents = signal<CertificateDocument[]>([]);
@@ -141,6 +141,7 @@ export class CertificateDocumentsManager implements OnChanges {
 
     selectFile(event: Event): void {
         const input = event.target as HTMLInputElement;
+
         this.selectedFile.set(input.files?.[0] ?? null);
     }
 
@@ -149,12 +150,14 @@ export class CertificateDocumentsManager implements OnChanges {
 
         const file = this.selectedFile();
         const documentTypeId = this.form.controls.document_type_id.value;
+
         if (this.form.invalid || !file || !documentTypeId) {
             return;
         }
 
         if (!this.certificateId) {
             this.addDraftDocument(documentTypeId, file);
+
             return;
         }
 
@@ -175,6 +178,7 @@ export class CertificateDocumentsManager implements OnChanges {
     async download(document: CertificateDocument): Promise<void> {
         try {
             const url = document.file ? URL.createObjectURL(document.file) : await this.certificatesService.createSignedUrl(document.storage_bucket, document.storage_path);
+
             window.open(url, '_blank', 'noopener,noreferrer');
         } catch {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo generar enlace de descarga.', life: 3500 });
@@ -198,6 +202,7 @@ export class CertificateDocumentsManager implements OnChanges {
     async delete(document: CertificateDocument): Promise<void> {
         if (!this.certificateId || document.file) {
             this.documents.set(this.documents().filter((currentDocument) => currentDocument.id !== document.id));
+
             return;
         }
 
@@ -206,6 +211,7 @@ export class CertificateDocumentsManager implements OnChanges {
             this.messageService.add({ severity: 'success', summary: 'Documento eliminado', detail: 'El documento fue eliminado correctamente.', life: 2500 });
         } catch (error) {
             const detail = error instanceof Error ? error.message : 'No se pudo eliminar el documento.';
+
             this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 4500 });
         } finally {
             await this.reload();
@@ -253,6 +259,7 @@ export class CertificateDocumentsManager implements OnChanges {
     private resetUploadControls(): void {
         this.selectedFile.set(null);
         this.form.reset({ document_type_id: '' });
+
         if (this.fileInput?.nativeElement) {
             this.fileInput.nativeElement.value = '';
         }

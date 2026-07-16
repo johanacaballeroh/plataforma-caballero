@@ -53,6 +53,7 @@ export class QuantityTypesEdit implements OnInit {
 
         if (!quantityTypeId) {
             this.loading.set(false);
+
             return;
         }
 

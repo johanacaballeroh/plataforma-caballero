@@ -61,11 +61,13 @@ export class RolesDetail implements OnInit {
 
         if (!roleId) {
             this.loading.set(false);
+
             return;
         }
 
         try {
             const [role, permissions] = await Promise.all([this.rolesService.getRole(roleId), this.rolesService.listPermissions()]);
+
             this.role.set(role);
             this.permissions.set(permissions);
         } catch {

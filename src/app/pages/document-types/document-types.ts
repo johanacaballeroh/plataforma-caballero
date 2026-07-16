@@ -241,6 +241,7 @@ export class DocumentTypes {
             await this.reload();
         } catch (error) {
             const detail = error instanceof Error ? error.message : 'No se pudo eliminar el tipo de documento.';
+
             this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 4000 });
         }
     }

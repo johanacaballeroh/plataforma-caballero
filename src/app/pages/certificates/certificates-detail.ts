@@ -61,6 +61,7 @@ export class CertificatesDetail implements OnInit {
 
         if (!certificateId) {
             this.loading.set(false);
+
             return;
         }
 
@@ -70,12 +71,15 @@ export class CertificatesDetail implements OnInit {
     async openCurrentPdf(certificate: ManagedCertificate): Promise<void> {
         try {
             const pdf = await this.certificatesService.getCertificatePdf(certificate.id);
+
             if (!pdf) {
                 this.messageService.add({ severity: 'warn', summary: 'PDF', detail: 'No hay PDF generado para este certificado.', life: 3000 });
+
                 return;
             }
 
             const url = await this.certificatesService.createSignedUrl(pdf.storage_bucket, pdf.storage_path);
+
             window.open(url, '_blank', 'noopener,noreferrer');
         } catch {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo abrir el PDF.', life: 3500 });
@@ -87,6 +91,7 @@ export class CertificatesDetail implements OnInit {
 
         try {
             const [certificate, options] = await Promise.all([this.certificatesService.getCertificate(certificateId), this.certificatesService.getFormOptions()]);
+
             this.certificate.set(certificate);
             this.options.set(options);
         } catch {

@@ -60,6 +60,7 @@ export class CompaniesEdit implements OnInit {
 
         if (!companyId) {
             this.loading.set(false);
+
             return;
         }
 
@@ -68,6 +69,7 @@ export class CompaniesEdit implements OnInit {
 
     async updateCompany(payload: SaveCompanyPayload): Promise<void> {
         const currentCompany = this.company();
+
         if (!currentCompany) {
             return;
         }
@@ -76,6 +78,7 @@ export class CompaniesEdit implements OnInit {
 
         try {
             const updatedCompany = await this.companiesService.updateCompany(currentCompany.id, payload);
+
             this.company.set(updatedCompany);
             this.messageService.add({ severity: 'success', summary: 'Empresa actualizada', detail: 'La empresa fue actualizada correctamente.', life: 2500 });
         } catch {

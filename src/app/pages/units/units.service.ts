@@ -58,8 +58,10 @@ export class UnitsService {
         let query = this.supabase.from('units').select('id, code, name, abbreviation, status, created_at, updated_at', { count: 'exact' });
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.or(`code.ilike.${pattern},name.ilike.${pattern},abbreviation.ilike.${pattern}`);
         }
 
@@ -68,6 +70,7 @@ export class UnitsService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<UnitRow[]>();
@@ -92,6 +95,7 @@ export class UnitsService {
         }
 
         const itemCounts = await this.getItemCounts([unitId]);
+
         return this.mapUnit(data, itemCounts.get(unitId) ?? 0);
     }
 

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Informe ESLint - plataforma-caballero</title>
+<style>
+:root { color-scheme: light; --bg:#f7f8fb; --panel:#ffffff; --ink:#1f2937; --muted:#64748b; --border:#d8dee9; --danger:#b42318; --warn:#b54708; --ok:#067647; --accent:#155eef; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Segoe UI, Arial, sans-serif; color: var(--ink); background: var(--bg); }
+main { max-width: 1180px; margin: 0 auto; padding: 32px 24px 48px; }
+header { margin-bottom: 24px; }
+h1 { margin: 0 0 8px; font-size: 28px; line-height: 1.2; }
+p { margin: 4px 0; color: var(--muted); }
+.badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; color: white; font-weight: 700; font-size: 13px; }
+.badge.danger { background: var(--danger); }
+.badge.warn { background: var(--warn); }
+.badge.ok { background: var(--ok); }
+.grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin: 20px 0 24px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.card strong { display:block; font-size: 24px; line-height: 1.1; }
+.card span { color: var(--muted); font-size: 13px; }
+section { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 18px; margin-top: 18px; }
+h2 { font-size: 18px; margin: 0 0 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { border-top: 1px solid var(--border); padding: 9px 10px; text-align: left; vertical-align: top; }
+th { color: #334155; background: #f8fafc; position: sticky; top: 0; }
+code { font-family: Consolas, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+.table-wrap { max-height: 760px; overflow: auto; border: 1px solid var(--border); border-radius: 6px; }
+.note { color: var(--muted); font-size: 13px; }
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } main { padding: 20px 14px; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>Informe de autoevaluacion del codigo fuente con ESLint</h1>
+<p>Proyecto: <strong>plataforma-caballero</strong></p>
+<p>Guia aplicada: ESLint 9 + angular-eslint 21 + typescript-eslint 8 + reglas recomendadas para Angular y templates.</p>
+<p>Generado: 9 jul. 2026, 11:33 a. m. (America/Lima) <span class="badge ok">Conforme</span></p>
+</header>
+<div class="grid">
+<div class="card"><strong>147</strong><span>Archivos evaluados</span></div>
+<div class="card"><strong>0</strong><span>Archivos con hallazgos</span></div>
+<div class="card"><strong>0</strong><span>Errores</span></div>
+<div class="card"><strong>0</strong><span>Advertencias</span></div>
+<div class="card"><strong>0</strong><span>Corregibles automaticamente</span></div>
+</div>
+<section>
+<h2>Resultado ejecutivo</h2>
+<p class="note">La ejecucion del linter finalizo y produjo este reporte. Un estado "No conforme" significa que hay errores que deben corregirse antes de considerar aprobada la autoevaluacion.</p>
+</section>
+<section>
+<h2>Reglas con mas hallazgos</h2>
+<table><thead><tr><th>Regla</th><th>Cantidad</th></tr></thead><tbody><tr><td colspan="2">Sin hallazgos.</td></tr></tbody></table>
+</section>
+<section>
+<h2>Detalle de hallazgos</h2>
+<div class="table-wrap"><table><thead><tr><th>Severidad</th><th>Archivo</th><th>Linea</th><th>Regla</th><th>Mensaje</th></tr></thead><tbody><tr><td colspan="5">Sin hallazgos.</td></tr></tbody></table></div>
+</section>
+</main>
+</body>
+</html>

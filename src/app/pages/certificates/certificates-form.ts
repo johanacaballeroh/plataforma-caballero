@@ -175,11 +175,13 @@ export class CertificatesForm implements OnChanges, OnInit {
 
     generatorAddressOptions(): CertificateFormOptions['companyAddresses'] {
         const companyId = this.form.controls.generator_company_id.value;
+
         return this.options.companyAddresses.filter((address) => address.company_id === companyId);
     }
 
     transporterAddressOptions(): CertificateFormOptions['companyAddresses'] {
         const companyId = this.form.controls.transporter_company_id.value;
+
         return this.options.companyAddresses.filter((address) => address.company_id === companyId);
     }
 
@@ -191,6 +193,7 @@ export class CertificatesForm implements OnChanges, OnInit {
         }
 
         const value = this.form.getRawValue();
+
         if (!value.generation_type_id || !value.issue_date || !value.operation_date || !value.guide_number || !value.generator_company_id || !value.transporter_company_id || !value.status) {
             return;
         }
@@ -231,6 +234,7 @@ export class CertificatesForm implements OnChanges, OnInit {
             });
         } else {
             const today = new Date().toISOString().slice(0, 10);
+
             this.form.reset({
                 generation_type_id: '',
                 issue_date: today,
@@ -251,6 +255,7 @@ export class CertificatesForm implements OnChanges, OnInit {
         if (this.mode === 'detail') {
             this.form.disable();
             this.showAdditional.set(true);
+
             return;
         }
 
@@ -280,6 +285,7 @@ export class CertificatesForm implements OnChanges, OnInit {
         const addressId = kind === 'generator' ? this.form.controls.generator_address_id.value : this.form.controls.transporter_address_id.value;
         const addressControl = kind === 'generator' ? this.form.controls.generator_address : this.form.controls.transporter_address;
         const address = this.options.companyAddresses.find((option) => option.id === addressId);
+
         addressControl.setValue(address?.address ?? '', { emitEvent: false });
     }
 }

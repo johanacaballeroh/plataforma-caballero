@@ -118,6 +118,7 @@ export class BaselCodesForm implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         this.save.emit({
             code: value.code,
             description: value.description,
@@ -142,6 +143,7 @@ export class BaselCodesForm implements OnChanges {
 
         if (this.mode === 'detail') {
             this.form.disable();
+
             return;
         }
 

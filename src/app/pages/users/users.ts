@@ -402,6 +402,7 @@ export class Users implements OnInit {
         this.userForm.markAllAsTouched();
 
         const user = this.selectedUser();
+
         if (!user || this.userForm.invalid) {
             return;
         }
@@ -410,6 +411,7 @@ export class Users implements OnInit {
 
         try {
             const value = this.userForm.getRawValue();
+
             await this.usersService.updateUser(user.id, {
                 full_name: value.full_name,
                 phone: value.phone || null,
@@ -481,12 +483,14 @@ export class Users implements OnInit {
 
     clientRoleSelected(): boolean {
         const selectedRoleIds = new Set(this.userForm.controls.role_ids.value);
+
         return this.roles().some((role) => role.name === 'Cliente' && selectedRoleIds.has(role.id));
     }
 
     private async loadOptions(): Promise<void> {
         try {
             const [roles, companies] = await Promise.all([this.usersService.listRoles(), this.usersService.listCompanies()]);
+
             this.roles.set(roles);
             this.companies.set(companies);
         } catch {

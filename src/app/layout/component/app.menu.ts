@@ -73,11 +73,13 @@ export class AppMenu {
         return items
             .map((item) => {
                 const children = item.items ? this.filterItems(item.items) : undefined;
+
                 return { ...item, items: children };
             })
             .filter((item) => {
                 const hasPermission = this.auth.hasAnyPermission(item.permissions);
                 const hasChildren = !item.items || item.items.length > 0;
+
                 return hasPermission && hasChildren;
             });
     }

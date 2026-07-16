@@ -60,6 +60,7 @@ export class UnitsDetail implements OnInit {
 
         if (!unitId) {
             this.loading.set(false);
+
             return;
         }
 

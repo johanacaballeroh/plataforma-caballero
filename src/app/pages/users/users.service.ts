@@ -119,8 +119,10 @@ export class UsersService {
             );
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.or(`full_name.ilike.${pattern},email.ilike.${pattern}`);
         }
 
@@ -133,6 +135,7 @@ export class UsersService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<ProfileRow[]>();
@@ -270,6 +273,7 @@ export class UsersService {
 
         if (roleIds && companyIds) {
             const companySet = new Set(companyIds);
+
             return roleIds.filter((userId) => companySet.has(userId));
         }
 

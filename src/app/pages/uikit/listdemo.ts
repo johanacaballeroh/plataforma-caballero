@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
@@ -29,7 +29,7 @@ import { Product, ProductService } from '@/app/pages/service/product.service';
 
                 <ng-template #list let-items>
                     <div class="flex flex-col">
-                        <div *ngFor="let item of items; let i = index">
+                        @for (item of items; track item.id; let i = $index) {
                             <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4" [ngClass]="{ 'border-t border-surface': i !== 0 }">
                                 <div class="md:w-40 relative">
                                     <img class="block xl:block mx-auto rounded w-full" src="https://primefaces.org/cdn/primevue/images/product/{{ item.image }}" [alt]="item.name" />
@@ -67,13 +67,14 @@ import { Product, ProductService } from '@/app/pages/service/product.service';
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 </ng-template>
 
                 <ng-template #grid let-items>
                     <div class="grid grid-cols-12 gap-4">
-                        <div *ngFor="let item of items; let i = index" class="col-span-12 sm:col-span-6 lg:col-span-4 p-2">
+                        @for (item of items; track item.id) {
+                        <div class="col-span-12 sm:col-span-6 lg:col-span-4 p-2">
                             <div class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col">
                                 <div class="relative w-full shadow-sm">
                                     <img class="rounded w-full" src="https://primefaces.org/cdn/primevue/images/product/{{ item.image }}" [alt]="item.name" />
@@ -120,6 +121,7 @@ import { Product, ProductService } from '@/app/pages/service/product.service';
                                 </div>
                             </div>
                         </div>
+                        }
                     </div>
                 </ng-template>
             </p-dataview>
@@ -158,7 +160,9 @@ import { Product, ProductService } from '@/app/pages/service/product.service';
     `,
     providers: [ProductService]
 })
-export class ListDemo {
+export class ListDemo implements OnInit {
+    private productService = inject(ProductService);
+
     layout: 'list' | 'grid' = 'list';
 
     options = ['list', 'grid'];
@@ -170,8 +174,6 @@ export class ListDemo {
     targetCities: any[] = [];
 
     orderCities: any[] = [];
-
-    constructor(private productService: ProductService) {}
 
     ngOnInit() {
         this.productService.getProductsSmall().then((data) => (this.products = data.slice(0, 6)));

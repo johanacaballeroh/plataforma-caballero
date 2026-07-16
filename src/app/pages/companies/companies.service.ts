@@ -107,8 +107,10 @@ export class CompaniesService {
         let query = this.supabase.from('companies').select('id, company_type, ruc, business_name, trade_name, fiscal_address, status, created_at, updated_at', { count: 'exact' });
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.or(`ruc.ilike.${pattern},business_name.ilike.${pattern},trade_name.ilike.${pattern},fiscal_address.ilike.${pattern}`);
         }
 
@@ -121,6 +123,7 @@ export class CompaniesService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<CompanyRow[]>();
@@ -345,6 +348,7 @@ export class CompaniesService {
             for (const companyId of [row.generator_company_id, row.transporter_company_id, row.final_destination_company_id]) {
                 if (companyId && companySet.has(companyId)) {
                     const certificateIds = certificateIdsByCompany.get(companyId) ?? new Set<string>();
+
                     certificateIds.add(row.id);
                     certificateIdsByCompany.set(companyId, certificateIds);
                 }

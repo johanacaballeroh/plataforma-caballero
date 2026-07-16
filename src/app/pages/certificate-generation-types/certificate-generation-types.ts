@@ -260,6 +260,7 @@ export class CertificateGenerationTypes {
             await this.reload();
         } catch (error) {
             const detail = error instanceof Error ? error.message : 'No se pudo eliminar el tipo de generacion.';
+
             this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 4000 });
         }
     }

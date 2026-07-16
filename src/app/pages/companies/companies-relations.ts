@@ -30,7 +30,7 @@ type RelationDialogMode = 'create' | 'edit';
                         <h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0">Sedes y direcciones</h2>
                         <p class="text-muted-color text-sm">Depositos, oficinas y direcciones asociadas.</p>
                     </div>
-                    @if (!isReadonly) {
+                    @if (!readOnly) {
                         <p-button label="Nueva sede" icon="pi pi-plus" size="small" (onClick)="openBranchCreate()" />
                     }
                 </div>
@@ -52,7 +52,7 @@ type RelationDialogMode = 'create' | 'edit';
                             <td>{{ branch.address }}</td>
                             <td><p-tag [value]="statusLabel(branch.status)" [severity]="branch.status === 'active' ? 'success' : 'danger'" /></td>
                             <td>
-                                @if (!isReadonly) {
+                                @if (!readOnly) {
                                     <div class="flex justify-end gap-2">
                                         <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (onClick)="openBranchEdit(branch)" />
                                         <p-button [icon]="branch.status === 'active' ? 'pi pi-ban' : 'pi pi-check'" [rounded]="true" [outlined]="true" [severity]="branch.status === 'active' ? 'danger' : 'success'" (onClick)="toggleBranchStatus(branch)" />
@@ -76,7 +76,7 @@ type RelationDialogMode = 'create' | 'edit';
                         <h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0">Contactos</h2>
                         <p class="text-muted-color text-sm">Personas de contacto asociadas a la empresa.</p>
                     </div>
-                    @if (!isReadonly) {
+                    @if (!readOnly) {
                         <p-button label="Nuevo contacto" icon="pi pi-plus" size="small" (onClick)="openContactCreate()" />
                     }
                 </div>
@@ -100,7 +100,7 @@ type RelationDialogMode = 'create' | 'edit';
                             <td>{{ contact.phone || 'Sin telefono' }}</td>
                             <td><p-tag [value]="statusLabel(contact.status)" [severity]="contact.status === 'active' ? 'success' : 'danger'" /></td>
                             <td>
-                                @if (!isReadonly) {
+                                @if (!readOnly) {
                                     <div class="flex justify-end gap-2">
                                         <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (onClick)="openContactEdit(contact)" />
                                         <p-button [icon]="contact.status === 'active' ? 'pi pi-ban' : 'pi pi-check'" [rounded]="true" [outlined]="true" [severity]="contact.status === 'active' ? 'danger' : 'success'" (onClick)="toggleContactStatus(contact)" />
@@ -190,7 +190,7 @@ export class CompaniesRelations implements OnChanges {
     private readonly messageService = inject(MessageService);
 
     @Input({ required: true }) companyId = '';
-    @Input({ alias: 'readonly' }) isReadonly = false;
+    @Input() readOnly = false;
 
     readonly branches = signal<CompanyBranch[]>([]);
     readonly contacts = signal<CompanyContact[]>([]);
@@ -241,6 +241,7 @@ export class CompaniesRelations implements OnChanges {
 
         try {
             const [branches, contacts] = await Promise.all([this.companiesService.listBranches(this.companyId), this.companiesService.listContacts(this.companyId)]);
+
             this.branches.set(branches);
             this.contacts.set(contacts);
         } catch {
@@ -272,6 +273,7 @@ export class CompaniesRelations implements OnChanges {
         }
 
         const value = this.branchForm.getRawValue();
+
         if (!value.branch_type || !value.address || !value.status) {
             return;
         }
@@ -287,6 +289,7 @@ export class CompaniesRelations implements OnChanges {
 
         try {
             const branch = this.selectedBranch();
+
             if (branch) {
                 await this.companiesService.updateBranch(branch.id, payload);
             } else {
@@ -305,6 +308,7 @@ export class CompaniesRelations implements OnChanges {
 
     toggleBranchStatus(branch: CompanyBranch): void {
         const nextStatus: CompanyStatus = branch.status === 'active' ? 'inactive' : 'active';
+
         void this.updateBranchStatus(branch, nextStatus);
     }
 
@@ -364,6 +368,7 @@ export class CompaniesRelations implements OnChanges {
         }
 
         const value = this.contactForm.getRawValue();
+
         if (!value.full_name || !value.status) {
             return;
         }
@@ -380,6 +385,7 @@ export class CompaniesRelations implements OnChanges {
 
         try {
             const contact = this.selectedContact();
+
             if (contact) {
                 await this.companiesService.updateContact(contact.id, payload);
             } else {
@@ -398,6 +404,7 @@ export class CompaniesRelations implements OnChanges {
 
     toggleContactStatus(contact: CompanyContact): void {
         const nextStatus: CompanyStatus = contact.status === 'active' ? 'inactive' : 'active';
+
         void this.updateContactStatus(contact, nextStatus);
     }
 

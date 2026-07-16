@@ -69,6 +69,7 @@ export class LayoutService {
 
             if (!this.initialized || !config) {
                 this.initialized = true;
+
                 return;
             }
 
@@ -94,6 +95,7 @@ export class LayoutService {
 
     toggleDarkMode(config?: LayoutConfig): void {
         const _config = config || this.layoutConfig();
+
         if (_config.darkTheme) {
             document.documentElement.classList.add('app-dark');
         } else {

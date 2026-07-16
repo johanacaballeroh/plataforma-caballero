@@ -60,6 +60,7 @@ export class DocumentTypesDetail implements OnInit {
 
         if (!documentTypeId) {
             this.loading.set(false);
+
             return;
         }
 

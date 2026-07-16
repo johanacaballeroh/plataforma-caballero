@@ -52,8 +52,10 @@ export class ItemTypesService {
         let query = this.supabase.from('item_types').select('id, name, status, created_at, updated_at', { count: 'exact' });
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.ilike('name', pattern);
         }
 
@@ -62,6 +64,7 @@ export class ItemTypesService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<ItemTypeRow[]>();
@@ -86,6 +89,7 @@ export class ItemTypesService {
         }
 
         const itemCounts = await this.getItemCounts([itemTypeId]);
+
         return this.mapItemType(data, itemCounts.get(itemTypeId) ?? 0);
     }
 

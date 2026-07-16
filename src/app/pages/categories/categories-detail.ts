@@ -60,6 +60,7 @@ export class CategoriesDetail implements OnInit {
 
         if (!categoryId) {
             this.loading.set(false);
+
             return;
         }
 

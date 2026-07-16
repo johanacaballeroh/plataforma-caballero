@@ -185,6 +185,7 @@ export class Profile implements OnInit {
 
     readonly initials = computed(() => {
         const name = this.profile()?.full_name?.trim();
+
         if (!name) {
             return 'U';
         }

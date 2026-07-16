@@ -90,8 +90,10 @@ export class RolesService {
             );
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.or(`name.ilike.${pattern},description.ilike.${pattern}`);
         }
 
@@ -108,6 +110,7 @@ export class RolesService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<RoleRow[]>();
@@ -152,6 +155,7 @@ export class RolesService {
         }
 
         await this.replaceRolePermissions(data.id, payload.permissionIds);
+
         return this.getRole(data.id);
     }
 
@@ -170,6 +174,7 @@ export class RolesService {
         }
 
         await this.replaceRolePermissions(roleId, payload.permissionIds);
+
         return this.getRole(roleId);
     }
 
@@ -221,6 +226,7 @@ export class RolesService {
         }
 
         const userCounts = await this.getUserCounts([roleId]);
+
         return this.mapRole(data, userCounts.get(roleId) ?? 0);
     }
 

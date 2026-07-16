@@ -60,6 +60,7 @@ export class QuantityTypesDetail implements OnInit {
 
         if (!quantityTypeId) {
             this.loading.set(false);
+
             return;
         }
 

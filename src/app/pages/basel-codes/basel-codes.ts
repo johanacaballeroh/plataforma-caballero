@@ -243,6 +243,7 @@ export class BaselCodes {
             await this.reload();
         } catch (error) {
             const detail = error instanceof Error ? error.message : 'No se pudo eliminar el codigo Basilea.';
+
             this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 4000 });
         }
     }

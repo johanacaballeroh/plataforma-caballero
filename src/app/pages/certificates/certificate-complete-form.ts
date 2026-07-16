@@ -29,8 +29,8 @@ export interface CertificateCompleteSaveEvent {
                 (save)="emitSave($event)"
             />
 
-            <app-certificate-items-manager [certificateId]="certificate?.id ?? ''" [options]="options" [readonly]="mode === 'detail'" [embedded]="true" />
-            <app-certificate-documents-manager [certificateId]="certificate?.id ?? ''" [options]="options" [readonly]="mode === 'detail'" [embedded]="true" />
+            <app-certificate-items-manager [certificateId]="certificate?.id ?? ''" [options]="options" [readOnly]="mode === 'detail'" [embedded]="true" />
+            <app-certificate-documents-manager [certificateId]="certificate?.id ?? ''" [options]="options" [readOnly]="mode === 'detail'" [embedded]="true" />
 
             <div class="flex justify-end gap-3 border-t border-surface-200 pt-6 dark:border-surface-700">
                 <p-button type="button" label="Volver" icon="pi pi-arrow-left" severity="secondary" [outlined]="true" routerLink="/certificates" />

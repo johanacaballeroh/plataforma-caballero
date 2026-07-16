@@ -174,6 +174,7 @@ export class UsersNew implements OnInit {
     async ngOnInit(): Promise<void> {
         try {
             const [roles, companies] = await Promise.all([this.usersService.listRoles(), this.usersService.listCompanies()]);
+
             this.roles.set(roles);
             this.companies.set(companies);
         } catch {
@@ -192,6 +193,7 @@ export class UsersNew implements OnInit {
 
         try {
             const value = this.form.getRawValue();
+
             await this.usersService.createUser({
                 full_name: value.full_name,
                 email: value.email,
@@ -214,11 +216,13 @@ export class UsersNew implements OnInit {
 
     clientRoleSelected(): boolean {
         const selectedRoleIds = new Set(this.form.controls.role_ids.value);
+
         return this.roles().some((role) => role.name === 'Cliente' && selectedRoleIds.has(role.id));
     }
 
     selectedRoleNames(): string {
         const selectedRoleIds = new Set(this.form.controls.role_ids.value);
+
         return this.roles()
             .filter((role) => selectedRoleIds.has(role.id))
             .map((role) => role.name)

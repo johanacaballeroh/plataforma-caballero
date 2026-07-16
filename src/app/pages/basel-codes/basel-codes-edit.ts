@@ -53,6 +53,7 @@ export class BaselCodesEdit implements OnInit {
 
         if (!baselCodeId) {
             this.loading.set(false);
+
             return;
         }
 

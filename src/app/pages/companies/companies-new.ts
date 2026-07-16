@@ -39,6 +39,7 @@ export class CompaniesNew {
 
         try {
             const company = await this.companiesService.createCompany(payload);
+
             this.messageService.add({ severity: 'success', summary: 'Empresa creada', detail: 'La empresa fue registrada correctamente.', life: 2500 });
             await this.router.navigate(['/companies', company.id, 'edit']);
         } catch {

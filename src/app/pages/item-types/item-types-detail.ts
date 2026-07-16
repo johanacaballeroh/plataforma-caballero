@@ -60,6 +60,7 @@ export class ItemTypesDetail implements OnInit {
 
         if (!itemTypeId) {
             this.loading.set(false);
+
             return;
         }
 

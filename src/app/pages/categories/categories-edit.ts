@@ -53,6 +53,7 @@ export class CategoriesEdit implements OnInit {
 
         if (!categoryId) {
             this.loading.set(false);
+
             return;
         }
 

@@ -250,6 +250,7 @@ export class Roles implements OnInit {
     async changeStatus(role: ManagedRole, status: RoleStatus): Promise<void> {
         if (role.is_system_role) {
             this.messageService.add({ severity: 'warn', summary: 'Rol protegido', detail: 'Los roles base no se pueden inactivar desde el frontend.', life: 3500 });
+
             return;
         }
 
@@ -284,6 +285,7 @@ export class Roles implements OnInit {
             await this.reload();
         } catch (error) {
             const detail = error instanceof Error ? error.message : 'No se pudo eliminar el rol.';
+
             this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 4000 });
         }
     }
@@ -294,6 +296,7 @@ export class Roles implements OnInit {
 
     moduleSummary(role: ManagedRole): string {
         const modules = [...new Set(role.permissions.map((permission) => this.moduleLabel(permission.module_key)))];
+
         return modules.length ? modules.slice(0, 3).join(', ') + (modules.length > 3 ? ` +${modules.length - 3}` : '') : 'Sin modulos';
     }
 

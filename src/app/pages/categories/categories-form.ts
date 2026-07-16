@@ -115,6 +115,7 @@ export class CategoriesForm implements OnChanges {
         }
 
         const value = this.form.getRawValue();
+
         this.save.emit({
             name: value.name,
             description: value.description || null,
@@ -139,6 +140,7 @@ export class CategoriesForm implements OnChanges {
 
         if (this.mode === 'detail') {
             this.form.disable();
+
             return;
         }
 

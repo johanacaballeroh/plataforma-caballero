@@ -52,8 +52,10 @@ export class DocumentTypesService {
         let query = this.supabase.from('document_types').select('id, name, status, created_at, updated_at', { count: 'exact' });
 
         const search = params.filters.search?.trim();
+
         if (search) {
             const pattern = `%${search.replaceAll('%', '\\%').replaceAll(',', '\\,')}%`;
+
             query = query.ilike('name', pattern);
         }
 
@@ -62,6 +64,7 @@ export class DocumentTypesService {
         }
 
         const sortField = this.sortableFields.has(params.sortField) ? params.sortField : 'created_at';
+
         query = query.order(sortField, { ascending: params.sortOrder === 1 }).range(params.first, params.first + params.rows - 1);
 
         const { data, error, count } = await query.returns<DocumentTypeRow[]>();
@@ -86,6 +89,7 @@ export class DocumentTypesService {
         }
 
         const documentCounts = await this.getDocumentCounts([documentTypeId]);
+
         return this.mapDocumentType(data, documentCounts.get(documentTypeId) ?? 0);
     }
 

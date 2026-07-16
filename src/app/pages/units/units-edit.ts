@@ -53,6 +53,7 @@ export class UnitsEdit implements OnInit {
 
         if (!unitId) {
             this.loading.set(false);
+
             return;
         }
 

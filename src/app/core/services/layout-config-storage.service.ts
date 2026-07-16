@@ -35,6 +35,7 @@ export class LayoutConfigStorageService {
 
             if (!this.isValidStoredConfig(storedConfig)) {
                 this.clear();
+
                 return defaultConfig;
             }
 
@@ -44,6 +45,7 @@ export class LayoutConfigStorageService {
             };
         } catch {
             this.clear();
+
             return defaultConfig;
         }
     }

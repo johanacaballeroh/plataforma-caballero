@@ -62,6 +62,7 @@ export class CertificateGenerationTypesEdit implements OnInit {
 
         if (!generationTypeId) {
             this.loading.set(false);
+
             return;
         }
 
@@ -89,6 +90,7 @@ export class CertificateGenerationTypesEdit implements OnInit {
             await this.router.navigate(['/certificate-generation-types']);
         } catch (error) {
             const detail = error instanceof Error ? error.message : 'No se pudo actualizar el tipo de generacion. Revisa permisos, nombre unico y RLS.';
+
             this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 4500 });
         } finally {
             this.saving.set(false);
@@ -98,6 +100,7 @@ export class CertificateGenerationTypesEdit implements OnInit {
     async openTemplate(generationType: ManagedCertificateGenerationType, template: CertificateTemplateVersion): Promise<void> {
         try {
             const pdf = await this.generationTypesService.createTemplatePdfUrl(generationType.id, template);
+
             window.open(pdf.url, '_blank', 'noopener,noreferrer');
 
             if (pdf.usedFallback) {
@@ -105,6 +108,7 @@ export class CertificateGenerationTypesEdit implements OnInit {
             }
         } catch (error) {
             const detail = error instanceof Error ? error.message : 'No se pudo abrir la plantilla PDF.';
+
             this.messageService.add({ severity: 'error', summary: 'Error', detail, life: 5000 });
         }
     }

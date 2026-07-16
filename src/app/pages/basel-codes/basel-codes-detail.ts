@@ -60,6 +60,7 @@ export class BaselCodesDetail implements OnInit {
 
         if (!baselCodeId) {
             this.loading.set(false);
+
             return;
         }
 
