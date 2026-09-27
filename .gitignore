@@ -40,6 +40,9 @@ testem.log
 .codex-captures/
 reference/
 
+/asistente
+/asistente-virtual
+
 # System files
 .DS_Store
 Thumbs.db

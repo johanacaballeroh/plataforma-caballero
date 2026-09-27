@@ -20,7 +20,7 @@ interface LayoutState {
 
 const DEFAULT_LAYOUT_CONFIG: LayoutConfig = {
     preset: 'Aura',
-    primary: 'emerald',
+    primary: 'sky',
     surface: null,
     darkTheme: false,
     menuMode: 'static'
