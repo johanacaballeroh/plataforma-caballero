@@ -1,4 +1,5 @@
 -- rls-policies.sql
+-- Politicas IBC adicionales: migrations/20261108043503_ibc_control_mvp.sql (contrato ibc.sql).
 -- Ejecutar después de schema.sql y seed.sql
 
 -- =========================

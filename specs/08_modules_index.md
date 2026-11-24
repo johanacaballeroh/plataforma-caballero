@@ -21,6 +21,7 @@
 | 15 | Tipos de cantidad | `/specs/modules/15-quantity-types.md` | `quantity_types.view` |
 | 16 | Tipos de documentos | `/specs/modules/16-document-types.md` | `document_types.view` |
 | 17 | Logs de auditoria | `/specs/modules/17-audit-logs.md` | `logs.view` |
+| 18 | Control IBC | `/specs/modules/18-ibc.md` | `ibc.view` / `ibc_chemicals.view` |
 
 ## Modulos transversales
 

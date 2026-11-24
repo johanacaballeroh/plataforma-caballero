@@ -34,6 +34,8 @@ La seguridad se compone de:
 
 ## Permisos
 
+Control IBC: permisos `ibc.*` e `ibc_chemicals.*` de `/specs/modules/18-ibc.md`. Acceso interno; Cliente no recibe estos permisos. Tablas protegidas por RLS y perfil activo; el cliente no tiene privilegios directos para alterar estados ni eventos. Bucket privado `ibc-documents`. Politicas aditivas en la migracion IBC.
+
 Formato:
 
 ```text

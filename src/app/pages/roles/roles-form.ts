@@ -233,6 +233,8 @@ export class RolesForm implements OnChanges {
             quantity_types: 'Tipos de cantidad',
             document_types: 'Tipos de documentos',
             certificates: 'Certificados',
+            ibc: 'Control IBC',
+            ibc_chemicals: 'Quimicos IBC',
             reports: 'Reportes',
             logs: 'Logs'
         };
@@ -249,7 +251,13 @@ export class RolesForm implements OnChanges {
             delete: 'Eliminar',
             issue: 'Emitir',
             print: 'Imprimir PDF',
-            export: 'Exportar'
+            export: 'Exportar',
+            wash: 'Registrar lavado',
+            test: 'Registrar hermeticidad',
+            repair: 'Registrar reparacion',
+            release: 'Liberar retenido',
+            deliver: 'Registrar entrega',
+            documents: 'Adjuntar documentos'
         };
 
         return labels[actionKey] ?? actionKey;

@@ -140,4 +140,6 @@ No se deben inventar campos, tablas ni columnas para completar formularios.
 
 ## Alcance de este SDD
 
+Extension autorizada: Control IBC, documentada en `/specs/modules/18-ibc.md`. Digitaliza envases y ciclos de lavado/reacondicionamiento, hermeticidad y entrega. Categoria propia del menu con Servicios IBC, Envases IBC, Quimicos y Reportes y seguimiento; badge `NUEVO` a la derecha.
+
 Este SDD prepara la implementacion futura. No autoriza por si solo cambios de codigo Angular, dependencias, SQL o scripts cuando la tarea activa solicita solo documentacion.

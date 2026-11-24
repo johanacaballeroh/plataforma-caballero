@@ -41,6 +41,16 @@ export class AppMenu {
             ]
         },
         {
+            label: 'Control IBC',
+            badge: 'NUEVO',
+            items: [
+                { label: 'Servicios IBC', icon: 'pi pi-fw pi-wrench', routerLink: ['/ibc/services'], permissions: ['ibc.view'] },
+                { label: 'Envases IBC', icon: 'pi pi-fw pi-box', routerLink: ['/ibc/containers'], permissions: ['ibc.view'] },
+                { label: 'Quimicos', icon: 'pi pi-fw pi-filter', routerLink: ['/ibc/chemicals'], permissions: ['ibc_chemicals.view'] },
+                { label: 'Reportes y seguimiento', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/ibc/reports'], permissions: ['ibc.view'] }
+            ]
+        },
+        {
             label: 'Catalogos',
             items: [
                 { label: 'Unidades', icon: 'pi pi-fw pi-sliders-h', routerLink: ['/units'], permissions: ['units.view'] },

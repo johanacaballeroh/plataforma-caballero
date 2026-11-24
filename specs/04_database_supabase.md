@@ -16,6 +16,8 @@ Este documento resume el contrato de datos para implementacion frontend. Si hay 
 
 ## Convenciones
 
+Extension IBC: contrato SQL aditivo en `/supabase/ibc.sql`, versionado por `/supabase/migrations/20261108043503_ibc_control_mvp.sql`. Incluye cinco tablas, vistas con RLS, RPC de recepcion y trigger privado de transiciones. Aplicar la migracion despues de los SQL base al instalar desde cero. Datos optativos en `/supabase/ibc-demo.sql`. Ver `/specs/modules/18-ibc.md`.
+
 - Tablas en `snake_case`.
 - Primary keys UUID con `gen_random_uuid()`, salvo `profiles.id` que referencia `auth.users(id)`.
 - Fechas estandar: `created_at`, `updated_at`.

@@ -2,15 +2,21 @@ import { Component, computed, inject, input, signal, OnInit, AfterViewInit } fro
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RippleModule } from 'primeng/ripple';
+import { BadgeModule } from 'primeng/badge';
 import { LayoutService } from '@/app/layout/service/layout.service';
 import { filter } from 'rxjs/operators';
 
 @Component({
     selector: '[app-menuitem]',
-    imports: [CommonModule, RouterModule, RippleModule],
+    imports: [CommonModule, RouterModule, RippleModule, BadgeModule],
     template: `
         @if (root() && isVisible()) {
-            <div class="layout-menuitem-root-text">{{ item().label }}</div>
+            <div class="layout-menuitem-root-text flex items-center gap-3">
+                <span class="min-w-0">{{ item().label }}</span>
+                @if (item().badge) {
+                    <p-badge [value]="item().badge" severity="success" class="ml-auto shrink-0" />
+                }
+            </div>
         }
         @if ((!hasRouterLink() || hasChildren()) && isVisible()) {
             <a [attr.href]="item().url" (click)="itemClick($event)" [ngClass]="item().class" [attr.target]="item().target" tabindex="0" pRipple>

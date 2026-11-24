@@ -316,6 +316,8 @@ export class Roles implements OnInit {
             quantity_types: 'Tipos de cantidad',
             document_types: 'Tipos de documentos',
             certificates: 'Certificados',
+            ibc: 'Control IBC',
+            ibc_chemicals: 'Quimicos IBC',
             reports: 'Reportes',
             logs: 'Logs'
         };

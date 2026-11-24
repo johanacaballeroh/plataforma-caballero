@@ -1,4 +1,5 @@
 -- storage-policies.sql
+-- Bucket privado y politicas IBC: migrations/20261108043503_ibc_control_mvp.sql (contrato ibc.sql).
 -- Ejecutar después de schema.sql, seed.sql y rls-policies.sql
 
 -- =========================

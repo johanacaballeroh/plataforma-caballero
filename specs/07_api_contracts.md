@@ -50,6 +50,12 @@ No se deben exponer filtros arbitrarios que permitan consultar columnas no previ
 
 ## Contratos por dominio
 
+### Control IBC
+
+Contrato de tablas, tipos de eventos y consultas descrito en `/specs/modules/18-ibc.md`; fuente SQL `/supabase/ibc.sql`. Consultas a `v_ibc_services`, `v_ibc_containers` y `ibc_chemicals`; RPC `ibc_receive` para ingreso atomico. Inserciones de eventos validadas mediante trigger; estados no actualizables directamente desde el cliente. Exportacion CSV paginada completa y registrada en `report_exports`.
+
+Reportes IBC consulta exclusivamente `summary` para los indicadores; la exportacion reutiliza `exportCsv` y su paginado completo. La unica bandeja individual esta en Servicios y usa `listServices`. El filtro virtual `status: 'open'` excluye `delivered` en Supabase. `summary` cuenta cada estado en servidor mediante peticiones HEAD. Los enlaces de Reportes a Servicios transmiten `companyId`, `chemicalId`, `dateFrom`, `dateTo` y `status` aplicados como query params. No cambia tablas ni politicas.
+
 ### Auth
 
 - Login: Supabase Auth email/password.

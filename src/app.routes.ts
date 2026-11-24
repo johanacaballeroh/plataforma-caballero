@@ -62,6 +62,7 @@ export const appRoutes: Routes = [
         children: [
             { path: '', component: Dashboard, canActivate: [permissionGuard], data: { permissions: ['dashboard.view'] } },
             { path: 'profile', component: Profile },
+            { path: 'ibc', loadChildren: () => import('./app/pages/ibc/ibc.routes') },
             { path: 'certificates/new', component: CertificatesNew, canActivate: [permissionGuard], data: { permissions: ['certificates.create'] } },
             { path: 'certificates/:id/edit', component: CertificatesEdit, canActivate: [permissionGuard], data: { permissions: ['certificates.update'] } },
             { path: 'certificates/:id', component: CertificatesDetail, canActivate: [permissionGuard], data: { permissions: ['certificates.view', 'certificates.view_own'] } },

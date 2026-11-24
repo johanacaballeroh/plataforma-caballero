@@ -125,6 +125,8 @@ Cada entrada debe mostrarse solo si el usuario tiene permiso suficiente.
 
 ## Accesibilidad y responsive
 
+Control IBC agrupa Servicios IBC, Envases IBC, Quimicos y Reportes y seguimiento en una categoria propia. Su encabezado utiliza un badge PrimeNG `NUEVO` al extremo derecho mediante flex y margen automatico; el texto puede envolver sin desplazar el badge. La categoria se oculta si no hay entradas autorizadas. Servicios concentra el registro y la unica bandeja individual; Reportes concentra indicadores, distribucion y exportacion. Los estados del reporte enlazan a Servicios conservando los filtros analiticos, sin repetir la tabla ni instrucciones del proceso.
+
 - Mantener navegacion por teclado donde PrimeNG lo soporte.
 - Usar labels visibles en formularios.
 - No depender solo de color para indicar estado.

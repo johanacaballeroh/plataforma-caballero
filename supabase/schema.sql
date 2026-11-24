@@ -1,4 +1,5 @@
 -- schema.sql
+-- Extension aditiva Control IBC: aplicar migrations/20261108043503_ibc_control_mvp.sql despues de los SQL base. Contrato: ibc.sql.
 -- Sistema de Gestión y Trazabilidad de Certificados
 -- Angular SPA + Supabase Auth + PostgreSQL + Storage
 
